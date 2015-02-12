@@ -6,13 +6,11 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.BindyType;
 
 /**
- * 
+ *
  * mvn camel:run
  *
  */
 public class MyRouteBuilder extends RouteBuilder {
-
-    MyProcessor myProcessor = new MyProcessor();
 
     @Override
     public void configure() throws Exception {
@@ -20,9 +18,12 @@ public class MyRouteBuilder extends RouteBuilder {
         from("file:///var/opt/data/in")
                 .routeId("my-route-1")
                 .split(body().tokenize("\n")).streaming()
+                .choice().when(header("CamelSplitIndex").isEqualTo(0)).log("do some setup").end()
                 .unmarshal().bindy(BindyType.Csv, Product.class)
-                .process(myProcessor)
+                .log("${body.description}")
+                .bean(MyProcessor.class)
                 .marshal().bindy(BindyType.Csv, Product.class)
-                .to("file:///var/opt/data/out?fileName=${in.header.description}");
+                .to("file:///var/opt/data/out?fileName=${in.header.description}")
+                .choice().when(header("CamelSplitComplete")).log("stop the route").end();
     }
 }
