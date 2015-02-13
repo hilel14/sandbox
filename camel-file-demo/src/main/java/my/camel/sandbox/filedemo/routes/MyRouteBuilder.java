@@ -6,11 +6,6 @@ import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.BindyType;
 
-/**
- *
- * mvn camel:run
- *
- */
 public class MyRouteBuilder extends RouteBuilder {
 
     @PropertyInject("inputFolder")
