@@ -7,6 +7,7 @@
          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
     <camelContext id="my-file-demo" xmlns="http://camel.apache.org/schema/spring">
+        <propertyPlaceholder id="properties" location="application.properties"/>
         <package>my.camel.sandbox.filedemo.routes</package>
     </camelContext>
 
