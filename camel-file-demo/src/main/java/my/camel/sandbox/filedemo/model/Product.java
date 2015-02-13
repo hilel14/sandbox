@@ -5,6 +5,7 @@
  */
 package my.camel.sandbox.filedemo.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
@@ -16,6 +17,8 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 @CsvRecord(separator = "\t", crlf = "UNIX")
 public class Product implements java.io.Serializable {
 // Apple	08.15	22/02/2012 17:53
+
+    SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @DataField(pos = 1)
     private String description;
@@ -66,6 +69,10 @@ public class Product implements java.io.Serializable {
      */
     public void setPurchaseDate(Date purchaseDate) {
         this.purchaseDate = purchaseDate;
+    }
+
+    public String getPurchaseDateFormatted() {
+        return dbDateFormat.format(purchaseDate);
     }
 
 }

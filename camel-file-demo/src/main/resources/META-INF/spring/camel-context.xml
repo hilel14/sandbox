@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://camel.apache.org/schema/spring
+        http://camel.apache.org/schema/spring/camel-spring.xsd
+    http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+">
 
     <camelContext id="my-file-demo" xmlns="http://camel.apache.org/schema/spring">
         <propertyPlaceholder id="properties" location="application.properties"/>
         <package>my.camel.sandbox.filedemo.routes</package>
     </camelContext>
+    
+    <context:property-placeholder location="classpath:database.properties" />
+   
+    <!-- database configuration -->
 
+    <bean id="productDataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+                p:driverClassName="${job1.jdbc.driver}"
+                p:url="${job1.jdbc.url}"
+                p:username="${job1.jdbc.user}"
+                p:password="${job1.jdbc.password}"/>
+    
 </beans>

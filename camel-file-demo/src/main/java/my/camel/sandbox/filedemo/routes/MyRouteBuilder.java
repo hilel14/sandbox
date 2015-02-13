@@ -2,6 +2,7 @@ package my.camel.sandbox.filedemo.routes;
 
 import my.camel.sandbox.filedemo.model.Product;
 import my.camel.sandbox.filedemo.processors.MyProcessor;
+import my.camel.sandbox.filedemo.processors.QueryBuilder;
 import org.apache.camel.PropertyInject;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.BindyType;
@@ -21,8 +22,11 @@ public class MyRouteBuilder extends RouteBuilder {
                 .unmarshal().bindy(BindyType.Csv, Product.class)
                 .log("${body.description}")
                 .bean(MyProcessor.class)
+                .bean(QueryBuilder.class)
                 .marshal().bindy(BindyType.Csv, Product.class)
                 .to("file:///var/opt/data/out?fileName=${in.header.description}")
+                .setBody(header("insert.query"))
+                .to("jdbc:productDataSource")
                 .choice().when(header("CamelSplitComplete")).log("stop the route").end();
     }
 }
