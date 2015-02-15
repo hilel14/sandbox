@@ -24,19 +24,17 @@ public class PersonReader extends FlatFileItemReader {
 
     public PersonReader() {
 
+        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
+        tokenizer.setNames(new String[]{"firstName", "lastName"});
+        //tokenizer.setDelimiter(DelimitedLineTokenizer.DELIMITER_TAB);
+
+        BeanWrapperFieldSetMapper<Person> mapper = new BeanWrapperFieldSetMapper<>();
+        mapper.setTargetType(Person.class);
+
         DefaultLineMapper<Person> defaultLineMapper = new DefaultLineMapper<>();
 
-        defaultLineMapper.setLineTokenizer(new DelimitedLineTokenizer() {
-            {
-                setNames(new String[]{"firstName", "lastName"});
-            }
-        });
-
-        defaultLineMapper.setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {
-            {
-                setTargetType(Person.class);
-            }
-        });
+        defaultLineMapper.setLineTokenizer(tokenizer);
+        defaultLineMapper.setFieldSetMapper(mapper);
 
         setLineMapper(defaultLineMapper);
     }
