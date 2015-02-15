@@ -1,4 +1,4 @@
-package my.spring.sandbox.spring.batch.demo;
+package my.sandbox.spring.batch.demo;
 
 import java.util.Date;
 import java.util.logging.Level;

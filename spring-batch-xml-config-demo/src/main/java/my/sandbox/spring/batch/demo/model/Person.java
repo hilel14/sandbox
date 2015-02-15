@@ -1,4 +1,4 @@
-package my.spring.sandbox.spring.batch.demo.model;
+package my.sandbox.spring.batch.demo.model;
 
 public class Person {
     private String lastName;

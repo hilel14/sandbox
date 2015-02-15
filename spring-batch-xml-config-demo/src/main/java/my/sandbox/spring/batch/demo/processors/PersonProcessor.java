@@ -1,6 +1,6 @@
-package my.spring.sandbox.spring.batch.demo.processors;
+package my.sandbox.spring.batch.demo.processors;
 
-import my.spring.sandbox.spring.batch.demo.model.Person;
+import my.sandbox.spring.batch.demo.model.Person;
 import org.springframework.batch.item.ItemProcessor;
 
 public class PersonProcessor implements ItemProcessor<Person, Person> {

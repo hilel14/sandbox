@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package my.spring.sandbox.spring.batch.demo.writers;
+package my.sandbox.spring.batch.demo.writers;
 
 import javax.sql.DataSource;
-import my.spring.sandbox.spring.batch.demo.model.Person;
+import my.sandbox.spring.batch.demo.model.Person;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 

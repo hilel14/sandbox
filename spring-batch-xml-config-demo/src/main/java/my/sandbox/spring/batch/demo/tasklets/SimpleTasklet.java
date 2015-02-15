@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package my.spring.sandbox.spring.batch.demo.tasklets;
+package my.sandbox.spring.batch.demo.tasklets;
 
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;

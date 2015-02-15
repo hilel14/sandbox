@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package my.spring.sandbox.spring.batch.demo.readers;
+package my.sandbox.spring.batch.demo.readers;
 
-import my.spring.sandbox.spring.batch.demo.model.Person;
+import my.sandbox.spring.batch.demo.model.Person;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
