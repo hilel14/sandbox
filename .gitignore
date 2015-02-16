@@ -1,2 +1,4 @@
 /camel-file-demo/target
-/spring-batch-3-demo-xml/target
+/spring-batch-java-config-demo/target
+/spring-batch-mixed-config-demo/target
+/spring-batch-xml-config-demo/target
