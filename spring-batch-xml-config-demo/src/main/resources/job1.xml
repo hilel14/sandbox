@@ -20,49 +20,49 @@
         Launch script example:
         CP=resources/:lib/*:/opt/spring/batch/current/resources/:/opt/spring/batch/current/lib/*
         MAIN=org.springframework.batch.core.launch.support.CommandLineJobRunner
-        ARGS="classpath:/spring/job-1.xml job-1 inputFile=data/sample-data.csv run=1"
+        ARGS="classpath:/job1.xml job1 inputFile=path/to/sample-data.csv"
         java -cp $CP $MAIN $ARGS
     </beans:description>
 
     <beans:import resource="classpath:spring/launch-context.xml"/>
 
     <!--  Job 1 configuration -->
-    <batch:job id="job-1">
-        <batch:step id="step-1" next="step-2">
+    <batch:job id="job1">
+        <batch:step id="step1" next="step2">
             <batch:tasklet ref="simpleTasklet"/>
         </batch:step>
-        <batch:step id="step-2">
+        <batch:step id="step2">
             <batch:tasklet>
-                <batch:chunk reader="personReader" processor="personProcessor" writer="personWriter" commit-interval="2"/>
+                <batch:chunk reader="reader1" processor="processor1" writer="writer1" commit-interval="5"/>
             </batch:tasklet>
         </batch:step>
     </batch:job>
 
     <!-- Step 1 beans -->
 
-    <beans:bean id="simpleTasklet" class="my.spring.sandbox.spring.batch.demo.tasklets.SimpleTasklet"/>
+    <beans:bean id="simpleTasklet" class="my.sandbox.spring.batch.demo.tasklets.SimpleTasklet"/>
 
     <!-- Step 2 beans -->
 
-    <beans:bean id="personReader" class="my.spring.sandbox.spring.batch.demo.readers.PersonReader" scope="step">
+    <beans:bean id="reader1" class="my.sandbox.spring.batch.demo.readers.ProductReader" scope="step">
         <beans:property name="inputFile" value="#{jobParameters[inputFile]}" />
     </beans:bean>
 
-    <beans:bean id="personProcessor" class="my.spring.sandbox.spring.batch.demo.processors.PersonProcessor" />
+    <beans:bean id="processor1" class="my.sandbox.spring.batch.demo.processors.ProductProcessor" />
 
-    <beans:bean id="personWriter" class="my.spring.sandbox.spring.batch.demo.writers.PersonWriter">
-        <beans:property name="peopleDataSource" ref="peopleDataSource" />
+    <beans:bean id="writer1" class="my.sandbox.spring.batch.demo.writers.ProductWriter">
+        <beans:property name="job1DataSource" ref="job1DataSource" />
     </beans:bean>
 
     <!-- Job 1 database configuration -->
 
-    <beans:bean id="peopleDataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+    <beans:bean id="job1DataSource" class="org.apache.commons.dbcp2.BasicDataSource"
                 p:driverClassName="${job1.jdbc.driver}"
                 p:url="${job1.jdbc.url}"
                 p:username="${job1.jdbc.user}"
                 p:password="${job1.jdbc.password}"/>
 
-    <jdbc:initialize-database data-source="peopleDataSource" enabled="${job1.data.source.init}">
+    <jdbc:initialize-database data-source="job1DataSource" enabled="${job1.data.source.init}">
         <jdbc:script location="${job1.schema.script}"/>
         <jdbc:script location="${job1.drop.script}"/>
     </jdbc:initialize-database>

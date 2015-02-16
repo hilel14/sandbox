@@ -5,7 +5,7 @@
  */
 package my.sandbox.spring.batch.demo.readers;
 
-import my.sandbox.spring.batch.demo.model.Person;
+import my.sandbox.spring.batch.demo.model.Product;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -16,22 +16,22 @@ import org.springframework.core.io.FileSystemResource;
  *
  * @author hilel
  */
-public class PersonReader extends FlatFileItemReader {
+public class ProductReader extends FlatFileItemReader {
 
     public void setInputFile(String inputFile) {
         setResource(new FileSystemResource(inputFile));
     }
 
-    public PersonReader() {
+    public ProductReader() {
 
         DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
-        tokenizer.setNames(new String[]{"firstName", "lastName"});
-        //tokenizer.setDelimiter(DelimitedLineTokenizer.DELIMITER_TAB);
+        tokenizer.setNames(new String[]{"description", "price", "purchaseDate"});
+        tokenizer.setDelimiter(DelimitedLineTokenizer.DELIMITER_TAB);
 
-        BeanWrapperFieldSetMapper<Person> mapper = new BeanWrapperFieldSetMapper<>();
-        mapper.setTargetType(Person.class);
+        BeanWrapperFieldSetMapper<Product> mapper = new BeanWrapperFieldSetMapper<>();
+        mapper.setTargetType(Product.class);
 
-        DefaultLineMapper<Person> defaultLineMapper = new DefaultLineMapper<>();
+        DefaultLineMapper<Product> defaultLineMapper = new DefaultLineMapper<>();
 
         defaultLineMapper.setLineTokenizer(tokenizer);
         defaultLineMapper.setFieldSetMapper(mapper);
