@@ -16,16 +16,16 @@ import org.springframework.stereotype.Component;
  *
  * @author hilel
  */
-@Component("writer")
-public class PersonWriter extends JdbcBatchItemWriter<Person> {
+@Component("writer1")
+public class ProductWriter extends JdbcBatchItemWriter<Product> {
 
     @Autowired
     public void setPeopleDataSource(@Qualifier("job1DataSource") DataSource job1DataSource) {
         setDataSource(job1DataSource);
     }
 
-    public PersonWriter() {
-        setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
-        setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
+    public ProductWriter() {
+        setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Product>());
+        setSql("INSERT INTO product (description, price, purchase_date) VALUES (:description, :price, :purchaseDate)");
     }
 }

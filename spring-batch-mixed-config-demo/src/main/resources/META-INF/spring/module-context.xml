@@ -7,14 +7,17 @@
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <description>Example job to get you started. It provides a skeleton for a typical batch application.</description>
- 	
+
     <batch:job id="job1">
-        <batch:step id="step1"  >			
+        <batch:step id="step1" next="step2">
+            <batch:tasklet ref="tasklet1"/>
+        </batch:step>
+        <batch:step id="step2"  >
             <batch:tasklet transaction-manager="transactionManager" start-limit="100" >
-                <batch:chunk reader="reader" processor="prcessor" writer="writer" commit-interval="1" />
+                <batch:chunk reader="reader1" processor="prcessor1" writer="writer1" commit-interval="1" />
             </batch:tasklet>
         </batch:step>
-    </batch:job> 
-	
+    </batch:job>
+
 
 </beans>

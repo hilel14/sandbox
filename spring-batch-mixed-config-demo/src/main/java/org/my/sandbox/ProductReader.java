@@ -5,7 +5,6 @@
  */
 package org.my.sandbox;
 
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -21,33 +20,30 @@ import org.springframework.stereotype.Component;
  *
  * @author hilel
  */
-@Component("reader")
-@Scope(value = "step", proxyMode = ScopedProxyMode.NO)
+@Component("reader1")
 //@StepScope
-public class PersonReader extends FlatFileItemReader {
+@Scope(value = "step", proxyMode = ScopedProxyMode.NO)
+public class ProductReader extends FlatFileItemReader {
 
     @Autowired
     public void setInputFile(@Value("#{jobParameters[inputFile]}") String inputFile) {
         setResource(new FileSystemResource(inputFile));
     }
 
-    public PersonReader() {
+    public ProductReader() {
 
-        DefaultLineMapper<Person> defaultLineMapper = new DefaultLineMapper<>();
+        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
+        tokenizer.setNames(new String[]{"description", "price", "purchaseDate"});
+        tokenizer.setDelimiter(DelimitedLineTokenizer.DELIMITER_TAB);
 
-        defaultLineMapper.setLineTokenizer(new DelimitedLineTokenizer() {
-            {
-                setNames(new String[]{"firstName", "lastName"});
-            }
-        });
+        BeanWrapperFieldSetMapper<Product> mapper = new BeanWrapperFieldSetMapper<>();
+        mapper.setTargetType(Product.class);
 
-        defaultLineMapper.setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {
-            {
-                setTargetType(Person.class);
-            }
-        });
+        DefaultLineMapper<Product> defaultLineMapper = new DefaultLineMapper<>();
+
+        defaultLineMapper.setLineTokenizer(tokenizer);
+        defaultLineMapper.setFieldSetMapper(mapper);
 
         setLineMapper(defaultLineMapper);
-        //setResource(new ClassPathResource("sample-data.csv"));
     }
 }
