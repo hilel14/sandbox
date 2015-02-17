@@ -13,22 +13,21 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 
 @Configuration
-@ComponentScan
+@ComponentScan(basePackageClasses = Application.class)
 public class Application {
 
-    @Bean
-    MessageService mockMessageService() {
-        return new MessageService() {
-            @Override
-            public String getMessage() {
-                return "Hello World!";
-            }
-        };
+    @Bean(name = "suffix1")
+    String suffixOne() {
+        return "111";
+    }
+
+    @Bean(name = "suffix2")
+    String suffixTwo() {
+        return "222";
     }
 
     public static void main(String[] args) {
-        ApplicationContext context
-                = new AnnotationConfigApplicationContext(Application.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(Application.class);
         MessagePrinter printer = context.getBean(MessagePrinter.class);
         printer.printMessage();
     }

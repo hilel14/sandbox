@@ -10,19 +10,22 @@ package com.mycompany.spring.context.demo;
  * @author hilel
  */
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MessagePrinter {
 
     final private MessageService service;
+    final private String suffix;
 
     @Autowired
-    public MessagePrinter(MessageService service) {
+    public MessagePrinter(@Qualifier("service1") MessageService service, @Qualifier("suffix2") String suffix) {
         this.service = service;
+        this.suffix = suffix;
     }
 
     public void printMessage() {
-        System.out.println(this.service.getMessage());
+        System.out.println(this.service.getMessage() + " " + suffix);
     }
 }
