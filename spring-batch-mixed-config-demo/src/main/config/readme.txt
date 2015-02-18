@@ -4,4 +4,4 @@ Create user1 with password 123456
 Grant user1 access to batch database and test database
 
 Run the job:
-org.springframework.batch.core.launch.support.CommandLineJobRunner classpath:/job1.xml job1 inputFile=/var/opt/data/sample-data.csv r=1
+org.springframework.batch.core.launch.support.CommandLineJobRunner classpath:/jobs/job1.xml job1 inputFile=/var/opt/data/sample-data.csv r=1

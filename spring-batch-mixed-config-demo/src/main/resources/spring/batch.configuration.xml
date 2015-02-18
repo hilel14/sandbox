@@ -11,10 +11,6 @@
 		http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:property-placeholder location="classpath:mysql.batch.properties,classpath:mysql.job1.properties" />
-
-    <context:component-scan base-package="org.my.sandbox" />
-
     <jdbc:initialize-database data-source="dataSource" enabled="${batch.data.source.init}">
         <jdbc:script location="${batch.drop.script}"/>
         <jdbc:script location="${batch.schema.script}"/>
@@ -33,13 +29,5 @@
 
     <bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher"
           p:jobRepository-ref="jobRepository"/>
-
-    <import resource="classpath:/META-INF/spring/module-context.xml" />
-    
-    <bean id="job1DataSource" class="org.apache.commons.dbcp2.BasicDataSource"
-             p:driverClassName="${job1.jdbc.driver}"
-             p:url="${job1.jdbc.url}"
-             p:username="${job1.jdbc.user}"
-             p:password="${job1.jdbc.password}"/>
 
 </beans>
