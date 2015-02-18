@@ -9,8 +9,8 @@
 
 http://maven.apache.org/archetype/maven-archetype-plugin/advanced-usage.html
 
-* mvn archetype:create-from-project
-* cd target/generated-sources/archetype
-* mvn install
-* cd ~/NetBeansProjects
-* mvn archetype:generate -DarchetypeCatalog=local
+1. mvn archetype:create-from-project
+2. cd target/generated-sources/archetype
+3. mvn install
+4. cd ~/NetBeansProjects
+5. mvn archetype:generate -DarchetypeCatalog=local
