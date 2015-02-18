@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.my.spring.batch.java.config.demo;
+package org.my.spring.batch.java.config.demo.configuration;
 
 import org.my.spring.batch.java.config.demo.model.Product;
 import org.my.spring.batch.java.config.demo.processors.ProductProcessor;
@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
  * annotation is used when there is more then one candidate bean.
  */
 @Configuration
-public class JobOneConfig {
+public class JobConfiguration {
 
     @Autowired
     private JobBuilderFactory jobBuilderFactory;

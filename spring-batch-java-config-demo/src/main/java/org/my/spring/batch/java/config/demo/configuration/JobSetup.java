@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.my.spring.batch.java.config.demo.setup;
+package org.my.spring.batch.java.config.demo.configuration;
 
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -33,4 +33,5 @@ public class JobSetup {
         dataSource.setPassword(environment.getProperty("job1.jdbc.password"));
         return dataSource;
     }
+
 }

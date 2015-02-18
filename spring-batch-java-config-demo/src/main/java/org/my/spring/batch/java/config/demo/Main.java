@@ -36,6 +36,7 @@ public class Main {
         JobLauncher jobLauncher = context.getBean(JobLauncher.class);
         try {
             JobExecution jobExecution = jobLauncher.run(job1, jobParameters);
+            logger.log(Level.INFO, "job execution {0} ended with status: {1}", new Object[]{jobExecution.getId(), jobExecution.getStatus()});
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }

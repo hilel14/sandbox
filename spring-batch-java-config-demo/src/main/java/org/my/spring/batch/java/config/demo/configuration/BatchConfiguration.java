@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.my.spring.batch.java.config.demo.setup;
+package org.my.spring.batch.java.config.demo.configuration;
 
 import javax.sql.DataSource;
 import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
@@ -33,7 +33,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 //@ComponentScan(basePackageClasses = MyBatchConfiguration.class)
 //@EnableAutoConfiguration
 
-public class BatchSetup implements BatchConfigurer {
+public class BatchConfiguration implements BatchConfigurer {
 
     @Autowired
     private Environment environment;
