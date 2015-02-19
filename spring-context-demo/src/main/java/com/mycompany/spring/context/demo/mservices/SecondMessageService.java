@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
  *
  * @author hilel
  */
-@Component(value = "service2")
+//@Component(value = "service2")
+@Component
 public class SecondMessageService implements MessageService {
 
     @Override

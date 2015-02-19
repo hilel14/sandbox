@@ -10,22 +10,28 @@ package com.mycompany.spring.context.demo;
  * @author hilel
  */
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+//import javax.inject.Inject; // Java EE
+//import javax.annotation.Resource;
+//import org.springframework.beans.factory.annotation.Qualifier;
 
 @Component
+@PropertySource("classpath:printer.properties")
 public class MessagePrinter {
 
-    final private MessageService service;
-    final private String suffix;
+    private final MessageService service;
 
     @Autowired
-    public MessagePrinter(@Qualifier("service1") MessageService service, @Qualifier("suffix2") String suffix) {
-        this.service = service;
-        this.suffix = suffix;
+    public MessagePrinter(ApplicationContext context, Environment environment) {
+        //service = context.getBean(MessageService.class); // NoUniqueBeanDefinitionException
+        service = context.getBean(environment.getProperty("messageService"), MessageService.class);
     }
 
     public void printMessage() {
-        System.out.println(this.service.getMessage() + " " + suffix);
+        System.out.println(service.getMessage());
     }
+
 }
