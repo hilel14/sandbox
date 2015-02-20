@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:batch="http://www.springframework.org/schema/batch"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <beans:description>
+        Example job providing a skeleton for a typical batch application.
+        Launch script example:
+        CP=resources/:lib/*:/opt/spring/batch/current/resources/:/opt/spring/batch/current/lib/*
+        MAIN=org.springframework.batch.core.launch.support.CommandLineJobRunner
+        ARGS="classpath:/job1.xml job1 inputFile=path/to/sample-data.csv"
+        java -cp $CP $MAIN $ARGS
+    </beans:description>
+
+    <beans:import resource="classpath:spring/launch-context.xml"/>
+
+    <!--  Job 1 configuration -->
+    <batch:job id="job1">
+        <batch:step id="step1" next="step2">
+            <batch:tasklet ref="simpleTasklet"/>
+        </batch:step>
+        <batch:step id="step2">
+            <batch:tasklet>
+                <batch:chunk reader="reader1" processor="processor1" writer="writer1" commit-interval="5"/>
+            </batch:tasklet>
+        </batch:step>
+    </batch:job>
+
+    <!-- Step 1 beans -->
+
+    <beans:bean id="simpleTasklet" class="my.sandbox.spring.batch.demo.tasklets.SimpleTasklet"/>
+
+    <!-- Step 2 beans -->
+
+    <beans:bean id="reader1" class="my.sandbox.spring.batch.demo.readers.ProductReader" scope="step">
+        <beans:property name="inputFile" value="#{jobParameters[inputFile]}" />
+    </beans:bean>
+
+    <beans:bean id="processor1" class="my.sandbox.spring.batch.demo.processors.ProductProcessor" />
+
+    <beans:bean id="writer1" class="my.sandbox.spring.batch.demo.writers.ProductWriter">
+        <beans:property name="job1DataSource" ref="job1DataSource" />
+    </beans:bean>
+
+    <!-- Job 1 database configuration -->
+
+    <beans:bean id="job1DataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+                p:driverClassName="${job1.jdbc.driver}"
+                p:url="${job1.jdbc.url}"
+                p:username="${job1.jdbc.user}"
+                p:password="${job1.jdbc.password}"/>
+
+    <jdbc:initialize-database data-source="job1DataSource" enabled="${job1.data.source.init}">
+        <jdbc:script location="${job1.schema.script}"/>
+        <jdbc:script location="${job1.drop.script}"/>
+    </jdbc:initialize-database>
+
+</beans:beans>
