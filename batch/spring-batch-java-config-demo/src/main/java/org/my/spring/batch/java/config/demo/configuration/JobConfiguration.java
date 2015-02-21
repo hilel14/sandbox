@@ -5,6 +5,8 @@
  */
 package org.my.spring.batch.java.config.demo.configuration;
 
+import java.text.ParseException;
+import org.my.spring.batch.java.config.demo.listeners.LogProcessListener;
 import org.my.spring.batch.java.config.demo.model.Product;
 import org.my.spring.batch.java.config.demo.processors.ProductProcessor;
 import org.my.spring.batch.java.config.demo.processors.SimpleTasklet;
@@ -12,8 +14,10 @@ import org.my.spring.batch.java.config.demo.readers.ProductReader;
 import org.my.spring.batch.java.config.demo.writers.ProductWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepListener;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.listener.StepListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -57,6 +61,8 @@ public class JobConfiguration {
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
+                .listener(new LogProcessListener())
+                //.faultTolerant().skipLimit(100).skip(ParseException.class)
                 .build();
     }
 }

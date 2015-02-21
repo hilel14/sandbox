@@ -44,7 +44,7 @@ public class Main {
 
     private static JobParameters parseJobParameters(String[] args) {
         Map<String, JobParameter> parameters = new HashMap<>();
-        parameters.put("inputFile", new JobParameter("/var/opt/data/sample-data-2.csv"));
+        parameters.put("inputFile", new JobParameter("/var/opt/data/sample-data.csv"));
         parameters.put("k1", new JobParameter(new Date()));
         return new JobParameters(parameters);
     }
