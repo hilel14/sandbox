@@ -13,7 +13,7 @@
           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-    <context:property-placeholder location="classpath:spring/mysql.batch.properties,classpath:mysql.job1.properties" />
+    <context:property-placeholder location="classpath:spring/mysql.batch.properties" ignore-unresolvable="true"/>
     
     <beans:bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
                 p:driverClassName="${batch.jdbc.driver}"

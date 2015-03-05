@@ -24,6 +24,7 @@
         java -cp $CP $MAIN $ARGS
     </beans:description>
 
+    <context:property-placeholder location="classpath:mysql.job1.properties" ignore-unresolvable="true"/>
     <beans:import resource="classpath:spring/launch-context.xml"/>
 
     <!--  Job 1 configuration -->
