@@ -16,11 +16,11 @@
 
     <!-- Job setup -->
 
-    <context:property-placeholder location="classpath:spring/mysql.batch.properties, classpath:jobs/mysql.job1.properties" />
-    <import resource="classpath:/spring/batch.configuration.xml" />
+    <context:property-placeholder location="classpath:mysql.job1.properties" ignore-unresolvable="true" ignore-resource-not-found="false" />
+
     <context:component-scan base-package="org.my.sandbox"/>
     
-    <bean id="job1DataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+    <bean id="job1DataSource" class="org.apache.commons.dbcp.BasicDataSource"
           p:driverClassName="${job1.jdbc.driver}"
           p:url="${job1.jdbc.url}"
           p:username="${job1.jdbc.user}"
@@ -28,7 +28,7 @@
     
     <!-- Job configuration -->
     
-    <batch:job id="job1">
+    <batch:job id="mixed-config-demo">
         <batch:step id="step1" next="step2">
             <batch:tasklet ref="tasklet1"/>
         </batch:step>
