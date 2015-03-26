@@ -6,12 +6,12 @@
       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
 
-    <camelContext xmlns="http://camel.apache.org/schema/blueprint" id="my-cut-demo">
+    <camelContext id="my-osgi-file-to-db" xmlns="http://camel.apache.org/schema/blueprint">
         <propertyPlaceholder id="properties" location="my.application.properties"/>
         <package>my.sandbox.osgi.filetodb.routes</package>
     </camelContext>
     
-    <reference id="product" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=product)"/>
+    <reference id="product" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=jdbc/product)"/>
    
     <!-- 
     <reference id="dataSource" interface="javax.sql.DataSource"/>
