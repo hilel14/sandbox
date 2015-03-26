@@ -13,7 +13,7 @@ copy org.ops4j.datasource-product.cfg to <karaf-home>/etc
 service:list DataSource
 
 jdbc:datasources
-jdbc:tables product
-jdbc:execute product SELECT * FROM product
+jdbc:tables jdbc/product
+jdbc:execute jdbc/product SELECT * FROM product
 
 bundle:install --start mvn:my.sandbox/camel-osgi-file-to-db/1.0-SNAPSHOT
