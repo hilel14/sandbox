@@ -11,7 +11,7 @@
     </properties>
     <scm>
         <url>https://github.com/hilel14/sandbox/tree/master/camel/camel-osgi-file-to-db</url>
-        <developerConnection>scm:git:git@github.com:hilel14/sandbox/camel/camel-osgi-file-to-db</developerConnection>
+        <developerConnection>scm:git:git@github.com:hilel14/sandbox/</developerConnection>
     </scm>
     <build>
         <plugins>
