@@ -1,24 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>my.sandbox</groupId>
     <artifactId>camel-osgi-file-to-db</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
-
+    <scm>
+        <url>https://github.com/hilel14/sandbox/tree/master/camel/camel-osgi-file-to-db</url>
+        <developerConnection>scm:git:git@github.com:hilel14/sandbox/camel/camel-osgi-file-to-db</developerConnection>
+    </scm>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
                 <version>2.13.2</version>
+                <configuration>
+                    <useBlueprint>true</useBlueprint>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -33,7 +37,6 @@
             </plugin>
         </plugins>
     </build>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -61,7 +64,7 @@
             <artifactId>camel-jdbc</artifactId>
             <version>2.13.2</version>
         </dependency>
-         <!--
+        <!--
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
