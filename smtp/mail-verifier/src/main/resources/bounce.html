@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+
+    <head>
+        <title>mail filter bounce message v2</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <style type="text/css">
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            td {
+                border: 2px solid white;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <!-- bgcolor="#f0f0f0" -->
+
+        <table align="center" dir="rtl">
+            <!--
+                <td width="50">&nbsp;</td>
+            -->
+            <tr>
+                <td>
+                    <p>
+                        הודעה ששלחת בתאריך
+                        <strong>
+                            ${date}
+                        </strong>
+                        בשעה
+                        <strong>
+                            ${time}
+                        </strong>
+                        <br>
+                        בנושא
+                        <strong>
+                            ${message.subject}
+                        </strong>
+                        <br>
+                        חזרה מהסיבה הבאה:
+                        <span style="color: red; font-weight: bolder">${statusDescription}</span>
+                        <br>
+                    </p>
+
+                    <div>
+                        פרטים נוספים:
+                    </div>
+                    <table width="100%" cellpadding="5" cellspacing="0" border="0" bgcolor="#f0f0f0">
+                        <tr valign="top">
+                            <td>נמענים</td>
+                            <td dir="ltr">
+                                <#list allRecipients as recipient>
+                                ${recipient} <br>
+                                </#list>
+                            </td>
+                        </tr>
+
+                        <tr valign="top">
+                            <td>קבצים מצורפים</td>
+                            <td dir="ltr">
+                                <#if attachments??>
+                                <#list attachments as attachment>
+                                ${attachment} <br>
+                                </#list>
+                                </#if>
+                                &nbsp;
+                            </td>
+                        </tr>
+
+                    </table>
+
+                    <br>
+
+                    <div>
+                        התפלגות הנמענים:
+                    </div>
+
+                    <table width="100%" cellpadding="5" cellspacing="0" border="0" bgcolor="#f0f0f0">
+                        <tr valign="top">
+                            <td>לקוחות</td>
+                            <td dir="ltr">
+                                <#list customerDomains as domain>
+                                ${domain} <br>
+                                </#list>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <td>שקופים</td>
+                            <td dir="ltr">
+                                <#list whiteListDomains as domain>
+                                ${domain} <br>
+                                </#list>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <td>אחרים</td>
+                            <td dir="ltr">
+                                <#list otherDomains as domain>
+                                ${domain} <br>
+                                </#list>
+                            </td>
+                        </tr>
+                    </table>                 
+
+                </td>
+                <!--
+                <td width="50">&nbsp;</td>
+                -->
+            </tr>
+
+        </table>
+
+    </body>
+
+</html>
