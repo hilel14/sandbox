@@ -1,0 +1,22 @@
+export PATH=/opt/spring/apache-maven-3.0.3/bin:$PATH
+mvn clean dependency:copy-dependencies package
+mvn install -P bootstrap
+mvn exec:java
+
+Maven Release plugin
+http://maven.apache.org/maven-release/maven-release-plugin
+mvn release:perform
+
+<scm>
+	<developerConnection>scm:svn:file:///home/hilel/test/repo1/mavenproject3/</developerConnection>
+</scm>
+
+
+Maven Archetype plugin
+
+cd source-project
+mvn archetype:create-from-project
+cd generated-sources/archetype
+mvn install
+cd target-project
+mvn archetype:generate -DarchetypeCatalog=local

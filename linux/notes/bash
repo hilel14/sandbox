@@ -1,0 +1,30 @@
+some times dos2unix needs to be executed before
+
+Loop over set of files:
+   for f in *.html; do iconv -f WINDOWS-1255 -t UTF-8 $f > /tmp/$f ; done
+
+Read text file line by line:
+   exec < $TEMP; while read line; do echo $line ; done
+   while read line; do echo $line ; done < myfile.txt
+
+change to current dir
+   cd `dirname "$0"`
+
+store full path to file in current dir
+   FULL_PATH=`pwd`/FILE_NAME
+
+extract file name and parent folder from path
+	
+
+Print all environment variables:
+   printenv
+
+
+Test if file exist:
+
+	if [ -f $1 ];
+	then
+	   echo "File $1 exists."
+	else
+	   echo "File $1 does not exist."
+	fi

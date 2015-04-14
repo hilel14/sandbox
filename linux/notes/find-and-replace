@@ -1,0 +1,5 @@
+replace ugly with beautiful:
+sed --in-place 's/ugly/beautiful/g' /home/bruno/old-friends/sue.txt
+
+replace comma with tab
+sed -i 's/,/\t/g' /opt/test/data.csv

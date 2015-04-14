@@ -1,0 +1,1 @@
+useradd --system --home /var/opt/jira --comment "JIRA bug and issue tracker" jira

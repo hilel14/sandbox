@@ -1,0 +1,8 @@
+rename:
+count=1 ; for item in `find . -type f` ; do mv $item `printf "%03d" $count`.jpg ; count=$(( $count + 1 )) ; done
+
+convert:
+ffmpeg -r 1 -b 1800 -i %03d.jpg movie.mp4
+
+more info:
+http://electron.mit.edu/~gsteele/ffmpeg/
