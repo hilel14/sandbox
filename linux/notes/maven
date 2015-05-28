@@ -20,3 +20,11 @@ cd generated-sources/archetype
 mvn install
 cd target-project
 mvn archetype:generate -DarchetypeCatalog=local
+
+Maven dependency plugin
+
+mvn dependency:copy-dependencies
+mvn dependency:copy-dependencies -Dclassifier=sources
+mvn dependency:copy-dependencies -Dclassifier=javadoc
+Common errors work-arounds:
+   mvn dependency:copy-dependencies -Dclassifier=javadoc -DexcludeArtifactIds=hamcrest-core
