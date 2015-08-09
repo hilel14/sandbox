@@ -5,6 +5,7 @@
  */
 package beeriprint.todo.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class Project {
 
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private int id;
     private String title;
     private String description;
@@ -33,10 +35,10 @@ public class Project {
 
     public Object[] toTableRow() {
         Object[] row = new Object[8];
-        row[0] = id;
-        row[1] = this;
-        row[2] = startDate;
-        row[3] = endDate;
+        row[0] = this;
+        row[1] = title;
+        row[2] = dateFormat.format(startDate);
+        row[3] = endDate == null ? null : dateFormat.format(endDate);
         row[4] = category;
         row[5] = priority;
         row[6] = active;
@@ -197,7 +199,5 @@ public class Project {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
-
-   
 
 }

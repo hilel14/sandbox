@@ -228,7 +228,7 @@ public class EditProjectDialog extends javax.swing.JDialog {
         storePreferences();
         try {
             saveProject();
-            mainFrame.setup();
+            mainFrame.updateSelectedProjectRow(project);
             dispose();
         } catch (IOException | ClassNotFoundException | SQLException | ParseException ex) {
             logger.log(Level.SEVERE, null, ex);

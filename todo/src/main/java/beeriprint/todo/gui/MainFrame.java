@@ -33,7 +33,6 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         loadPreferences();
-        //projectTable.getColumnModel().getColumn(1).setPreferredWidth(750);
         try {
             setup();
         } catch (IOException | ClassNotFoundException | SQLException ex) {
@@ -267,8 +266,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void editProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProjectMenuItemActionPerformed
         int selection = projectTable.convertRowIndexToModel(projectTable.getSelectedRow());
-        Project project = (Project) projectTable.getModel().getValueAt(selection, 1);
-        EditProjectDialog dialog = new EditProjectDialog(this, false);
+        Project project = (Project) projectTable.getModel().getValueAt(selection, 0);
+        EditProjectDialog dialog = new EditProjectDialog(this, true);
         dialog.setProject(project);
         dialog.setMainFrame(this);
         try {
@@ -344,12 +343,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 
-    public void setup() throws IOException, ClassNotFoundException, SQLException {
-        int selection = projectTable.getSelectedRow();
-        int index = selection < 0 ? selection : projectTable.convertRowIndexToModel(selection);
+    private void setup() throws IOException, ClassNotFoundException, SQLException {
         try (JdbcController controller = new JdbcController();) {
             fillProjectTable(controller);
-            projectTable.setRowSelectionInterval(index, index);
+            projectTable.setRowSelectionInterval(0, 0);
             showProjectDetails(controller);
         }
     }
@@ -365,12 +362,18 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
+    public void updateSelectedProjectRow(Project project) {
+        int selection = projectTable.getSelectedRow();
+        int index = selection < 0 ? selection : projectTable.convertRowIndexToModel(selection);
+        Object[] row = project.toTableRow();
+        for (int i = 0; i < projectTable.getColumnCount(); i++) {
+            projectTable.setValueAt(row[i], index, i);
+        }
+    }
+
     private void showProjectDetails(JdbcController controller) throws IOException, ClassNotFoundException, SQLException {
         // get selected row
         int selection = projectTable.getSelectedRow();
-        if (selection < 0) {
-            return;
-        }
         int index = projectTable.convertRowIndexToModel(selection);
         // extract project stored in the title column
         Project project = (Project) projectTable.getModel().getValueAt(index, 1);
