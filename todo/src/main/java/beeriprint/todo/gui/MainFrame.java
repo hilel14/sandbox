@@ -376,7 +376,7 @@ public class MainFrame extends javax.swing.JFrame {
         int selection = projectTable.getSelectedRow();
         int index = projectTable.convertRowIndexToModel(selection);
         // extract project stored in the title column
-        Project project = (Project) projectTable.getModel().getValueAt(index, 1);
+        Project project = (Project) projectTable.getModel().getValueAt(index, 0);
         // fill lists
         fillNoteList(project);
         fillTaskTable(project);
@@ -413,6 +413,10 @@ public class MainFrame extends javax.swing.JFrame {
             int width = preferences.getInt("ProjectTable.column." + i, 75);
             model.getColumn(i).setPreferredWidth(width);
         }
+        // hide id column
+        //model.getColumn(0).setPreferredWidth(0);
+        //model.getColumn(0).setMinWidth(0);
+        //model.getColumn(0).setMaxWidth(0);
         // Task table columns with
         model = taskTable.getColumnModel();
         for (int i = 0; i < model.getColumnCount(); i++) {

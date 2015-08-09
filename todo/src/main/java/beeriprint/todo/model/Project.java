@@ -30,7 +30,7 @@ public class Project {
 
     @Override
     public String toString() {
-        return title;
+        return String.valueOf(id);
     }
 
     public Object[] toTableRow() {
