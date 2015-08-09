@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package beeriprint.todo;
+package beeriprint.todo.gui;
 
 import beeriprint.todo.controller.JdbcController;
 import beeriprint.todo.model.Project;
@@ -70,6 +70,7 @@ public class MainFrame extends javax.swing.JFrame {
         allTasksMenuItem = new javax.swing.JMenuItem();
         projectMenu = new javax.swing.JMenu();
         newProjectMenuItem = new javax.swing.JMenuItem();
+        editProjectMenuItem = new javax.swing.JMenuItem();
         saveProjectMenuItem = new javax.swing.JMenuItem();
         deleteProjectMenuItem = new javax.swing.JMenuItem();
         taskMenu = new javax.swing.JMenu();
@@ -216,6 +217,14 @@ public class MainFrame extends javax.swing.JFrame {
         newProjectMenuItem.setText("New");
         projectMenu.add(newProjectMenuItem);
 
+        editProjectMenuItem.setText("Edit...");
+        editProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editProjectMenuItemActionPerformed(evt);
+            }
+        });
+        projectMenu.add(editProjectMenuItem);
+
         saveProjectMenuItem.setText("Save");
         projectMenu.add(saveProjectMenuItem);
 
@@ -239,7 +248,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         setJMenuBar(menuBar);
 
-        setBounds(0, 0, 988, 634);
+        setBounds(0, 0, 865, 534);
     }// </editor-fold>//GEN-END:initComponents
 
     private void command1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_command1ActionPerformed
@@ -255,6 +264,20 @@ public class MainFrame extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         storePreferences();
     }//GEN-LAST:event_formWindowClosing
+
+    private void editProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProjectMenuItemActionPerformed
+        int selection = projectTable.convertRowIndexToModel(projectTable.getSelectedRow());
+        Project project = (Project) projectTable.getModel().getValueAt(selection, 1);
+        EditProjectDialog dialog = new EditProjectDialog(this, false);
+        dialog.setProject(project);
+        dialog.setMainFrame(this);
+        try {
+            dialog.setup();
+            dialog.setVisible(true);
+        } catch (IOException | ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_editProjectMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -300,6 +323,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem deleteProjectMenuItem;
     private javax.swing.JMenuItem deleteTaskMenuItem;
     private javax.swing.JMenuItem desktopTasksMenuItem;
+    private javax.swing.JMenuItem editProjectMenuItem;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newProjectMenuItem;
@@ -320,10 +344,12 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 
-    private void setup() throws IOException, ClassNotFoundException, SQLException {
+    public void setup() throws IOException, ClassNotFoundException, SQLException {
+        int selection = projectTable.getSelectedRow();
+        int index = selection < 0 ? selection : projectTable.convertRowIndexToModel(selection);
         try (JdbcController controller = new JdbcController();) {
             fillProjectTable(controller);
-            projectTable.setRowSelectionInterval(0, 0);
+            projectTable.setRowSelectionInterval(index, index);
             showProjectDetails(controller);
         }
     }

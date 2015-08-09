@@ -5,6 +5,8 @@
  */
 package beeriprint.todo.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author hilel
@@ -17,6 +19,29 @@ public class Status {
     @Override
     public String toString() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof Category)) {
+            return false;
+        }
+        Status otherStatus = (Status) other;
+        return otherStatus.getId() == id && otherStatus.getDescription().equals(description);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + this.id;
+        hash = 19 * hash + Objects.hashCode(this.description);
+        return hash;
     }
 
     /**

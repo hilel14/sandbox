@@ -29,10 +29,13 @@ public class JdbcController implements AutoCloseable {
     static final Logger logger = Logger.getLogger(JdbcController.class.getName());
     Connection connection;
     PreparedStatement findAllProjects;
+    PreparedStatement findAllCategories;
+    PreparedStatement findAllStatuses;
     PreparedStatement findCategoryById;
     PreparedStatement findStatusById;
     PreparedStatement findNotesByProjectId;
     PreparedStatement findTasksByProjectId;
+    PreparedStatement updateProject;
 
     public JdbcController() throws IOException, ClassNotFoundException, SQLException {
         initConnection();
@@ -53,10 +56,14 @@ public class JdbcController implements AutoCloseable {
 
     private void preparedStatements() throws SQLException {
         findAllProjects = connection.prepareStatement("SELECT * FROM project ORDER BY id;");
+        findAllCategories = connection.prepareStatement("SELECT * FROM category ORDER BY id;");
         findCategoryById = connection.prepareStatement("SELECT * FROM category WHERE id = ?;");
         findStatusById = connection.prepareStatement("SELECT * FROM status WHERE id = ?;");
         findNotesByProjectId = connection.prepareStatement("SELECT * FROM note WHERE project_id = ?;");
         findTasksByProjectId = connection.prepareStatement("SELECT * FROM task WHERE project_id = ?;");
+        updateProject = connection.prepareStatement("UPDATE project SET "
+                + "title = ?, start_date = ?, end_date = ?, category =  ?, priority = ?, on_desktop = ?, active = ? "
+                + "WHERE id = ?;");
     }
 
     public List<Project> findAllProjects() throws SQLException {
@@ -78,6 +85,18 @@ public class JdbcController implements AutoCloseable {
             projects.add(project);
         }
         return projects;
+    }
+
+    public List<Category> findAllCategories() throws SQLException {
+        List<Category> categories = new ArrayList<>();
+        ResultSet resultSet = findAllCategories.executeQuery();
+        while (resultSet.next()) {
+            Category category = new Category();
+            category.setId(resultSet.getInt("id"));
+            category.setDescription(resultSet.getString("description"));
+            categories.add(category);
+        }
+        return categories;
     }
 
     public Category findCategoryById(int id) throws SQLException {
@@ -124,6 +143,20 @@ public class JdbcController implements AutoCloseable {
             status.setDescription(resultSet.getString("description"));
         }
         return status;
+    }
+
+    public void updateProject(Project project) throws SQLException {
+        updateProject.setString(1, project.getTitle());
+        java.sql.Date startDate = new java.sql.Date(project.getStartDate().getTime());
+        updateProject.setDate(2, startDate);
+        java.sql.Date endDate = project.getEndDate() == null ? null : new java.sql.Date(project.getEndDate().getTime());
+        updateProject.setDate(3, endDate);
+        updateProject.setInt(4, project.getCategory().getId());
+        updateProject.setInt(5, project.getPriority());
+        updateProject.setBoolean(6, project.isOnDesktop());
+        updateProject.setBoolean(7, project.isActive());
+        updateProject.setInt(8, project.getId());
+        updateProject.execute();
     }
 
     @Override
