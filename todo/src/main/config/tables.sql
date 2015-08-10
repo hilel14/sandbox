@@ -35,15 +35,6 @@ INSERT INTO project (title) VALUES('Project one');
 INSERT INTO project (title) VALUES('Project two');
 INSERT INTO project (title) VALUES('Project tree');
 
-DROP TABLE IF EXISTS note;
-CREATE TABLE note(
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    project_id int,
-    description  VARCHAR(255),
-    FOREIGN KEY (project_id) REFERENCES project(id)
-);
-INSERT INTO note (project_id, description) VALUES(1, 'Very important project');
-
 DROP TABLE IF EXISTS task;
 CREATE TABLE task(
     id INT AUTO_INCREMENT PRIMARY KEY,

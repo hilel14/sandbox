@@ -28,9 +28,6 @@ public class JdbcControllerTest {
             List<Project> projects = controller.findAllProjects();
             for (Project project : projects) {
                 System.out.println(project);
-                for (String note : project.getNotes()) {
-                    System.out.println(note);
-                }
                 for (Task task : project.getTasks()) {
                     System.out.print(task.getDescription());
                     System.out.print(": ");

@@ -33,7 +33,6 @@ public class JdbcController implements AutoCloseable {
     PreparedStatement findAllStatuses;
     PreparedStatement findCategoryById;
     PreparedStatement findStatusById;
-    PreparedStatement findNotesByProjectId;
     PreparedStatement findTasksByProjectId;
     PreparedStatement updateProject;
 
@@ -59,10 +58,9 @@ public class JdbcController implements AutoCloseable {
         findAllCategories = connection.prepareStatement("SELECT * FROM category ORDER BY id;");
         findCategoryById = connection.prepareStatement("SELECT * FROM category WHERE id = ?;");
         findStatusById = connection.prepareStatement("SELECT * FROM status WHERE id = ?;");
-        findNotesByProjectId = connection.prepareStatement("SELECT * FROM note WHERE project_id = ?;");
         findTasksByProjectId = connection.prepareStatement("SELECT * FROM task WHERE project_id = ?;");
         updateProject = connection.prepareStatement("UPDATE project SET "
-                + "title = ?, start_date = ?, end_date = ?, category =  ?, priority = ?, on_desktop = ?, active = ? "
+                + "title = ?, description = ?, start_date = ?, end_date = ?, category =  ?, priority = ?, on_desktop = ?, active = ? "
                 + "WHERE id = ?;");
     }
 
@@ -80,7 +78,6 @@ public class JdbcController implements AutoCloseable {
             project.setActive(resultSet.getBoolean("active"));
             project.setOnDesktop(resultSet.getBoolean("on_desktop"));
             project.setCategory(findCategoryById(resultSet.getInt("category")));
-            project.setNotes(findNotesByProjectId(project.getId()));
             project.setTasks(findTasksByProjectId(project.getId()));
             projects.add(project);
         }
@@ -110,16 +107,6 @@ public class JdbcController implements AutoCloseable {
         return category;
     }
 
-    public List<String> findNotesByProjectId(int projectId) throws SQLException {
-        List<String> notes = new ArrayList<>();
-        findNotesByProjectId.setInt(1, projectId);
-        ResultSet resultSet = findNotesByProjectId.executeQuery();
-        while (resultSet.next()) {
-            notes.add(resultSet.getString("description"));
-        }
-        return notes;
-    }
-
     public List<Task> findTasksByProjectId(int projectId) throws SQLException {
         List<Task> tasks = new ArrayList<>();
         findTasksByProjectId.setInt(1, projectId);
@@ -147,15 +134,16 @@ public class JdbcController implements AutoCloseable {
 
     public void updateProject(Project project) throws SQLException {
         updateProject.setString(1, project.getTitle());
+        updateProject.setString(2, project.getDescription());
         java.sql.Date startDate = new java.sql.Date(project.getStartDate().getTime());
-        updateProject.setDate(2, startDate);
+        updateProject.setDate(3, startDate);
         java.sql.Date endDate = project.getEndDate() == null ? null : new java.sql.Date(project.getEndDate().getTime());
-        updateProject.setDate(3, endDate);
-        updateProject.setInt(4, project.getCategory().getId());
-        updateProject.setInt(5, project.getPriority());
-        updateProject.setBoolean(6, project.isOnDesktop());
-        updateProject.setBoolean(7, project.isActive());
-        updateProject.setInt(8, project.getId());
+        updateProject.setDate(4, endDate);
+        updateProject.setInt(5, project.getCategory().getId());
+        updateProject.setInt(6, project.getPriority());
+        updateProject.setBoolean(7, project.isOnDesktop());
+        updateProject.setBoolean(8, project.isActive());
+        updateProject.setInt(9, project.getId());
         updateProject.execute();
     }
 

@@ -25,7 +25,6 @@ public class Project {
     private int priority;
     private boolean active;
     private boolean onDesktop;
-    private List<String> notes;
     private List<Task> tasks;
 
     @Override
@@ -170,20 +169,6 @@ public class Project {
      */
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    /**
-     * @return the notes
-     */
-    public List<String> getNotes() {
-        return notes;
-    }
-
-    /**
-     * @param notes the notes to set
-     */
-    public void setNotes(List<String> notes) {
-        this.notes = notes;
     }
 
     /**

@@ -9,6 +9,7 @@ import beeriprint.todo.controller.JdbcController;
 import beeriprint.todo.model.Category;
 import beeriprint.todo.model.Project;
 import beeriprint.todo.model.Task;
+import java.awt.ComponentOrientation;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -18,7 +19,6 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -38,9 +38,13 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        projectTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        taskTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        descriptionTextPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        menuBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         loadPreferences();
         try {
-            setup();
+            setup();            
         } catch (IOException | ClassNotFoundException | SQLException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
@@ -61,9 +65,9 @@ public class MainFrame extends javax.swing.JFrame {
         mainPanel = new javax.swing.JPanel();
         projectTableScroll = new javax.swing.JScrollPane();
         projectTable = new javax.swing.JTable();
-        noteListLable = new javax.swing.JLabel();
-        noteListScroll = new javax.swing.JScrollPane();
-        noteList = new javax.swing.JList();
+        descriptionLable = new javax.swing.JLabel();
+        descriptionScrollPane = new javax.swing.JScrollPane();
+        descriptionTextPane = new javax.swing.JTextPane();
         taskListLabel = new javax.swing.JLabel();
         taskTableScroll = new javax.swing.JScrollPane();
         taskTable = new javax.swing.JTable();
@@ -109,7 +113,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Title", "Start", "End", "Category", "Priority", "Active", "Desktop"
+                "#", "נושא", "התחלה", "סיום", "קטגוריה", "חשיבות", "Active", "Desktop"
             }
         ) {
             Class[] types = new Class [] {
@@ -143,18 +147,13 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.weighty = 0.1;
         mainPanel.add(projectTableScroll, gridBagConstraints);
 
-        noteListLable.setText("Notes");
+        descriptionLable.setText("Description");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        mainPanel.add(noteListLable, gridBagConstraints);
+        mainPanel.add(descriptionLable, gridBagConstraints);
 
-        noteList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        noteListScroll.setViewportView(noteList);
+        descriptionScrollPane.setViewportView(descriptionTextPane);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -162,7 +161,7 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
-        mainPanel.add(noteListScroll, gridBagConstraints);
+        mainPanel.add(descriptionScrollPane, gridBagConstraints);
 
         taskListLabel.setText("Tasks");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -178,7 +177,7 @@ public class MainFrame extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "ID", "Status", "Description"
+                "#", "סטטוס", "תיאור"
             }
         ) {
             Class[] types = new Class [] {
@@ -334,15 +333,15 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel commandPanel;
     private javax.swing.JMenuItem deleteProjectMenuItem;
     private javax.swing.JMenuItem deleteTaskMenuItem;
+    private javax.swing.JLabel descriptionLable;
+    private javax.swing.JScrollPane descriptionScrollPane;
+    private javax.swing.JTextPane descriptionTextPane;
     private javax.swing.JMenuItem desktopTasksMenuItem;
     private javax.swing.JMenuItem editProjectMenuItem;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newProjectMenuItem;
     private javax.swing.JMenuItem newTaskMenuItem;
-    private javax.swing.JList noteList;
-    private javax.swing.JLabel noteListLable;
-    private javax.swing.JScrollPane noteListScroll;
     private javax.swing.JMenu projectMenu;
     private javax.swing.JTable projectTable;
     private javax.swing.JScrollPane projectTableScroll;
@@ -389,16 +388,8 @@ public class MainFrame extends javax.swing.JFrame {
         // extract project stored in the id column
         Project project = (Project) projectTable.getModel().getValueAt(index, 0);
         // fill lists
-        fillNoteList(project);
+        descriptionTextPane.setText(project.getDescription());
         fillTaskTable(project);
-    }
-
-    private void fillNoteList(Project project) {
-        DefaultListModel model = new DefaultListModel();
-        for (String note : project.getNotes()) {
-            model.addElement(note);
-        }
-        noteList.setModel(model);
     }
 
     private void fillTaskTable(Project project) {
@@ -464,7 +455,7 @@ public class MainFrame extends javax.swing.JFrame {
         Project project = (Project) projectTable.getModel().getValueAt(index, 0);
         // update project data
         try (JdbcController controller = new JdbcController();) {
-            project.setTitle(projectTable.getValueAt(index, 1).toString());
+            project.setTitle(projectTable.getValueAt(index, 1).toString());            
             project.setStartDate(dateFormat.parse(projectTable.getValueAt(index, 2).toString()));
             Object endDate = projectTable.getValueAt(index, 3);
             project.setEndDate(endDate == null ? null : dateFormat.parse(endDate.toString()));
@@ -472,6 +463,8 @@ public class MainFrame extends javax.swing.JFrame {
             project.setPriority(Integer.parseInt(projectTable.getValueAt(index, 5).toString()));
             project.setActive(Boolean.parseBoolean(projectTable.getValueAt(index, 6).toString()));
             project.setOnDesktop(Boolean.parseBoolean(projectTable.getValueAt(index, 7).toString()));
+            // description
+            project.setDescription(descriptionTextPane.getText());
             // update database record
             controller.updateProject(project);
         } catch (Exception ex) {
