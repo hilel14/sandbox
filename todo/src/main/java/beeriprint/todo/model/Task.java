@@ -17,10 +17,15 @@ public class Task {
 
     public Object[] toTableRow() {
         Object[] row = new Object[3];
-        row[0] = id;
+        row[0] = this;
         row[1] = status;
         row[2] = description;
         return row;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(id);
     }
 
     /**

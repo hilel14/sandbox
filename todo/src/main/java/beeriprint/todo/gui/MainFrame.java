@@ -6,15 +6,20 @@
 package beeriprint.todo.gui;
 
 import beeriprint.todo.controller.JdbcController;
+import beeriprint.todo.model.Category;
 import beeriprint.todo.model.Project;
 import beeriprint.todo.model.Task;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -26,6 +31,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     static final Logger logger = Logger.getLogger(MainFrame.class.getName());
     static Preferences preferences = Preferences.userNodeForPackage(MainFrame.class);
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * Creates new form MainFrame
@@ -107,10 +113,10 @@ public class MainFrame extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Short.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.Long.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true, true, false, true, true, true
+                false, true, true, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -225,6 +231,11 @@ public class MainFrame extends javax.swing.JFrame {
         projectMenu.add(editProjectMenuItem);
 
         saveProjectMenuItem.setText("Save");
+        saveProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveProjectMenuItemActionPerformed(evt);
+            }
+        });
         projectMenu.add(saveProjectMenuItem);
 
         deleteProjectMenuItem.setText("Delete");
@@ -251,9 +262,9 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void command1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_command1ActionPerformed
-        for (int i = 0; i < 8; i++) {
-            System.out.println(projectTable.getColumnModel().getColumn(i).getWidth());
-        }
+        BidiTextEditor dialog = new BidiTextEditor(this, true);
+        String text = dialog.showDialog();
+        System.out.println(text);
     }//GEN-LAST:event_command1ActionPerformed
 
     private void projectTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectTableMouseClicked
@@ -266,17 +277,19 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void editProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProjectMenuItemActionPerformed
         int selection = projectTable.convertRowIndexToModel(projectTable.getSelectedRow());
-        Project project = (Project) projectTable.getModel().getValueAt(selection, 0);
-        EditProjectDialog dialog = new EditProjectDialog(this, true);
-        dialog.setProject(project);
-        dialog.setMainFrame(this);
-        try {
-            dialog.setup();
-            dialog.setVisible(true);
-        } catch (IOException | ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        //Project project = (Project) projectTable.getModel().getValueAt(selection, 0);
+        String title = projectTable.getModel().getValueAt(selection, 1).toString();
+        BidiTextEditor dialog = new BidiTextEditor(this, true);
+        dialog.setInitialText(title);
+        String input = dialog.showDialog();
+        if (input != null) {
+            projectTable.getModel().setValueAt(input, selection, 1);
         }
     }//GEN-LAST:event_editProjectMenuItemActionPerformed
+
+    private void saveProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectMenuItemActionPerformed
+        saveProject();
+    }//GEN-LAST:event_saveProjectMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -345,6 +358,13 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void setup() throws IOException, ClassNotFoundException, SQLException {
         try (JdbcController controller = new JdbcController();) {
+            // category column
+            Category[] categories = controller.findAllCategories().toArray(new Category[0]);
+            projectTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JComboBox(new DefaultComboBoxModel(categories))));
+            // priority column
+            Integer[] priorities = new Integer[]{0, 1, 2, 3};
+            projectTable.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(new JComboBox(new DefaultComboBoxModel(priorities))));
+            // data
             fillProjectTable(controller);
             projectTable.setRowSelectionInterval(0, 0);
             showProjectDetails(controller);
@@ -362,20 +382,11 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    public void updateSelectedProjectRow(Project project) {
-        int selection = projectTable.getSelectedRow();
-        int index = selection < 0 ? selection : projectTable.convertRowIndexToModel(selection);
-        Object[] row = project.toTableRow();
-        for (int i = 0; i < projectTable.getColumnCount(); i++) {
-            projectTable.setValueAt(row[i], index, i);
-        }
-    }
-
     private void showProjectDetails(JdbcController controller) throws IOException, ClassNotFoundException, SQLException {
         // get selected row
         int selection = projectTable.getSelectedRow();
         int index = projectTable.convertRowIndexToModel(selection);
-        // extract project stored in the title column
+        // extract project stored in the id column
         Project project = (Project) projectTable.getModel().getValueAt(index, 0);
         // fill lists
         fillNoteList(project);
@@ -442,6 +453,29 @@ public class MainFrame extends javax.swing.JFrame {
         for (int i = 0; i < model.getColumnCount(); i++) {
             int width = model.getColumn(i).getPreferredWidth();
             preferences.putInt("TaskTable.column." + i, width);
+        }
+    }
+
+    private void saveProject() {
+        // get selected row
+        int selection = projectTable.getSelectedRow();
+        int index = projectTable.convertRowIndexToModel(selection);
+        // extract project stored in the id column
+        Project project = (Project) projectTable.getModel().getValueAt(index, 0);
+        // update project data
+        try (JdbcController controller = new JdbcController();) {
+            project.setTitle(projectTable.getValueAt(index, 1).toString());
+            project.setStartDate(dateFormat.parse(projectTable.getValueAt(index, 2).toString()));
+            Object endDate = projectTable.getValueAt(index, 3);
+            project.setEndDate(endDate == null ? null : dateFormat.parse(endDate.toString()));
+            project.setCategory((Category) projectTable.getValueAt(index, 4));
+            project.setPriority(Integer.parseInt(projectTable.getValueAt(index, 5).toString()));
+            project.setActive(Boolean.parseBoolean(projectTable.getValueAt(index, 6).toString()));
+            project.setOnDesktop(Boolean.parseBoolean(projectTable.getValueAt(index, 7).toString()));
+            // update database record
+            controller.updateProject(project);
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
         }
     }
 }
