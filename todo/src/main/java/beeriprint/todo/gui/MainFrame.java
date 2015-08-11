@@ -23,6 +23,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -42,6 +43,11 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         projectTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        projectTable.getColumnModel().getColumn(1).setCellRenderer(renderer);
+        projectTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
+        projectTable.getColumnModel().getColumn(3).setCellRenderer(renderer);
         taskTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         descriptionTextPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         //menuBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -409,9 +415,11 @@ public class MainFrame extends javax.swing.JFrame {
         try (JdbcController controller = new JdbcController();) {
             // category column
             Category[] categories = controller.findAllCategories().toArray(new Category[0]);
-            projectTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JComboBox(new DefaultComboBoxModel(categories))));
+            JComboBox categoryCombo = new JComboBox(new DefaultComboBoxModel(categories));
+            categoryCombo.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            projectTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(categoryCombo));
             // priority column
-            Integer[] priorities = new Integer[]{0, 1, 2, 3};
+            Integer[] priorities = new Integer[]{1, 2, 3};
             projectTable.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(new JComboBox(new DefaultComboBoxModel(priorities))));
             // status column
             Status[] statuses = controller.findAllStatuses().toArray(new Status[0]);
