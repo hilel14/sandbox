@@ -31,7 +31,7 @@ public class JdbcControllerTest {
                 for (Task task : project.getTasks()) {
                     System.out.print(task.getDescription());
                     System.out.print(": ");
-                    System.out.println(task.getStatus().getDescription());
+                    System.out.println(task.isCompleted());
                 }
             }
         }

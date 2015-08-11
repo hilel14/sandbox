@@ -35,6 +35,7 @@ public class JdbcController implements AutoCloseable {
     PreparedStatement findStatusById;
     PreparedStatement findTasksByProjectId;
     PreparedStatement updateProject;
+    PreparedStatement updateTask;
 
     public JdbcController() throws IOException, ClassNotFoundException, SQLException {
         initConnection();
@@ -56,12 +57,14 @@ public class JdbcController implements AutoCloseable {
     private void preparedStatements() throws SQLException {
         findAllProjects = connection.prepareStatement("SELECT * FROM project ORDER BY id;");
         findAllCategories = connection.prepareStatement("SELECT * FROM category ORDER BY id;");
+        findAllStatuses = connection.prepareStatement("SELECT * FROM status ORDER BY id;");
         findCategoryById = connection.prepareStatement("SELECT * FROM category WHERE id = ?;");
         findStatusById = connection.prepareStatement("SELECT * FROM status WHERE id = ?;");
         findTasksByProjectId = connection.prepareStatement("SELECT * FROM task WHERE project_id = ?;");
         updateProject = connection.prepareStatement("UPDATE project SET "
-                + "title = ?, description = ?, start_date = ?, end_date = ?, category =  ?, priority = ?, on_desktop = ?, active = ? "
+                + "title = ?, description = ?, start_date = ?, end_date = ?, category =  ?, priority = ?, status = ? "
                 + "WHERE id = ?;");
+        updateTask = connection.prepareStatement("UPDATE task SET description = ?, completed = ? WHERE id = ?");
     }
 
     public List<Project> findAllProjects() throws SQLException {
@@ -75,8 +78,7 @@ public class JdbcController implements AutoCloseable {
             project.setStartDate(resultSet.getDate("start_date"));
             project.setEndDate(resultSet.getDate("end_date"));
             project.setPriority(resultSet.getInt("priority"));
-            project.setActive(resultSet.getBoolean("active"));
-            project.setOnDesktop(resultSet.getBoolean("on_desktop"));
+            project.setStatus(findStatusById(resultSet.getInt("status")));
             project.setCategory(findCategoryById(resultSet.getInt("category")));
             project.setTasks(findTasksByProjectId(project.getId()));
             projects.add(project);
@@ -94,6 +96,18 @@ public class JdbcController implements AutoCloseable {
             categories.add(category);
         }
         return categories;
+    }
+
+    public List<Status> findAllStatuses() throws SQLException {
+        List<Status> statuses = new ArrayList<>();
+        ResultSet resultSet = findAllStatuses.executeQuery();
+        while (resultSet.next()) {
+            Status status = new Status();
+            status.setId(resultSet.getInt("id"));
+            status.setDescription(resultSet.getString("description"));
+            statuses.add(status);
+        }
+        return statuses;
     }
 
     public Category findCategoryById(int id) throws SQLException {
@@ -115,7 +129,7 @@ public class JdbcController implements AutoCloseable {
             Task task = new Task();
             task.setId(resultSet.getInt("id"));
             task.setDescription(resultSet.getString("description"));
-            task.setStatus(findStatusById(resultSet.getInt("status")));
+            task.setCompleted(resultSet.getBoolean("completed"));
             tasks.add(task);
         }
         return tasks;
@@ -141,10 +155,16 @@ public class JdbcController implements AutoCloseable {
         updateProject.setDate(4, endDate);
         updateProject.setInt(5, project.getCategory().getId());
         updateProject.setInt(6, project.getPriority());
-        updateProject.setBoolean(7, project.isOnDesktop());
-        updateProject.setBoolean(8, project.isActive());
-        updateProject.setInt(9, project.getId());
+        updateProject.setInt(7, project.getStatus().getId());
+        updateProject.setInt(8, project.getId());
         updateProject.execute();
+    }
+
+    public void updateTask(Task task) throws SQLException {
+        updateTask.setString(1, task.getDescription());
+        updateTask.setBoolean(2, task.isCompleted());
+        updateTask.setInt(3, task.getId());
+        updateTask.execute();
     }
 
     @Override

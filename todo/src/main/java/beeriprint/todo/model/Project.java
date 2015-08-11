@@ -23,8 +23,7 @@ public class Project {
     private Date endDate;
     private Category category;
     private int priority;
-    private boolean active;
-    private boolean onDesktop;
+    private Status status;
     private List<Task> tasks;
 
     @Override
@@ -40,8 +39,7 @@ public class Project {
         row[3] = endDate == null ? null : dateFormat.format(endDate);
         row[4] = category;
         row[5] = priority;
-        row[6] = active;
-        row[7] = onDesktop;
+        row[6] = status;
         return row;
     }
 
@@ -130,20 +128,6 @@ public class Project {
     }
 
     /**
-     * @return the on_desktop
-     */
-    public boolean isOnDesktop() {
-        return onDesktop;
-    }
-
-    /**
-     * @param on_desktop the on_desktop to set
-     */
-    public void setOnDesktop(boolean on_desktop) {
-        this.onDesktop = on_desktop;
-    }
-
-    /**
      * @return the category
      */
     public Category getCategory() {
@@ -158,20 +142,6 @@ public class Project {
     }
 
     /**
-     * @return the active
-     */
-    public boolean isActive() {
-        return active;
-    }
-
-    /**
-     * @param active the active to set
-     */
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    /**
      * @return the tasks
      */
     public List<Task> getTasks() {
@@ -183,6 +153,20 @@ public class Project {
      */
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    /**
+     * @return the status
+     */
+    public Status getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
 }

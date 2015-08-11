@@ -11,17 +11,17 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="desktopTasksMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Desktop"/>
+                <Property name="text" type="java.lang.String" value="Active projects"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="activeTasksMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Active"/>
+                <Property name="text" type="java.lang.String" value="Open projects"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="allTasksMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="All"/>
+                <Property name="text" type="java.lang.String" value="All projects"/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -54,7 +54,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="deleteProjectMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Delete"/>
+                <Property name="text" type="java.lang.String" value="Delete..."/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -69,14 +69,22 @@
                 <Property name="text" type="java.lang.String" value="New"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="editTaskMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Edit..."/>
+              </Properties>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="saveTaskMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Save"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveTaskMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="deleteTaskMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Delete"/>
+                <Property name="text" type="java.lang.String" value="Delete..."/>
               </Properties>
             </MenuItem>
           </SubComponents>
@@ -158,15 +166,14 @@
               <Properties>
                 <Property name="autoCreateRowSorter" type="boolean" value="true"/>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="8" rowCount="0">
+                  <Table columnCount="7" rowCount="0">
                     <Column editable="false" title="#" type="java.lang.Long"/>
                     <Column editable="true" title="&#x5e0;&#x5d5;&#x5e9;&#x5d0;" type="java.lang.String"/>
                     <Column editable="true" title="&#x5d4;&#x5ea;&#x5d7;&#x5dc;&#x5d4;" type="java.lang.Object"/>
                     <Column editable="true" title="&#x5e1;&#x5d9;&#x5d5;&#x5dd;" type="java.lang.Object"/>
                     <Column editable="true" title="&#x5e7;&#x5d8;&#x5d2;&#x5d5;&#x5e8;&#x5d9;&#x5d4;" type="java.lang.Object"/>
                     <Column editable="true" title="&#x5d7;&#x5e9;&#x5d9;&#x5d1;&#x5d5;&#x5ea;" type="java.lang.Object"/>
-                    <Column editable="true" title="Active" type="java.lang.Boolean"/>
-                    <Column editable="true" title="Desktop" type="java.lang.Boolean"/>
+                    <Column editable="true" title="&#x5e1;&#x5d8;&#x5d8;&#x5d5;&#x5e1;" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -276,7 +283,7 @@
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="3" rowCount="4">
                     <Column editable="true" title="#" type="java.lang.Integer"/>
-                    <Column editable="true" title="&#x5e1;&#x5d8;&#x5d8;&#x5d5;&#x5e1;" type="java.lang.String"/>
+                    <Column editable="true" title="&#x5d1;&#x5d5;&#x5e6;&#x5e2;" type="java.lang.Boolean"/>
                     <Column editable="true" title="&#x5ea;&#x5d9;&#x5d0;&#x5d5;&#x5e8;" type="java.lang.String"/>
                   </Table>
                 </Property>

@@ -13,12 +13,12 @@ public class Task {
 
     private int id;
     private String description;
-    private Status status;
+    private boolean completed;
 
     public Object[] toTableRow() {
         Object[] row = new Object[3];
         row[0] = this;
-        row[1] = status;
+        row[1] = isCompleted();
         row[2] = description;
         return row;
     }
@@ -57,16 +57,17 @@ public class Task {
     }
 
     /**
-     * @return the status
+     * @return the completed
      */
-    public Status getStatus() {
-        return status;
+    public boolean isCompleted() {
+        return completed;
     }
 
     /**
-     * @param status the status to set
+     * @param completed the completed to set
      */
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
+
 }

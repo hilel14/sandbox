@@ -8,6 +8,7 @@ package beeriprint.todo.gui;
 import beeriprint.todo.controller.JdbcController;
 import beeriprint.todo.model.Category;
 import beeriprint.todo.model.Project;
+import beeriprint.todo.model.Status;
 import beeriprint.todo.model.Task;
 import java.awt.ComponentOrientation;
 import java.io.IOException;
@@ -41,10 +42,10 @@ public class MainFrame extends javax.swing.JFrame {
         projectTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         taskTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         descriptionTextPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        menuBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        //menuBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         loadPreferences();
         try {
-            setup();            
+            setup();
         } catch (IOException | ClassNotFoundException | SQLException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
@@ -84,6 +85,7 @@ public class MainFrame extends javax.swing.JFrame {
         deleteProjectMenuItem = new javax.swing.JMenuItem();
         taskMenu = new javax.swing.JMenu();
         newTaskMenuItem = new javax.swing.JMenuItem();
+        editTaskMenuItem = new javax.swing.JMenuItem();
         saveTaskMenuItem = new javax.swing.JMenuItem();
         deleteTaskMenuItem = new javax.swing.JMenuItem();
 
@@ -113,14 +115,14 @@ public class MainFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "#", "נושא", "התחלה", "סיום", "קטגוריה", "חשיבות", "Active", "Desktop"
+                "#", "נושא", "התחלה", "סיום", "קטגוריה", "חשיבות", "סטטוס"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.Long.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, true, true, true, true
+                false, true, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -177,11 +179,11 @@ public class MainFrame extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "#", "סטטוס", "תיאור"
+                "#", "בוצע", "תיאור"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.Boolean.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -205,13 +207,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         viewMenu.setText("View");
 
-        desktopTasksMenuItem.setText("Desktop");
+        desktopTasksMenuItem.setText("Active projects");
         viewMenu.add(desktopTasksMenuItem);
 
-        activeTasksMenuItem.setText("Active");
+        activeTasksMenuItem.setText("Open projects");
         viewMenu.add(activeTasksMenuItem);
 
-        allTasksMenuItem.setText("All");
+        allTasksMenuItem.setText("All projects");
         viewMenu.add(allTasksMenuItem);
 
         menuBar.add(viewMenu);
@@ -237,7 +239,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         projectMenu.add(saveProjectMenuItem);
 
-        deleteProjectMenuItem.setText("Delete");
+        deleteProjectMenuItem.setText("Delete...");
         projectMenu.add(deleteProjectMenuItem);
 
         menuBar.add(projectMenu);
@@ -247,10 +249,18 @@ public class MainFrame extends javax.swing.JFrame {
         newTaskMenuItem.setText("New");
         taskMenu.add(newTaskMenuItem);
 
+        editTaskMenuItem.setText("Edit...");
+        taskMenu.add(editTaskMenuItem);
+
         saveTaskMenuItem.setText("Save");
+        saveTaskMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveTaskMenuItemActionPerformed(evt);
+            }
+        });
         taskMenu.add(saveTaskMenuItem);
 
-        deleteTaskMenuItem.setText("Delete");
+        deleteTaskMenuItem.setText("Delete...");
         taskMenu.add(deleteTaskMenuItem);
 
         menuBar.add(taskMenu);
@@ -267,7 +277,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_command1ActionPerformed
 
     private void projectTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectTableMouseClicked
-
+        showProjectDetails();
     }//GEN-LAST:event_projectTableMouseClicked
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -289,6 +299,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void saveProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveProjectMenuItemActionPerformed
         saveProject();
     }//GEN-LAST:event_saveProjectMenuItemActionPerformed
+
+    private void saveTaskMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveTaskMenuItemActionPerformed
+        saveTask();
+    }//GEN-LAST:event_saveTaskMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -338,6 +352,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextPane descriptionTextPane;
     private javax.swing.JMenuItem desktopTasksMenuItem;
     private javax.swing.JMenuItem editProjectMenuItem;
+    private javax.swing.JMenuItem editTaskMenuItem;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newProjectMenuItem;
@@ -363,10 +378,13 @@ public class MainFrame extends javax.swing.JFrame {
             // priority column
             Integer[] priorities = new Integer[]{0, 1, 2, 3};
             projectTable.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(new JComboBox(new DefaultComboBoxModel(priorities))));
+            // status column
+            Status[] statuses = controller.findAllStatuses().toArray(new Status[0]);
+            projectTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(new JComboBox(new DefaultComboBoxModel(statuses))));
             // data
             fillProjectTable(controller);
             projectTable.setRowSelectionInterval(0, 0);
-            showProjectDetails(controller);
+            showProjectDetails();
         }
     }
 
@@ -381,7 +399,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void showProjectDetails(JdbcController controller) throws IOException, ClassNotFoundException, SQLException {
+    private void showProjectDetails() {
         // get selected row
         int selection = projectTable.getSelectedRow();
         int index = projectTable.convertRowIndexToModel(selection);
@@ -455,18 +473,34 @@ public class MainFrame extends javax.swing.JFrame {
         Project project = (Project) projectTable.getModel().getValueAt(index, 0);
         // update project data
         try (JdbcController controller = new JdbcController();) {
-            project.setTitle(projectTable.getValueAt(index, 1).toString());            
+            project.setTitle(projectTable.getValueAt(index, 1).toString());
             project.setStartDate(dateFormat.parse(projectTable.getValueAt(index, 2).toString()));
             Object endDate = projectTable.getValueAt(index, 3);
             project.setEndDate(endDate == null ? null : dateFormat.parse(endDate.toString()));
             project.setCategory((Category) projectTable.getValueAt(index, 4));
             project.setPriority(Integer.parseInt(projectTable.getValueAt(index, 5).toString()));
-            project.setActive(Boolean.parseBoolean(projectTable.getValueAt(index, 6).toString()));
-            project.setOnDesktop(Boolean.parseBoolean(projectTable.getValueAt(index, 7).toString()));
+            project.setStatus((Status) projectTable.getValueAt(index, 6));
             // description
             project.setDescription(descriptionTextPane.getText());
             // update database record
             controller.updateProject(project);
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void saveTask() {
+        // get selected row
+        int selection = taskTable.getSelectedRow();
+        int index = taskTable.convertRowIndexToModel(selection);
+        // extract task stored in the id column
+        Task task = (Task) taskTable.getModel().getValueAt(index, 0);
+        // update task data
+        try (JdbcController controller = new JdbcController();) {
+            task.setCompleted(Boolean.parseBoolean(taskTable.getValueAt(index, 1).toString()));
+            task.setDescription(taskTable.getValueAt(index, 2).toString());
+            // update database record
+            controller.updateTask(task);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }
