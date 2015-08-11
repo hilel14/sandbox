@@ -19,10 +19,10 @@ public class Project {
     private int id;
     private String title;
     private String description;
-    private Date startDate;
+    private Date startDate = new Date();
     private Date endDate;
     private Category category;
-    private int priority;
+    private int priority = 1;
     private Status status;
     private List<Task> tasks;
 

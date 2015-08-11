@@ -31,11 +31,17 @@ public class JdbcController implements AutoCloseable {
     PreparedStatement findAllProjects;
     PreparedStatement findAllCategories;
     PreparedStatement findAllStatuses;
+    PreparedStatement findProjectById;
+    PreparedStatement findTaskById;
     PreparedStatement findCategoryById;
     PreparedStatement findStatusById;
     PreparedStatement findTasksByProjectId;
     PreparedStatement updateProject;
     PreparedStatement updateTask;
+    PreparedStatement insertProject;
+    PreparedStatement insertTask;
+    PreparedStatement deleteProject;
+    PreparedStatement deleteTask;
 
     public JdbcController() throws IOException, ClassNotFoundException, SQLException {
         initConnection();
@@ -58,29 +64,28 @@ public class JdbcController implements AutoCloseable {
         findAllProjects = connection.prepareStatement("SELECT * FROM project ORDER BY id;");
         findAllCategories = connection.prepareStatement("SELECT * FROM category ORDER BY id;");
         findAllStatuses = connection.prepareStatement("SELECT * FROM status ORDER BY id;");
+
+        findProjectById = connection.prepareStatement("SELECT * FROM project WHERE id = ?;");
+        findTaskById = connection.prepareStatement("SELECT * FROM task WHERE id = ?;");
         findCategoryById = connection.prepareStatement("SELECT * FROM category WHERE id = ?;");
         findStatusById = connection.prepareStatement("SELECT * FROM status WHERE id = ?;");
         findTasksByProjectId = connection.prepareStatement("SELECT * FROM task WHERE project_id = ?;");
+
         updateProject = connection.prepareStatement("UPDATE project SET "
                 + "title = ?, description = ?, start_date = ?, end_date = ?, category =  ?, priority = ?, status = ? "
                 + "WHERE id = ?;");
         updateTask = connection.prepareStatement("UPDATE task SET description = ?, completed = ? WHERE id = ?");
+        insertProject = connection.prepareStatement("INSERT INTO project (title) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        insertTask = connection.prepareStatement("INSERT INTO task (project_id, description) VALUES (?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        deleteProject = connection.prepareStatement("DELETE FROM project WHERE id = ?");
+        deleteTask = connection.prepareStatement("DELETE FROM task WHERE id = ?");
     }
 
     public List<Project> findAllProjects() throws SQLException {
         List<Project> projects = new ArrayList<>();
         ResultSet resultSet = findAllProjects.executeQuery();
         while (resultSet.next()) {
-            Project project = new Project();
-            project.setId(resultSet.getInt("id"));
-            project.setTitle(resultSet.getString("title"));
-            project.setDescription(resultSet.getString("description"));
-            project.setStartDate(resultSet.getDate("start_date"));
-            project.setEndDate(resultSet.getDate("end_date"));
-            project.setPriority(resultSet.getInt("priority"));
-            project.setStatus(findStatusById(resultSet.getInt("status")));
-            project.setCategory(findCategoryById(resultSet.getInt("category")));
-            project.setTasks(findTasksByProjectId(project.getId()));
+            Project project = recordToProject(resultSet);
             projects.add(project);
         }
         return projects;
@@ -108,6 +113,39 @@ public class JdbcController implements AutoCloseable {
             statuses.add(status);
         }
         return statuses;
+    }
+
+    public Project findProjectById(int id) throws SQLException {
+        findProjectById.setInt(1, id);
+        ResultSet resultSet = findProjectById.executeQuery();
+        return resultSet.next() ? recordToProject(resultSet) : null;
+    }
+
+    public Task findTaskById(int id) throws SQLException {
+        findTaskById.setInt(1, id);
+        ResultSet resultSet = findTaskById.executeQuery();
+        Task task = null;
+        if (resultSet.next()) {
+            task = new Task();
+            task.setId(resultSet.getInt("id"));
+            task.setDescription(resultSet.getString("description"));
+            task.setCompleted(resultSet.getBoolean("completed"));
+        }
+        return task;
+    }
+
+    private Project recordToProject(ResultSet resultSet) throws SQLException {
+        Project project = new Project();
+        project.setId(resultSet.getInt("id"));
+        project.setTitle(resultSet.getString("title"));
+        project.setDescription(resultSet.getString("description"));
+        project.setStartDate(resultSet.getDate("start_date"));
+        project.setEndDate(resultSet.getDate("end_date"));
+        project.setPriority(resultSet.getInt("priority"));
+        project.setStatus(findStatusById(resultSet.getInt("status")));
+        project.setCategory(findCategoryById(resultSet.getInt("category")));
+        project.setTasks(findTasksByProjectId(project.getId()));
+        return project;
     }
 
     public Category findCategoryById(int id) throws SQLException {
@@ -165,6 +203,31 @@ public class JdbcController implements AutoCloseable {
         updateTask.setBoolean(2, task.isCompleted());
         updateTask.setInt(3, task.getId());
         updateTask.execute();
+    }
+
+    public int insertProject(String title) throws SQLException {
+        insertProject.setString(1, title);
+        insertProject.executeUpdate();
+        ResultSet rs = insertProject.getGeneratedKeys();
+        return rs.next() ? rs.getInt(1) : null;
+    }
+
+    public int insertTask(int projectId, String description) throws SQLException {
+        insertTask.setInt(1, projectId);
+        insertTask.setString(2, description);
+        insertTask.executeUpdate();
+        ResultSet rs = insertTask.getGeneratedKeys();
+        return rs.next() ? rs.getInt(1) : null;
+    }
+
+    public void deleteProject(int id) throws SQLException {
+        deleteProject.setInt(1, id);
+        deleteProject.executeUpdate();
+    }
+
+    public void deleteTask(int id) throws SQLException {
+        deleteTask.setInt(1, id);
+        deleteTask.executeUpdate();
     }
 
     @Override

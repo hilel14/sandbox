@@ -14,6 +14,7 @@ import java.awt.ComponentOrientation;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ import java.util.prefs.Preferences;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -48,6 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
             setup();
         } catch (IOException | ClassNotFoundException | SQLException ex) {
             logger.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -83,6 +86,8 @@ public class MainFrame extends javax.swing.JFrame {
         editProjectMenuItem = new javax.swing.JMenuItem();
         saveProjectMenuItem = new javax.swing.JMenuItem();
         deleteProjectMenuItem = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        saveAllMenuItem = new javax.swing.JMenuItem();
         taskMenu = new javax.swing.JMenu();
         newTaskMenuItem = new javax.swing.JMenuItem();
         editTaskMenuItem = new javax.swing.JMenuItem();
@@ -221,6 +226,11 @@ public class MainFrame extends javax.swing.JFrame {
         projectMenu.setText("Project");
 
         newProjectMenuItem.setText("New");
+        newProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newProjectMenuItemActionPerformed(evt);
+            }
+        });
         projectMenu.add(newProjectMenuItem);
 
         editProjectMenuItem.setText("Edit...");
@@ -240,13 +250,27 @@ public class MainFrame extends javax.swing.JFrame {
         projectMenu.add(saveProjectMenuItem);
 
         deleteProjectMenuItem.setText("Delete...");
+        deleteProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteProjectMenuItemActionPerformed(evt);
+            }
+        });
         projectMenu.add(deleteProjectMenuItem);
+        projectMenu.add(jSeparator1);
+
+        saveAllMenuItem.setText("Save all");
+        projectMenu.add(saveAllMenuItem);
 
         menuBar.add(projectMenu);
 
         taskMenu.setText("Task");
 
         newTaskMenuItem.setText("New");
+        newTaskMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newTaskMenuItemActionPerformed(evt);
+            }
+        });
         taskMenu.add(newTaskMenuItem);
 
         editTaskMenuItem.setText("Edit...");
@@ -304,6 +328,18 @@ public class MainFrame extends javax.swing.JFrame {
         saveTask();
     }//GEN-LAST:event_saveTaskMenuItemActionPerformed
 
+    private void newProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectMenuItemActionPerformed
+        addProject();
+    }//GEN-LAST:event_newProjectMenuItemActionPerformed
+
+    private void deleteProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProjectMenuItemActionPerformed
+        deleteProject();
+    }//GEN-LAST:event_deleteProjectMenuItemActionPerformed
+
+    private void newTaskMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newTaskMenuItemActionPerformed
+        addTask();
+    }//GEN-LAST:event_newTaskMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -320,15 +356,12 @@ public class MainFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the form */
@@ -353,6 +386,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem desktopTasksMenuItem;
     private javax.swing.JMenuItem editProjectMenuItem;
     private javax.swing.JMenuItem editTaskMenuItem;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newProjectMenuItem;
@@ -360,6 +394,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu projectMenu;
     private javax.swing.JTable projectTable;
     private javax.swing.JScrollPane projectTableScroll;
+    private javax.swing.JMenuItem saveAllMenuItem;
     private javax.swing.JMenuItem saveProjectMenuItem;
     private javax.swing.JMenuItem saveTaskMenuItem;
     private javax.swing.JLabel statusLabel;
@@ -486,6 +521,7 @@ public class MainFrame extends javax.swing.JFrame {
             controller.updateProject(project);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -503,6 +539,59 @@ public class MainFrame extends javax.swing.JFrame {
             controller.updateTask(task);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void addProject() {
+        try (JdbcController controller = new JdbcController();) {
+            int id = controller.insertProject("New project " + new Date().toString());
+            Project project = controller.findProjectById(id);
+            DefaultTableModel model = (DefaultTableModel) projectTable.getModel();
+            model.addRow(project.toTableRow());
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void deleteProject() {
+        int selection = projectTable.convertRowIndexToModel(projectTable.getSelectedRow());
+        Project project = (Project) projectTable.getModel().getValueAt(selection, 0);
+        String msg = "Delete project #" + project.getId() + " and all related taks?";
+        int retVal = JOptionPane.showConfirmDialog(null, msg, "Confirmation", JOptionPane.YES_NO_OPTION);
+        if (retVal == JOptionPane.YES_OPTION) {
+            try (JdbcController controller = new JdbcController();) {
+                for (Task task : project.getTasks()) {
+                    controller.deleteTask(task.getId());
+                }
+                controller.deleteProject(project.getId());
+                DefaultTableModel model = (DefaultTableModel) projectTable.getModel();
+                model.removeRow(selection);
+                projectTable.setRowSelectionInterval(0, 0);
+                showProjectDetails();
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void addTask() {
+        // get selected row
+        int selection = projectTable.getSelectedRow();
+        int index = projectTable.convertRowIndexToModel(selection);
+        // extract project stored in the id column
+        Project project = (Project) projectTable.getModel().getValueAt(index, 0);
+        // update project data
+        try (JdbcController controller = new JdbcController();) {
+            int id = controller.insertTask(project.getId(), "New task " + new Date().toString());
+            Task task = controller.findTaskById(id);
+            project.getTasks().add(task);
+            fillTaskTable(project);
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
