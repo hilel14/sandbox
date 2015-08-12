@@ -42,16 +42,9 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        projectTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        projectTable.getColumnModel().getColumn(1).setCellRenderer(renderer);
-        projectTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
-        projectTable.getColumnModel().getColumn(3).setCellRenderer(renderer);
-        taskTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        descriptionTextPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        //menuBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         loadPreferences();
+        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        fixComponentsOrientation();
         try {
             setup();
         } catch (IOException | ClassNotFoundException | SQLException ex) {
@@ -291,6 +284,11 @@ public class MainFrame extends javax.swing.JFrame {
         taskMenu.add(saveTaskMenuItem);
 
         deleteTaskMenuItem.setText("Delete...");
+        deleteTaskMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteTaskMenuItemActionPerformed(evt);
+            }
+        });
         taskMenu.add(deleteTaskMenuItem);
 
         menuBar.add(taskMenu);
@@ -345,6 +343,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void newTaskMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newTaskMenuItemActionPerformed
         addTask();
     }//GEN-LAST:event_newTaskMenuItemActionPerformed
+
+    private void deleteTaskMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTaskMenuItemActionPerformed
+        deleteTask();
+    }//GEN-LAST:event_deleteTaskMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -600,6 +602,37 @@ public class MainFrame extends javax.swing.JFrame {
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void fixComponentsOrientation() {
+        ComponentOrientation orientation = getComponentOrientation();
+        //menuBar.setComponentOrientation(orientation);
+        projectTable.setComponentOrientation(orientation);
+        descriptionTextPane.setComponentOrientation(orientation);
+        taskTable.setComponentOrientation(orientation);
+        // fix project table title and task table description
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setComponentOrientation(orientation);
+        projectTable.getColumnModel().getColumn(1).setCellRenderer(renderer);
+        taskTable.getColumnModel().getColumn(2).setCellRenderer(renderer);
+    }
+
+    private void deleteTask() {
+        int selection = taskTable.convertRowIndexToModel(taskTable.getSelectedRow());
+        Task task = (Task) taskTable.getModel().getValueAt(selection, 0);
+        String msg = "Delete task #" + task.getId() + "?";
+        int retVal = JOptionPane.showConfirmDialog(null, msg, "Confirmation", JOptionPane.YES_NO_OPTION);
+        if (retVal == JOptionPane.YES_OPTION) {
+            try (JdbcController controller = new JdbcController();) {
+                controller.deleteTask(task.getId());
+                DefaultTableModel model = (DefaultTableModel) taskTable.getModel();
+                model.removeRow(selection);
+                taskTable.setRowSelectionInterval(0, 0);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }
