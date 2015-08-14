@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package beeriprint.todo.gui2;
+package beeriprint.todo.gui;
 
 import java.awt.ComponentOrientation;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,6 +24,26 @@ public class TaskTable extends javax.swing.JTable {
         setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         setAutoCreateRowSorter(true);
         setModel(new TaskTableModel(columnNames, 0));
+        setCellRenderers();
+        setCellEditors();
+    }
+
+    private void setCellRenderers() {
+        // description
+        DefaultTableCellRenderer titleRenderer = new DefaultTableCellRenderer();
+        titleRenderer.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        getColumnModel().getColumn(2).setCellRenderer(titleRenderer);
+    }
+
+    private void setCellEditors() {
+        // description
+        JTextField text = new JTextField();
+        text.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(text));
+    }
+
+    public int getSelectedRowConverted() {
+        return convertRowIndexToModel(getSelectedRow());
     }
 
     class TaskTableModel extends DefaultTableModel {

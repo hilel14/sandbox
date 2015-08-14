@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package beeriprint.todo.gui2;
+package beeriprint.todo.gui;
 
 import java.awt.ComponentOrientation;
 import javax.swing.DefaultCellEditor;
@@ -43,7 +43,7 @@ public class ProjectTable extends javax.swing.JTable {
         DefaultTableCellRenderer categoryRenderer = new DefaultTableCellRenderer();
         categoryRenderer.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         getColumnModel().getColumn(4).setCellRenderer(categoryRenderer);
-        
+
         // priority
         DefaultTableCellRenderer priorityRenderer = new DefaultTableCellRenderer();
         priorityRenderer.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -80,22 +80,7 @@ public class ProjectTable extends javax.swing.JTable {
         return (DefaultComboBoxModel) component.getModel();
     }
 
-
-    /*
-     private void setCellEditors2() throws IOException, ClassNotFoundException, SQLException {
-     try (JdbcController controller = new JdbcController();) {
-     // category column
-     categoryList = controller.findAllCategories().toArray(new Category[0]);
-     JComboBox categoryCombo = new JComboBox(new DefaultComboBoxModel(categoryList));
-     categoryCombo.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-     getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(categoryCombo));
-     // priority column
-     priorityList = new Integer[]{1, 2, 3};
-     getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(new JComboBox(new DefaultComboBoxModel(priorityList))));
-     // status column
-     statusList = controller.findAllStatuses().toArray(new Status[0]);
-     getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(new JComboBox(new DefaultComboBoxModel(statusList))));
-     }
-     }
-     */
+    public int getSelectedRowConverted() {
+        return convertRowIndexToModel(getSelectedRow());
+    }
 }
