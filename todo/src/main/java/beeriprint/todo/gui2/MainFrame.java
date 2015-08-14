@@ -7,23 +7,25 @@ package beeriprint.todo.gui2;
 
 import beeriprint.todo.controller.JdbcController;
 import beeriprint.todo.model.Category;
+import beeriprint.todo.model.Project;
 import beeriprint.todo.model.Status;
+import beeriprint.todo.model.Task;
 import java.awt.ComponentOrientation;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -37,22 +39,20 @@ public class MainFrame extends JFrame {
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
     // project table
     JLabel projectTableLabel;
-    ProjectTableModel projectTableModel;
     ProjectTable projectTable;
     JScrollPane projectTableScroll;
-    // project description
-    JLabel projectDescriptionLabel;
-    JTextArea projectDescriptionText;
+    // project remarks
+    JLabel projectRemarksLabel;
+    JTextArea projectRemarksText;
     // task table
     JLabel taskTableLabel;
-    TaskTableModel taskTableModel;
     TaskTable taskTable;
     JScrollPane taskTableScroll;
 
     public MainFrame() {
+        initComponents();
+        loadPreferences();
         try {
-            initComponents();
-            loadPreferences();
             setup();
         } catch (IOException | ClassNotFoundException | SQLException ex) {
             logger.log(Level.SEVERE, null, ex);
@@ -70,7 +70,7 @@ public class MainFrame extends JFrame {
         });
     }
 
-    private void initComponents() throws IOException, ClassNotFoundException, SQLException {
+    private void initComponents() {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         setLayout(new java.awt.GridBagLayout());
@@ -79,12 +79,12 @@ public class MainFrame extends JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = GridBagConstraints.RELATIVE;
         addProjectTable();
-        addProjectDescriptionText();
+        addProjectRemarks();
         addTaskTable();
         addListeners();
     }
 
-    private void addProjectTable() throws IOException, ClassNotFoundException, SQLException {
+    private void addProjectTable() {
         // label
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.1;
@@ -96,30 +96,26 @@ public class MainFrame extends JFrame {
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
-        ProjectTableModel model = new ProjectTableModel();
         projectTable = new ProjectTable();
-        projectTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         projectTableScroll = new JScrollPane(projectTable);
         add(projectTableScroll, gridBagConstraints);
     }
 
-    private void addProjectDescriptionText() {
+    private void addProjectRemarks() {
         // label
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.0;
-        projectDescriptionLabel = new JLabel("תיאור");
-        projectDescriptionLabel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        add(projectDescriptionLabel, gridBagConstraints);
+        projectRemarksLabel = new JLabel("הערות");
+        projectRemarksLabel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        add(projectRemarksLabel, gridBagConstraints);
         // text-area
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
-        // create ojects
-        projectDescriptionText = new JTextArea();
-        projectDescriptionText.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        // add to frame
-        add(projectDescriptionText, gridBagConstraints);
+        projectRemarksText = new JTextArea();
+        projectRemarksText.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        add(projectRemarksText, gridBagConstraints);
     }
 
     private void addTaskTable() {
@@ -134,15 +130,20 @@ public class MainFrame extends JFrame {
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
-        TaskTableModel model = new TaskTableModel();
-        taskTable = new TaskTable(model);
-        taskTable.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        taskTable = new TaskTable();
         taskTableScroll = new JScrollPane(taskTable);
         add(taskTableScroll, gridBagConstraints);
     }
 
     private void addListeners() {
-        // formWindowClosing
+        // project table mouse click
+        projectTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                projectTableMouseClicked(evt);
+            }
+        });
+        // form window closing
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -194,10 +195,70 @@ public class MainFrame extends JFrame {
 
     private void setup() throws IOException, ClassNotFoundException, SQLException {
         try (JdbcController controller = new JdbcController();) {
-            //fillProjectTable(controller);
-            //projectTable.setRowSelectionInterval(0, 0);
-            //showProjectDetails();
+            fillCategoryCombo(controller.findAllCategories());
+            fillPriorityCombo(controller.findAllPriorities());
+            fillStatusCombo(controller.findAllStatuses());
+            fillProjectTable(controller);
         }
+    }
+
+    private void fillCategoryCombo(List<Category> categoryList) {
+        DefaultComboBoxModel model = projectTable.getComboModel(4);
+        for (Category category : categoryList) {
+            model.addElement(category);
+        }
+    }
+
+    private void fillPriorityCombo(List<Integer> priorities) {
+        DefaultComboBoxModel model = projectTable.getComboModel(5);
+        for (Integer priority : priorities) {
+            model.addElement(priority);
+        }
+    }
+
+    private void fillStatusCombo(List<Status> statusList) {
+        DefaultComboBoxModel model = projectTable.getComboModel(6);
+        for (Status status : statusList) {
+            model.addElement(status);
+        }
+    }
+
+    private void fillProjectTable(JdbcController controller) throws IOException, ClassNotFoundException, SQLException {
+        DefaultTableModel model = (DefaultTableModel) projectTable.getModel();
+        /*
+         while (model.getRowCount() > 0) {
+         model.removeRow(0);
+         }
+         */
+        List<Project> projects = controller.findAllProjects();
+        for (Project project : projects) {
+            model.addRow(project.toTableRow());
+        }
+    }
+
+    private void showProjectDetails() {
+        // get selected row
+        int selection = projectTable.getSelectedRow();
+        int index = projectTable.convertRowIndexToModel(selection);
+        // extract project stored in the id column
+        Project project = (Project) projectTable.getModel().getValueAt(index, 0);
+        // fill lists
+        projectRemarksText.setText(project.getRemarks());
+        fillTaskTable(project);
+    }
+
+    private void fillTaskTable(Project project) {
+        DefaultTableModel model = (DefaultTableModel) taskTable.getModel();
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+        for (Task task : project.getTasks()) {
+            model.addRow(task.toTableRow());
+        }
+    }
+
+    private void projectTableMouseClicked(java.awt.event.MouseEvent evt) {
+        showProjectDetails();
     }
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {

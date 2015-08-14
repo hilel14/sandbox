@@ -72,7 +72,7 @@ public class JdbcController implements AutoCloseable {
         findTasksByProjectId = connection.prepareStatement("SELECT * FROM task WHERE project_id = ?;");
 
         updateProject = connection.prepareStatement("UPDATE project SET "
-                + "title = ?, description = ?, start_date = ?, end_date = ?, category =  ?, priority = ?, status = ? "
+                + "title = ?, remarks = ?, start_date = ?, end_date = ?, category =  ?, priority = ?, status = ? "
                 + "WHERE id = ?;");
         updateTask = connection.prepareStatement("UPDATE task SET description = ?, completed = ? WHERE id = ?");
         insertProject = connection.prepareStatement("INSERT INTO project (title) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS);
@@ -115,6 +115,14 @@ public class JdbcController implements AutoCloseable {
         return statuses;
     }
 
+    public List<Integer> findAllPriorities() {
+        List<Integer> priorities = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            priorities.add(i);
+        }
+        return priorities;
+    }
+
     public Project findProjectById(int id) throws SQLException {
         findProjectById.setInt(1, id);
         ResultSet resultSet = findProjectById.executeQuery();
@@ -138,7 +146,7 @@ public class JdbcController implements AutoCloseable {
         Project project = new Project();
         project.setId(resultSet.getInt("id"));
         project.setTitle(resultSet.getString("title"));
-        project.setDescription(resultSet.getString("description"));
+        project.setRemarks(resultSet.getString("remarks"));
         project.setStartDate(resultSet.getDate("start_date"));
         project.setEndDate(resultSet.getDate("end_date"));
         project.setPriority(resultSet.getInt("priority"));
@@ -186,7 +194,7 @@ public class JdbcController implements AutoCloseable {
 
     public void updateProject(Project project) throws SQLException {
         updateProject.setString(1, project.getTitle());
-        updateProject.setString(2, project.getDescription());
+        updateProject.setString(2, project.getRemarks());
         java.sql.Date startDate = new java.sql.Date(project.getStartDate().getTime());
         updateProject.setDate(3, startDate);
         java.sql.Date endDate = project.getEndDate() == null ? null : new java.sql.Date(project.getEndDate().getTime());

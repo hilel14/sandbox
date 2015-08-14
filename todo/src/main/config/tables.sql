@@ -22,7 +22,7 @@ CREATE TABLE project(
 --  id BIGINT AUTO_INCREMENT PRIMARY KEY,
     id INT AUTO_INCREMENT PRIMARY KEY,
     title  VARCHAR(255),
-    description VARCHAR(1024),
+    remarks VARCHAR(1024),
     start_date DATE DEFAULT NOW(),
     end_date DATE,
     priority INT DEFAULT 1,

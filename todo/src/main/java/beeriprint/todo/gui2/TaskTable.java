@@ -5,7 +5,8 @@
  */
 package beeriprint.todo.gui2;
 
-import javax.swing.table.TableModel;
+import java.awt.ComponentOrientation;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -13,11 +14,26 @@ import javax.swing.table.TableModel;
  */
 public class TaskTable extends javax.swing.JTable {
 
+    final Object[] columnNames = new String[]{"#", "בוצע", "תיאור"};
+
     public TaskTable() {
         super();
+        setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        setAutoCreateRowSorter(true);
+        setModel(new TaskTableModel(columnNames, 0));
     }
 
-    public TaskTable(TableModel model) {
-        super(model);
+    class TaskTableModel extends DefaultTableModel {
+
+        final Class[] types = new Class[]{Integer.class, Boolean.class, String.class};
+
+        public TaskTableModel(Object[] columnNames, int rowCount) {
+            super(columnNames, rowCount);
+        }
+
+        @Override
+        public Class getColumnClass(int columnIndex) {
+            return types[columnIndex];
+        }
     }
 }

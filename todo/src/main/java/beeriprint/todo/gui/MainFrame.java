@@ -10,6 +10,7 @@ import beeriprint.todo.model.Category;
 import beeriprint.todo.model.Project;
 import beeriprint.todo.model.Status;
 import beeriprint.todo.model.Task;
+import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,6 +26,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -420,6 +422,10 @@ public class MainFrame extends javax.swing.JFrame {
             JComboBox categoryCombo = new JComboBox(new DefaultComboBoxModel(categories));
             categoryCombo.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             projectTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(categoryCombo));
+            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+            //Component component=renderer.getTableCellRendererComponent(null, null, false, false, 0, 0);
+            renderer.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            projectTable.getColumnModel().getColumn(4).setCellRenderer(renderer);
             // priority column
             Integer[] priorities = new Integer[]{1, 2, 3};
             projectTable.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(new JComboBox(new DefaultComboBoxModel(priorities))));
@@ -451,7 +457,7 @@ public class MainFrame extends javax.swing.JFrame {
         // extract project stored in the id column
         Project project = (Project) projectTable.getModel().getValueAt(index, 0);
         // fill lists
-        descriptionTextPane.setText(project.getDescription());
+        descriptionTextPane.setText(project.getRemarks());
         fillTaskTable(project);
     }
 
@@ -526,7 +532,7 @@ public class MainFrame extends javax.swing.JFrame {
             project.setPriority(Integer.parseInt(projectTable.getValueAt(index, 5).toString()));
             project.setStatus((Status) projectTable.getValueAt(index, 6));
             // description
-            project.setDescription(descriptionTextPane.getText());
+            project.setRemarks(descriptionTextPane.getText());
             // update database record
             controller.updateProject(project);
         } catch (Exception ex) {

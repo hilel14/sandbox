@@ -18,7 +18,7 @@ public class Project {
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private int id;
     private String title;
-    private String description;
+    private String remarks;
     private Date startDate = new Date();
     private Date endDate;
     private Category category;
@@ -72,17 +72,17 @@ public class Project {
     }
 
     /**
-     * @return the description
+     * @return the remarks
      */
-    public String getDescription() {
-        return description;
+    public String getRemarks() {
+        return remarks;
     }
 
     /**
-     * @param description the description to set
+     * @param remarks the remarks to set
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     /**
