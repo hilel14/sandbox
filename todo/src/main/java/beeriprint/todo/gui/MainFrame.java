@@ -56,7 +56,6 @@ public class MainFrame extends JFrame {
     JMenuBar menuBar;
     JMenu fileMenu;
     JMenuItem newProjectMenuItem;
-    //JMenuItem saveProjectMenuItem;
     JMenuItem deleteProjectMenuItem;
     JMenuItem newTaskMenuItem;
     JMenuItem deleteTaskMenuItem;
@@ -317,6 +316,20 @@ public class MainFrame extends JFrame {
                 projectTableKeyReleased(evt);
             }
         });
+        // task table mouse click
+        taskTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                taskTableMouseClicked(evt);
+            }
+        });
+        // task table key released
+        taskTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                taskTableKeyReleased(evt);
+            }
+        });
     }
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {
@@ -365,11 +378,23 @@ public class MainFrame extends JFrame {
 
     private void projectTableMouseClicked(java.awt.event.MouseEvent evt) {
         showProjectDetails();
+        enableButtonsAndMenues();
     }
 
     private void projectTableKeyReleased(java.awt.event.KeyEvent evt) {
         if (arrowKeys.contains(evt.getKeyCode())) {
             showProjectDetails();
+            enableButtonsAndMenues();
+        }
+    }
+
+    private void taskTableMouseClicked(java.awt.event.MouseEvent evt) {
+        enableButtonsAndMenues();
+    }
+
+    private void taskTableKeyReleased(java.awt.event.KeyEvent evt) {
+        if (arrowKeys.contains(evt.getKeyCode())) {
+            enableButtonsAndMenues();
         }
     }
 
@@ -424,6 +449,7 @@ public class MainFrame extends JFrame {
             fillPriorityCombo(controller.findAllPriorities());
             fillStatusCombo(controller.findAllStatuses());
             fillProjectTable(controller);
+            enableButtonsAndMenues();
         }
     }
 
@@ -551,6 +577,7 @@ public class MainFrame extends JFrame {
                 // delete project record
                 controller.deleteProject(project.getId());
                 projectTableSelectedRow = -1;
+                enableButtonsAndMenues();
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -584,10 +611,22 @@ public class MainFrame extends JFrame {
                 controller.deleteTask(task.getId());
                 DefaultTableModel model = (DefaultTableModel) taskTable.getModel();
                 model.removeRow(index);
+                enableButtonsAndMenues();
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    private void enableButtonsAndMenues() {
+        // menues        
+        deleteProjectMenuItem.setEnabled((projectTable.getSelectedRow() >= 0));
+        newTaskMenuItem.setEnabled((projectTable.getSelectedRow() >= 0));
+        deleteTaskMenuItem.setEnabled(taskTable.getSelectedRow() >= 0);
+        // buttons
+        deleteProjectButton.setEnabled((projectTable.getSelectedRow() >= 0));
+        newTaskButton.setEnabled((projectTable.getSelectedRow() >= 0));
+        deleteTaskButton.setEnabled(taskTable.getSelectedRow() >= 0);
     }
 }
