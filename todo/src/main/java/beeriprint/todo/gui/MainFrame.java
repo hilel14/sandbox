@@ -59,6 +59,11 @@ public class MainFrame extends JFrame {
     JMenuItem deleteProjectMenuItem;
     JMenuItem newTaskMenuItem;
     JMenuItem deleteTaskMenuItem;
+    JMenu viewMenu;
+    JMenuItem viewAllProjectsMenuItem;
+    JMenuItem viewActiveProjectsMenuItem;
+    JMenuItem viewOpenProjectsMenuItem;
+    JMenuItem viewCloseProjectsMenuItem;
 
     // Frame layout
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -127,6 +132,7 @@ public class MainFrame extends JFrame {
         menuBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         setJMenuBar(menuBar);
         addFileMenu();
+        addViewMenu();
     }
 
     private void addFileMenu() {
@@ -151,6 +157,28 @@ public class MainFrame extends JFrame {
         deleteTaskMenuItem = new JMenuItem("מחיקת מטלה...");
         deleteTaskMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         fileMenu.add(deleteTaskMenuItem);
+    }
+
+    private void addViewMenu() {
+        viewMenu = new JMenu("תצוגה");
+        viewMenu.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        menuBar.add(viewMenu);
+        // All projects view
+        viewAllProjectsMenuItem = new JMenuItem("כל הפרויקטים");
+        viewAllProjectsMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        viewMenu.add(viewAllProjectsMenuItem);
+        // Active projects view
+        viewActiveProjectsMenuItem = new JMenuItem("פרויקטים פעילים");
+        viewActiveProjectsMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        viewMenu.add(viewActiveProjectsMenuItem);
+        // Open projects view
+        viewOpenProjectsMenuItem = new JMenuItem("פרויקטים פתוחים");
+        viewOpenProjectsMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        viewMenu.add(viewOpenProjectsMenuItem);
+        // Close projects view
+        viewCloseProjectsMenuItem = new JMenuItem("פרויקטים סגורים");
+        viewCloseProjectsMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        viewMenu.add(viewCloseProjectsMenuItem);
     }
 
     private void addActionPanel() {
@@ -272,7 +300,34 @@ public class MainFrame extends JFrame {
                 deleteTaskMenuItemActionPerformed(evt);
             }
         });
-
+        // view all projects menu item
+        viewAllProjectsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewAllProjectsMenuItemActionPerformed(evt);
+            }
+        });
+        // view active projects menu item
+        viewActiveProjectsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewActiveProjectsMenuItemActionPerformed(evt);
+            }
+        });
+        // view open projects menu item
+        viewOpenProjectsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewOpenProjectsMenuItemActionPerformed(evt);
+            }
+        });
+        // view close projects menu item
+        viewCloseProjectsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewCloseProjectsMenuItemActionPerformed(evt);
+            }
+        });
         // new project button
         newProjectButton.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -344,10 +399,6 @@ public class MainFrame extends JFrame {
         addProject();
     }
 
-    private void saveProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        //saveProject();
-    }
-
     private void deleteProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         deleteProject();
     }
@@ -358,6 +409,22 @@ public class MainFrame extends JFrame {
 
     private void deleteTaskMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
         deleteTask();
+    }
+
+    private void viewAllProjectsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        findProjects("all");
+    }
+
+    private void viewActiveProjectsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        findProjects("active");
+    }
+
+    private void viewOpenProjectsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        findProjects("open");
+    }
+
+    private void viewCloseProjectsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        findProjects("close");
     }
 
     private void newProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -448,7 +515,7 @@ public class MainFrame extends JFrame {
             fillCategoryCombo(controller.findAllCategories());
             fillPriorityCombo(controller.findAllPriorities());
             fillStatusCombo(controller.findAllStatuses());
-            fillProjectTable(controller);
+            findProjects(controller, "all");
             enableButtonsAndMenues();
         }
     }
@@ -474,17 +541,40 @@ public class MainFrame extends JFrame {
         }
     }
 
-    private void fillProjectTable(JdbcController controller) throws IOException, ClassNotFoundException, SQLException {
+    private void findProjects(String status) {
+        try (JdbcController controller = new JdbcController();) {
+            findProjects(controller, status);
+        } catch (IOException | ClassNotFoundException | SQLException ex) {
+            logger.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void findProjects(JdbcController controller, String status) throws IOException, ClassNotFoundException, SQLException {
         DefaultTableModel model = (DefaultTableModel) projectTable.getModel();
-        /*
-         while (model.getRowCount() > 0) {
-         model.removeRow(0);
-         }
-         */
-        List<Project> projects = controller.findAllProjects();
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+        List<Project> projects = null;
+        switch (status) {
+            case "all":
+                projects = controller.findAllProjects();
+                break;
+            case "active":
+                projects = controller.findActiveProjects();
+                break;
+            case "open":
+                projects = controller.findOpenProjects();
+                break;
+            case "close":
+                projects = controller.findCloseProjects();
+                break;
+        }
         for (Project project : projects) {
             model.addRow(project.toTableRow());
         }
+        projectTableSelectedRow = -1;
+        enableButtonsAndMenues();
     }
 
     private void showProjectDetails() {
