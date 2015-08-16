@@ -11,6 +11,7 @@ import beeriprint.todo.model.Project;
 import beeriprint.todo.model.Status;
 import beeriprint.todo.model.Task;
 import java.awt.ComponentOrientation;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -140,6 +141,11 @@ public class MainFrame extends javax.swing.JFrame {
         projectTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 projectTableMouseClicked(evt);
+            }
+        });
+        projectTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                projectTableKeyReleased(evt);
             }
         });
         projectTableScroll.setViewportView(projectTable);
@@ -347,6 +353,13 @@ public class MainFrame extends javax.swing.JFrame {
     private void deleteTaskMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTaskMenuItemActionPerformed
         deleteTask();
     }//GEN-LAST:event_deleteTaskMenuItemActionPerformed
+
+    private void projectTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_projectTableKeyReleased
+        System.out.println(evt.toString());
+        System.out.println("keyCode=" + evt.getKeyCode());
+        System.out.println(KeyEvent.VK_DOWN);
+        System.out.println(KeyEvent.VK_KP_DOWN);
+    }//GEN-LAST:event_projectTableKeyReleased
 
     /**
      * @param args the command line arguments

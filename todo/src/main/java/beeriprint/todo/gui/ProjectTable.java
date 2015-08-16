@@ -81,6 +81,6 @@ public class ProjectTable extends javax.swing.JTable {
     }
 
     public int getSelectedRowConverted() {
-        return convertRowIndexToModel(getSelectedRow());
+        return getSelectedRow() < 0 ? -1 : convertRowIndexToModel(getSelectedRow());
     }
 }
