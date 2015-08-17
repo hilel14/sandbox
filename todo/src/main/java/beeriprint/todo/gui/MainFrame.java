@@ -260,7 +260,6 @@ public class MainFrame extends JFrame {
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.0;
         statusLabel = new JLabel("status:");
-        //taskTableLabel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         add(statusLabel, gridBagConstraints);
     }
 
@@ -574,6 +573,11 @@ public class MainFrame extends JFrame {
             model.addRow(project.toTableRow());
         }
         projectTableSelectedRow = -1;
+        projectRemarksText.setText("");
+        model = (DefaultTableModel) taskTable.getModel();
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
         enableButtonsAndMenues();
     }
 
@@ -718,5 +722,9 @@ public class MainFrame extends JFrame {
         deleteProjectButton.setEnabled((projectTable.getSelectedRow() >= 0));
         newTaskButton.setEnabled((projectTable.getSelectedRow() >= 0));
         deleteTaskButton.setEnabled(taskTable.getSelectedRow() >= 0);
+    }
+
+    private void clearTaskTable() {
+
     }
 }
