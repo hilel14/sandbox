@@ -25,6 +25,7 @@ public class ProjectTable extends javax.swing.JTable {
         super();
         setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         setAutoCreateRowSorter(true);
+        setAutoResizeMode(AUTO_RESIZE_NEXT_COLUMN);
         setModel(new DefaultTableModel(columnNames, 0));
         setCellRenderers();
         setCellEditors();
