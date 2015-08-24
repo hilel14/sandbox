@@ -11,7 +11,6 @@ import beeriprint.todo.model.Project;
 import beeriprint.todo.model.Status;
 import beeriprint.todo.model.Task;
 import beeriprint.todo.util.comparators.ProjectComparator;
-import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -29,7 +28,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -56,6 +54,8 @@ public class MainFrame extends JFrame {
     static Preferences preferences = Preferences.userNodeForPackage(beeriprint.todo.gui.MainFrame.class);
     final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     final List<Integer> arrowKeys = new ArrayList<>();
+    final Map<Integer, Project> projectMap = new HashMap<>();
+    int currentProjectId;
 
     // menu
     JMenuBar menuBar;
@@ -64,21 +64,9 @@ public class MainFrame extends JFrame {
     JMenuItem deleteProjectMenuItem;
     JMenuItem newTaskMenuItem;
     JMenuItem deleteTaskMenuItem;
-    JMenu viewMenu;
-    JMenuItem viewAllProjectsMenuItem;
-    JMenuItem viewActiveProjectsMenuItem;
-    JMenuItem viewOpenProjectsMenuItem;
-    JMenuItem viewCloseProjectsMenuItem;
 
     // Frame layout
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
-
-    // Action panel
-    JPanel actionPanel;
-    JButton newProjectButton;
-    JButton deleteProjectButton;
-    JButton newTaskButton;
-    JButton deleteTaskButton;
 
     // Filter and sort panel
     JPanel filterAndSortPanel;
@@ -101,9 +89,6 @@ public class MainFrame extends JFrame {
     JScrollPane taskTableScroll;
     // Status label
     JLabel statusLabel;
-
-    // data
-    Map<Integer, Project> projects = new HashMap<>();
 
     public MainFrame() {
         initComponents();
@@ -135,7 +120,6 @@ public class MainFrame extends JFrame {
         gridBagConstraints.insets = new Insets(5, 5, 5, 5);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = GridBagConstraints.RELATIVE;
-        addActionPanel();
         addFilterAndSortPanel();
         addProjectTable();
         addProjectRemarks();
@@ -149,7 +133,6 @@ public class MainFrame extends JFrame {
         menuBar.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         setJMenuBar(menuBar);
         addFileMenu();
-        addViewMenu();
     }
 
     private void addFileMenu() {
@@ -176,33 +159,11 @@ public class MainFrame extends JFrame {
         fileMenu.add(deleteTaskMenuItem);
     }
 
-    private void addViewMenu() {
-        viewMenu = new JMenu("תצוגה");
-        viewMenu.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        menuBar.add(viewMenu);
-        // All projects view
-        viewAllProjectsMenuItem = new JMenuItem("כל הפרויקטים");
-        viewAllProjectsMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        viewMenu.add(viewAllProjectsMenuItem);
-        // Active projects view
-        viewActiveProjectsMenuItem = new JMenuItem("פרויקטים פעילים");
-        viewActiveProjectsMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        viewMenu.add(viewActiveProjectsMenuItem);
-        // Open projects view
-        viewOpenProjectsMenuItem = new JMenuItem("פרויקטים פתוחים");
-        viewOpenProjectsMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        viewMenu.add(viewOpenProjectsMenuItem);
-        // Close projects view
-        viewCloseProjectsMenuItem = new JMenuItem("פרויקטים סגורים");
-        viewCloseProjectsMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        viewMenu.add(viewCloseProjectsMenuItem);
-    }
-
     private void addFilterAndSortPanel() {
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.0;
-        filterAndSortPanel = new JPanel(new FlowLayout());
+        filterAndSortPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 15, 5));
         filterAndSortPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         add(filterAndSortPanel, gridBagConstraints);
         // filter
@@ -216,29 +177,6 @@ public class MainFrame extends JFrame {
         // command
         filterAndSortPanel.add(fillProjectTableButton);
         fillProjectTableButton.setText("טען");
-    }
-
-    private void addActionPanel() {
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.0;
-        actionPanel = new JPanel(new FlowLayout());
-        actionPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        add(actionPanel, gridBagConstraints);
-        // new project button
-        newProjectButton = new JButton("פרויקט חדש");
-        actionPanel.add(newProjectButton);
-        // delete project button
-        deleteProjectButton = new JButton("מחיקת פרויקט");
-        deleteProjectButton.setForeground(Color.red);
-        actionPanel.add(deleteProjectButton);
-        // new task button
-        newTaskButton = new JButton("מטלה חדשה");
-        actionPanel.add(newTaskButton);
-        // delete task button
-        deleteTaskButton = new JButton("מחיקת מטלה");
-        deleteTaskButton.setForeground(Color.red);
-        actionPanel.add(deleteTaskButton);
     }
 
     private void addProjectTable() {
@@ -336,62 +274,6 @@ public class MainFrame extends JFrame {
                 deleteTaskMenuItemActionPerformed(evt);
             }
         });
-        // view all projects menu item
-        viewAllProjectsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewAllProjectsMenuItemActionPerformed(evt);
-            }
-        });
-        // view active projects menu item
-        viewActiveProjectsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewActiveProjectsMenuItemActionPerformed(evt);
-            }
-        });
-        // view open projects menu item
-        viewOpenProjectsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewOpenProjectsMenuItemActionPerformed(evt);
-            }
-        });
-        // view close projects menu item
-        viewCloseProjectsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewCloseProjectsMenuItemActionPerformed(evt);
-            }
-        });
-        // new project button
-        newProjectButton.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newProjectButtonActionPerformed(evt);
-            }
-        });
-        // delete project button
-        deleteProjectButton.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteProjectButtonActionPerformed(evt);
-            }
-        });
-        // new task button
-        newTaskButton.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newTaskButtonActionPerformed(evt);
-            }
-        });
-        // delete task button
-        deleteTaskButton.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteTaskButtonActionPerformed(evt);
-            }
-        });
         // fill project table button
         fillProjectTableButton.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -432,6 +314,7 @@ public class MainFrame extends JFrame {
                 projectTableKeyReleased(evt);
             }
         });
+
         // task table mouse click
         taskTable.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -450,7 +333,7 @@ public class MainFrame extends JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {
         storePreferences();
-        saveSelectedProject();
+        saveProjectMap();
     }
 
     private void newProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
@@ -469,44 +352,12 @@ public class MainFrame extends JFrame {
         deleteTask();
     }
 
-    private void viewAllProjectsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        findProjects("all");
-    }
-
-    private void viewActiveProjectsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        findProjects("active");
-    }
-
-    private void viewOpenProjectsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        findProjects("open");
-    }
-
-    private void viewCloseProjectsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-        findProjects("close");
-    }
-
-    private void newProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        addProject();
-    }
-
-    private void deleteProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        deleteProject();
-    }
-
-    private void newTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        addTask();
-    }
-
-    private void deleteTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        deleteTask();
-    }
-
     private void fillProjectTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
         fillProjectTable(filterCombo.getSelectedItem().toString(), sortCombo.getSelectedItem().toString());
     }
 
     private void projectTableMousePressed(java.awt.event.MouseEvent evt) {
-        saveSelectedProject();
+        updateSelectedProject();
     }
 
     private void projectTableMouseReleased(java.awt.event.MouseEvent evt) {
@@ -516,7 +367,7 @@ public class MainFrame extends JFrame {
 
     public void projectTableKeyPressed(java.awt.event.KeyEvent evt) {
         if (arrowKeys.contains(evt.getKeyCode())) {
-            saveSelectedProject();
+            updateSelectedProject();
         }
     }
 
@@ -628,11 +479,16 @@ public class MainFrame extends JFrame {
         DefaultComboBoxModel model = (DefaultComboBoxModel) sortCombo.getModel();
         model.addElement("id");
         model.addElement("title");
+        model.addElement("start");
+        model.addElement("end");
+        model.addElement("category");
+        model.addElement("priority");
+        model.addElement("status");
     }
 
     private void findAllProjects(JdbcController controller) throws SQLException {
         for (Project project : controller.findAllProjects()) {
-            projects.put(project.getId(), project);
+            projectMap.put(project.getId(), project);
         }
     }
 
@@ -645,7 +501,7 @@ public class MainFrame extends JFrame {
         }
         // load new data by filter
         List<Project> projectList = new ArrayList<>();
-        for (Project project : projects.values()) {
+        for (Project project : projectMap.values()) {
             if (filter.equals("all") || project.getStatus().getDescription().equals(filter)) {
                 projectList.add(project);
             }
@@ -659,49 +515,10 @@ public class MainFrame extends JFrame {
         }
     }
 
-    private void findProjects(String status) {
-        try (JdbcController controller = new JdbcController();) {
-            findProjects(controller, status);
-        } catch (IOException | ClassNotFoundException | SQLException ex) {
-            logger.log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void findProjects(JdbcController controller, String status) throws IOException, ClassNotFoundException, SQLException {
-        DefaultTableModel model = (DefaultTableModel) projectTable.getModel();
-        while (model.getRowCount() > 0) {
-            model.removeRow(0);
-        }
-        List<Project> projects = null;
-        switch (status) {
-            case "all":
-                projects = controller.findAllProjects();
-                break;
-            case "active":
-                projects = controller.findActiveProjects();
-                break;
-            case "open":
-                projects = controller.findOpenProjects();
-                break;
-            case "close":
-                projects = controller.findCloseProjects();
-                break;
-        }
-        for (Project project : projects) {
-            model.addRow(project.toTableRow());
-        }
-        projectRemarksText.setText("");
-        model = (DefaultTableModel) taskTable.getModel();
-        while (model.getRowCount() > 0) {
-            model.removeRow(0);
-        }
-        enableButtonsAndMenues();
-    }
-
     private void showProjectDetails() {
         int row = projectTable.getSelectedRowConverted();
-        Project project = (Project) projectTable.getModel().getValueAt(row, 0);
+        currentProjectId = (int) projectTable.getModel().getValueAt(row, 0);
+        Project project = projectMap.get(currentProjectId);
         projectRemarksText.setText(project.getRemarks());
         fillTaskTable(project);
     }
@@ -714,6 +531,34 @@ public class MainFrame extends JFrame {
         for (Task task : project.getTasks()) {
             model.addRow(task.toTableRow());
         }
+    }
+
+    private void updateSelectedProject() {
+        int row = projectTable.getSelectedRow();
+        if (row < 0) {
+            return;
+        }
+        Project project = projectMap.get(currentProjectId);
+        if (project == null) {
+            return;
+        }
+        try {
+            project.setTitle(projectTable.getValueAt(row, 1).toString());
+            project.setStartDate(dateFormat.parse(projectTable.getValueAt(row, 2).toString()));
+            Object endDate = projectTable.getValueAt(row, 3);
+            project.setEndDate(endDate == null ? null : dateFormat.parse(endDate.toString()));
+            project.setCategory((Category) projectTable.getValueAt(row, 4));
+            project.setPriority(Integer.parseInt(projectTable.getValueAt(row, 5).toString()));
+            project.setStatus((Status) projectTable.getValueAt(row, 6));
+            project.setRemarks(projectRemarksText.getText());
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void saveProjectMap() {
+        logger.log(Level.INFO, "Saving {0} projects to database", projectMap.size());
     }
 
     /**
@@ -839,10 +684,6 @@ public class MainFrame extends JFrame {
         deleteProjectMenuItem.setEnabled((projectTable.getSelectedRow() >= 0));
         newTaskMenuItem.setEnabled((projectTable.getSelectedRow() >= 0));
         deleteTaskMenuItem.setEnabled(taskTable.getSelectedRow() >= 0);
-        // buttons
-        deleteProjectButton.setEnabled((projectTable.getSelectedRow() >= 0));
-        newTaskButton.setEnabled((projectTable.getSelectedRow() >= 0));
-        deleteTaskButton.setEnabled(taskTable.getSelectedRow() >= 0);
     }
 
     private void clearTaskTable() {
