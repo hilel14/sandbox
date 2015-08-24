@@ -50,7 +50,7 @@ public class MainFrame extends JFrame {
     static Preferences preferences = Preferences.userNodeForPackage(beeriprint.todo.gui.MainFrame.class);
     final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     final List<Integer> arrowKeys = new ArrayList<>();
-    int projectTableSelectedRow = -1;
+    Project selectedProject = null;
 
     // menu
     JMenuBar menuBar;
@@ -360,11 +360,29 @@ public class MainFrame extends JFrame {
         projectTable.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                projectTableMouseClicked(evt);
+                //projectTableMouseClicked(evt);
             }
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                projectTableMousePressed(evt);
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                projectTableMouseReleased(evt);
+            }
+
         });
-        // project table key released
+
         projectTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            // project table key pressed
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                projectTableKeyPressed(evt);
+            }
+
+            // project table key released
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 projectTableKeyReleased(evt);
@@ -388,10 +406,7 @@ public class MainFrame extends JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {
         storePreferences();
-        int index = projectTable.getSelectedRowConverted();
-        if (index >= 0) {
-            saveProject(index);
-        }
+        saveSelectedProject();
     }
 
     private void newProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
@@ -443,8 +458,21 @@ public class MainFrame extends JFrame {
     }
 
     private void projectTableMouseClicked(java.awt.event.MouseEvent evt) {
+    }
+
+    private void projectTableMousePressed(java.awt.event.MouseEvent evt) {
+        saveSelectedProject();
+    }
+
+    private void projectTableMouseReleased(java.awt.event.MouseEvent evt) {
         showProjectDetails();
         enableButtonsAndMenues();
+    }
+
+    private void projectTableKeyPressed(java.awt.event.KeyEvent evt) {
+        if (arrowKeys.contains(evt.getKeyCode())) {
+            saveSelectedProject();
+        }
     }
 
     private void projectTableKeyReleased(java.awt.event.KeyEvent evt) {
@@ -572,7 +600,6 @@ public class MainFrame extends JFrame {
         for (Project project : projects) {
             model.addRow(project.toTableRow());
         }
-        projectTableSelectedRow = -1;
         projectRemarksText.setText("");
         model = (DefaultTableModel) taskTable.getModel();
         while (model.getRowCount() > 0) {
@@ -582,17 +609,10 @@ public class MainFrame extends JFrame {
     }
 
     private void showProjectDetails() {
-        Project project;
-        if (projectTableSelectedRow >= 0) {
-            int selectedRow = projectTable.getSelectedRowConverted();
-            if (selectedRow != projectTableSelectedRow) {
-                saveProject(projectTableSelectedRow);
-            }
-        }
-        projectTableSelectedRow = projectTable.getSelectedRowConverted();
-        project = (Project) projectTable.getModel().getValueAt(projectTableSelectedRow, 0);
-        projectRemarksText.setText(project.getRemarks());
-        fillTaskTable(project);
+        int row = projectTable.getSelectedRowConverted();
+        selectedProject = (Project) projectTable.getModel().getValueAt(row, 0);
+        projectRemarksText.setText(selectedProject.getRemarks());
+        fillTaskTable(selectedProject);
     }
 
     private void fillTaskTable(Project project) {
@@ -608,19 +628,24 @@ public class MainFrame extends JFrame {
     /**
      * Update Project and Task objects and save to database
      */
-    private void saveProject(int index) {
-        // Make sure Project object stored in project table selected row is updated
-        Project project = (Project) projectTable.getModel().getValueAt(index, 0);
+    private void saveSelectedProject() {
+        if (selectedProject == null) {
+            return;
+        }
+        int row = projectTable.getSelectedRowConverted();
+        logger.log(Level.INFO, "Saving project {0}", selectedProject);
         try (JdbcController controller = new JdbcController();) {
-            project.setTitle(projectTable.getValueAt(index, 1).toString());
-            project.setStartDate(dateFormat.parse(projectTable.getValueAt(index, 2).toString()));
-            Object endDate = projectTable.getValueAt(index, 3);
-            project.setEndDate(endDate == null ? null : dateFormat.parse(endDate.toString()));
-            project.setCategory((Category) projectTable.getValueAt(index, 4));
-            project.setPriority(Integer.parseInt(projectTable.getValueAt(index, 5).toString()));
-            project.setStatus((Status) projectTable.getValueAt(index, 6));
-            project.setRemarks(projectRemarksText.getText());
-            controller.updateProject(project);
+            // Make sure Project object stored in project table selected row is updated
+            selectedProject.setTitle(projectTable.getValueAt(row, 1).toString());
+            selectedProject.setStartDate(dateFormat.parse(projectTable.getValueAt(row, 2).toString()));
+            Object endDate = projectTable.getValueAt(row, 3);
+            selectedProject.setEndDate(endDate == null ? null : dateFormat.parse(endDate.toString()));
+            selectedProject.setCategory((Category) projectTable.getValueAt(row, 4));
+            selectedProject.setPriority(Integer.parseInt(projectTable.getValueAt(row, 5).toString()));
+            selectedProject.setStatus((Status) projectTable.getValueAt(row, 6));
+            selectedProject.setRemarks(projectRemarksText.getText());
+            // save project data to database
+            controller.updateProject(selectedProject);
             saveTasks(controller);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
@@ -670,7 +695,6 @@ public class MainFrame extends JFrame {
                 projectModel.removeRow(index);
                 // delete project record
                 controller.deleteProject(project.getId());
-                projectTableSelectedRow = -1;
                 enableButtonsAndMenues();
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
