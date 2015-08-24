@@ -10,6 +10,7 @@ import beeriprint.todo.model.Category;
 import beeriprint.todo.model.Project;
 import beeriprint.todo.model.Status;
 import beeriprint.todo.model.Task;
+import beeriprint.todo.util.comparators.ProjectComparator;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
@@ -20,13 +21,18 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -50,7 +56,6 @@ public class MainFrame extends JFrame {
     static Preferences preferences = Preferences.userNodeForPackage(beeriprint.todo.gui.MainFrame.class);
     final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     final List<Integer> arrowKeys = new ArrayList<>();
-    Project selectedProject = null;
 
     // menu
     JMenuBar menuBar;
@@ -75,6 +80,14 @@ public class MainFrame extends JFrame {
     JButton newTaskButton;
     JButton deleteTaskButton;
 
+    // Filter and sort panel
+    JPanel filterAndSortPanel;
+    JLabel filterLabel;
+    JComboBox<String> filterCombo = new JComboBox<>();
+    JLabel sortLabel;
+    JComboBox<String> sortCombo = new JComboBox<>();
+    JButton fillProjectTableButton = new JButton();
+
     // project table
     JLabel projectTableLabel;
     ProjectTable projectTable;
@@ -88,6 +101,9 @@ public class MainFrame extends JFrame {
     JScrollPane taskTableScroll;
     // Status label
     JLabel statusLabel;
+
+    // data
+    Map<Integer, Project> projects = new HashMap<>();
 
     public MainFrame() {
         initComponents();
@@ -120,6 +136,7 @@ public class MainFrame extends JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = GridBagConstraints.RELATIVE;
         addActionPanel();
+        addFilterAndSortPanel();
         addProjectTable();
         addProjectRemarks();
         addTaskTable();
@@ -179,6 +196,26 @@ public class MainFrame extends JFrame {
         viewCloseProjectsMenuItem = new JMenuItem("פרויקטים סגורים");
         viewCloseProjectsMenuItem.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         viewMenu.add(viewCloseProjectsMenuItem);
+    }
+
+    private void addFilterAndSortPanel() {
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.0;
+        filterAndSortPanel = new JPanel(new FlowLayout());
+        filterAndSortPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        add(filterAndSortPanel, gridBagConstraints);
+        // filter
+        filterLabel = new JLabel("סינון");
+        filterAndSortPanel.add(filterLabel);
+        filterAndSortPanel.add(filterCombo);
+        // sort
+        sortLabel = new JLabel("מיון");
+        filterAndSortPanel.add(sortLabel);
+        filterAndSortPanel.add(sortCombo);
+        // command
+        filterAndSortPanel.add(fillProjectTableButton);
+        fillProjectTableButton.setText("טען");
     }
 
     private void addActionPanel() {
@@ -355,6 +392,13 @@ public class MainFrame extends JFrame {
                 deleteTaskButtonActionPerformed(evt);
             }
         });
+        // fill project table button
+        fillProjectTableButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fillProjectTableButtonActionPerformed(evt);
+            }
+        });
 
         // project table mouse click
         projectTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -457,7 +501,8 @@ public class MainFrame extends JFrame {
         deleteTask();
     }
 
-    private void projectTableMouseClicked(java.awt.event.MouseEvent evt) {
+    private void fillProjectTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        fillProjectTable(filterCombo.getSelectedItem().toString(), sortCombo.getSelectedItem().toString());
     }
 
     private void projectTableMousePressed(java.awt.event.MouseEvent evt) {
@@ -469,13 +514,13 @@ public class MainFrame extends JFrame {
         enableButtonsAndMenues();
     }
 
-    private void projectTableKeyPressed(java.awt.event.KeyEvent evt) {
+    public void projectTableKeyPressed(java.awt.event.KeyEvent evt) {
         if (arrowKeys.contains(evt.getKeyCode())) {
             saveSelectedProject();
         }
     }
 
-    private void projectTableKeyReleased(java.awt.event.KeyEvent evt) {
+    public void projectTableKeyReleased(java.awt.event.KeyEvent evt) {
         if (arrowKeys.contains(evt.getKeyCode())) {
             showProjectDetails();
             enableButtonsAndMenues();
@@ -542,7 +587,10 @@ public class MainFrame extends JFrame {
             fillCategoryCombo(controller.findAllCategories());
             fillPriorityCombo(controller.findAllPriorities());
             fillStatusCombo(controller.findAllStatuses());
-            findProjects(controller, "all");
+            fillFilterCombo(controller.findAllStatuses());
+            fillSortCombo();
+            findAllProjects(controller);
+            fillProjectTable("all", "id");
             enableButtonsAndMenues();
         }
     }
@@ -565,6 +613,49 @@ public class MainFrame extends JFrame {
         DefaultComboBoxModel model = projectTable.getComboModel(6);
         for (Status status : statusList) {
             model.addElement(status);
+        }
+    }
+
+    private void fillFilterCombo(List<Status> statusList) {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) filterCombo.getModel();
+        model.addElement("all");
+        for (Status status : statusList) {
+            model.addElement(status);
+        }
+    }
+
+    private void fillSortCombo() {
+        DefaultComboBoxModel model = (DefaultComboBoxModel) sortCombo.getModel();
+        model.addElement("id");
+        model.addElement("title");
+    }
+
+    private void findAllProjects(JdbcController controller) throws SQLException {
+        for (Project project : controller.findAllProjects()) {
+            projects.put(project.getId(), project);
+        }
+    }
+
+    private void fillProjectTable(String filter, String sortKey) {
+        // get data model
+        DefaultTableModel model = (DefaultTableModel) projectTable.getModel();
+        // clear table
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+        // load new data by filter
+        List<Project> projectList = new ArrayList<>();
+        for (Project project : projects.values()) {
+            if (filter.equals("all") || project.getStatus().getDescription().equals(filter)) {
+                projectList.add(project);
+            }
+        }
+        // sort
+        ProjectComparator comparator = new ProjectComparator(sortKey);
+        Collections.sort(projectList, comparator);
+        // add projects to table
+        for (Project project : projectList) {
+            model.addRow(project.toTableRow());
         }
     }
 
@@ -610,9 +701,9 @@ public class MainFrame extends JFrame {
 
     private void showProjectDetails() {
         int row = projectTable.getSelectedRowConverted();
-        selectedProject = (Project) projectTable.getModel().getValueAt(row, 0);
-        projectRemarksText.setText(selectedProject.getRemarks());
-        fillTaskTable(selectedProject);
+        Project project = (Project) projectTable.getModel().getValueAt(row, 0);
+        projectRemarksText.setText(project.getRemarks());
+        fillTaskTable(project);
     }
 
     private void fillTaskTable(Project project) {
@@ -629,23 +720,29 @@ public class MainFrame extends JFrame {
      * Update Project and Task objects and save to database
      */
     private void saveSelectedProject() {
-        if (selectedProject == null) {
+        int row = projectTable.getSelectedRowConverted();
+        if (row < 0) {
             return;
         }
-        int row = projectTable.getSelectedRowConverted();
-        logger.log(Level.INFO, "Saving project {0}", selectedProject);
+        Project project = (Project) projectTable.getModel().getValueAt(row, 0);
+        System.out.println(projectTable.getValueAt(row, 1).toString() + " -> " + project);
+        System.out.println(projectRemarksText.getText() + " -> " + project);
+        if (true) {
+            return;
+        }
+        logger.log(Level.INFO, "Saving project {0}", project);
         try (JdbcController controller = new JdbcController();) {
             // Make sure Project object stored in project table selected row is updated
-            selectedProject.setTitle(projectTable.getValueAt(row, 1).toString());
-            selectedProject.setStartDate(dateFormat.parse(projectTable.getValueAt(row, 2).toString()));
+            project.setTitle(projectTable.getValueAt(row, 1).toString());
+            project.setStartDate(dateFormat.parse(projectTable.getValueAt(row, 2).toString()));
             Object endDate = projectTable.getValueAt(row, 3);
-            selectedProject.setEndDate(endDate == null ? null : dateFormat.parse(endDate.toString()));
-            selectedProject.setCategory((Category) projectTable.getValueAt(row, 4));
-            selectedProject.setPriority(Integer.parseInt(projectTable.getValueAt(row, 5).toString()));
-            selectedProject.setStatus((Status) projectTable.getValueAt(row, 6));
-            selectedProject.setRemarks(projectRemarksText.getText());
+            project.setEndDate(endDate == null ? null : dateFormat.parse(endDate.toString()));
+            project.setCategory((Category) projectTable.getValueAt(row, 4));
+            project.setPriority(Integer.parseInt(projectTable.getValueAt(row, 5).toString()));
+            project.setStatus((Status) projectTable.getValueAt(row, 6));
+            project.setRemarks(projectRemarksText.getText());
             // save project data to database
-            controller.updateProject(selectedProject);
+            controller.updateProject(project);
             saveTasks(controller);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
@@ -681,7 +778,7 @@ public class MainFrame extends JFrame {
         int retVal = JOptionPane.showConfirmDialog(null, msg, "Confirmation", JOptionPane.YES_NO_OPTION);
         if (retVal == JOptionPane.YES_OPTION) {
             try (JdbcController controller = new JdbcController();) {
-                // clear task table                
+                // clear task table
                 DefaultTableModel taskModel = (DefaultTableModel) taskTable.getModel();
                 while (taskModel.getRowCount() > 0) {
                     taskModel.removeRow(0);
@@ -738,7 +835,7 @@ public class MainFrame extends JFrame {
     }
 
     private void enableButtonsAndMenues() {
-        // menues        
+        // menues
         deleteProjectMenuItem.setEnabled((projectTable.getSelectedRow() >= 0));
         newTaskMenuItem.setEnabled((projectTable.getSelectedRow() >= 0));
         deleteTaskMenuItem.setEnabled(taskTable.getSelectedRow() >= 0);

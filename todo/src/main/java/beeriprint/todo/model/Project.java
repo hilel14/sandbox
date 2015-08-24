@@ -33,7 +33,8 @@ public class Project {
 
     public Object[] toTableRow() {
         Object[] row = new Object[8];
-        row[0] = this;
+        //row[0] = this;
+        row[0] = id;
         row[1] = title;
         row[2] = dateFormat.format(startDate);
         row[3] = endDate == null ? null : dateFormat.format(endDate);

@@ -24,7 +24,7 @@ public class ProjectTable extends javax.swing.JTable {
     public ProjectTable() {
         super();
         setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        setAutoCreateRowSorter(true);
+        setAutoCreateRowSorter(false);
         setAutoResizeMode(AUTO_RESIZE_NEXT_COLUMN);
         setModel(new DefaultTableModel(columnNames, 0));
         setCellRenderers();
@@ -83,6 +83,24 @@ public class ProjectTable extends javax.swing.JTable {
 
     public int getSelectedRowConverted() {
         //return getSelectedRow();
-        return getSelectedRow() < 0 ? -1 : convertRowIndexToModel(getSelectedRow());
+        return convertRowIndexToModel(getSelectedRow());
+        //return convertRowIndexToView(getSelectedRow());
     }
+    /*
+     public void addKeyListeners(final MainFrame mainFrame) {
+     addKeyListener(new java.awt.event.KeyAdapter() {
+     // project table key pressed
+     @Override
+     public void keyPressed(java.awt.event.KeyEvent evt) {
+     mainFrame.projectTableKeyPressed(evt);
+     }
+
+     // project table key released
+     @Override
+     public void keyReleased(java.awt.event.KeyEvent evt) {
+     mainFrame.projectTableKeyReleased(evt);
+     }
+     });
+     }
+     */
 }
