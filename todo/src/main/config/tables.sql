@@ -33,9 +33,9 @@ CREATE TABLE project(
     FOREIGN KEY (category) REFERENCES category(id),
     FOREIGN KEY (status) REFERENCES status(id)
 );
-INSERT INTO project (title) VALUES('Project one');
-INSERT INTO project (title) VALUES('Project two');
-INSERT INTO project (title) VALUES('Project tree');
+INSERT INTO project (title, remarks) VALUES('Project one','a');
+INSERT INTO project (title, remarks) VALUES('Project two','b');
+INSERT INTO project (title,remarks) VALUES('Project tree','c');
 
 DROP TABLE IF EXISTS task;
 CREATE TABLE task(
