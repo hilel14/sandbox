@@ -42,10 +42,6 @@ public class TaskTable extends javax.swing.JTable {
         getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(text));
     }
 
-    public int getSelectedRowConverted() {
-        return getSelectedRow() < 0 ? -1 : convertRowIndexToModel(getSelectedRow());
-    }
-
     class TaskTableModel extends DefaultTableModel {
 
         final Class[] types = new Class[]{Integer.class, Boolean.class, String.class};

@@ -29,9 +29,6 @@ public class JdbcController implements AutoCloseable {
     static final Logger logger = Logger.getLogger(JdbcController.class.getName());
     Connection connection;
     PreparedStatement findAllProjects;
-    PreparedStatement findActiveProjects;
-    PreparedStatement findOpenProjects;
-    PreparedStatement findCloseProjects;
     PreparedStatement findAllCategories;
     PreparedStatement findAllStatuses;
     PreparedStatement findProjectById;
@@ -65,9 +62,6 @@ public class JdbcController implements AutoCloseable {
 
     private void preparedStatements() throws SQLException {
         findAllProjects = connection.prepareStatement("SELECT * FROM project ORDER BY id;");
-        findActiveProjects = connection.prepareStatement("SELECT * FROM project WHERE status = 1 ORDER BY id;");
-        findOpenProjects = connection.prepareStatement("SELECT * FROM project WHERE status = 2 ORDER BY id;");
-        findCloseProjects = connection.prepareStatement("SELECT * FROM project WHERE status = 3 ORDER BY id;");
         findAllCategories = connection.prepareStatement("SELECT * FROM category ORDER BY id;");
         findAllStatuses = connection.prepareStatement("SELECT * FROM status ORDER BY id;");
 
@@ -90,36 +84,6 @@ public class JdbcController implements AutoCloseable {
     public List<Project> findAllProjects() throws SQLException {
         List<Project> projects = new ArrayList<>();
         ResultSet resultSet = findAllProjects.executeQuery();
-        while (resultSet.next()) {
-            Project project = recordToProject(resultSet);
-            projects.add(project);
-        }
-        return projects;
-    }
-
-    public List<Project> findActiveProjects() throws SQLException {
-        List<Project> projects = new ArrayList<>();
-        ResultSet resultSet = findActiveProjects.executeQuery();
-        while (resultSet.next()) {
-            Project project = recordToProject(resultSet);
-            projects.add(project);
-        }
-        return projects;
-    }
-
-    public List<Project> findOpenProjects() throws SQLException {
-        List<Project> projects = new ArrayList<>();
-        ResultSet resultSet = findOpenProjects.executeQuery();
-        while (resultSet.next()) {
-            Project project = recordToProject(resultSet);
-            projects.add(project);
-        }
-        return projects;
-    }
-
-    public List<Project> findCloseProjects() throws SQLException {
-        List<Project> projects = new ArrayList<>();
-        ResultSet resultSet = findCloseProjects.executeQuery();
         while (resultSet.next()) {
             Project project = recordToProject(resultSet);
             projects.add(project);

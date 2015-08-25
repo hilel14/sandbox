@@ -80,27 +80,4 @@ public class ProjectTable extends javax.swing.JTable {
         JComboBox component = (JComboBox) getColumnModel().getColumn(columnIndex).getCellEditor().getTableCellEditorComponent(null, null, false, 0, 0);
         return (DefaultComboBoxModel) component.getModel();
     }
-
-    public int getSelectedRowConverted() {
-        return getSelectedRow();
-        //return convertRowIndexToModel(getSelectedRow());
-        //return convertRowIndexToView(getSelectedRow());
-    }
-    /*
-     public void addKeyListeners(final MainFrame mainFrame) {
-     addKeyListener(new java.awt.event.KeyAdapter() {
-     // project table key pressed
-     @Override
-     public void keyPressed(java.awt.event.KeyEvent evt) {
-     mainFrame.projectTableKeyPressed(evt);
-     }
-
-     // project table key released
-     @Override
-     public void keyReleased(java.awt.event.KeyEvent evt) {
-     mainFrame.projectTableKeyReleased(evt);
-     }
-     });
-     }
-     */
 }

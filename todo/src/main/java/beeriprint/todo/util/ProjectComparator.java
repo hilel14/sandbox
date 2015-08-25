@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package beeriprint.todo.util.comparators;
+package beeriprint.todo.util;
 
 import beeriprint.todo.model.Project;
 import java.util.Comparator;
