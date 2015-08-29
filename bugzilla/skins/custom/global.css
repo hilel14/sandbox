@@ -1,0 +1,6 @@
+/*Used for custome description filed (Large Text Box) */
+.field_textarea_readonly {
+   float: none;
+   max-width: 100%;
+   max-height: 18em;
+}
