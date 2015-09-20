@@ -7,7 +7,7 @@
     <artifactId>spring-batch-admin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <description>A sample web application (WAR project) for Spring Batch Admin console. 
-Based on spring-batch-admin-sample 1.3.1</description>
+        Based on spring-batch-admin-sample 1.3.1</description>
     <packaging>war</packaging>
     <name>Spring Batch Admin</name>
     <properties>
@@ -30,6 +30,16 @@ Based on spring-batch-admin-sample 1.3.1</description>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.4-1203-jdbc41</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.36</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.189</version>
         </dependency>
     </dependencies>
 </project>
