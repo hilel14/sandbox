@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:batch="http://www.springframework.org/schema/batch"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+          http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <beans:description>
+        Example job providing a skeleton for a typical batch application.
+        Launch script example:
+        CP=resources/:lib/*:/opt/spring/batch/current/resources/:/opt/spring/batch/current/lib/*
+        MAIN=org.springframework.batch.core.launch.support.CommandLineJobRunner
+        ARGS="classpath:/my-job-1.xml my-job-1 inputFile=file:$1 outputFile=file:$2 jobInstance=$3"
+        java -cp $CP $MAIN $ARGS
+    </beans:description>
+    
+    <beans:import resource="classpath:launch-context.xml"/>
+
+    <batch:job id="my-job-1">
+        <batch:step id="my-step-1">
+            <batch:tasklet>
+                <batch:chunk reader="itemReader" writer="itemWriter"
+                             commit-interval="5"/>
+            </batch:tasklet>
+            <batch:fail on="FAILED"/>
+            <batch:end on="*"/>
+        </batch:step>
+    </batch:job>
+
+    <beans:bean id="itemReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <beans:property name="resource" value="#{jobParameters[inputFile]}" />
+
+        <beans:property name="lineMapper">
+            <beans:bean class="org.springframework.batch.item.file.mapping.PassThroughLineMapper">
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="itemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <beans:property name="resource" value="#{jobParameters[outputFile]}" />
+        <beans:property name="lineAggregator">
+            <beans:bean class="org.springframework.batch.item.file.transform.PassThroughLineAggregator">
+            </beans:bean>            
+        </beans:property>
+    </beans:bean>
+
+</beans:beans>
