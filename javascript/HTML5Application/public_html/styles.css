@@ -8,6 +8,38 @@ and open the template in the editor.
     Author     : hilel
 */
 
-td {
+td,th {
     border: 1px solid black;
 }
+
+th {
+    text-align: left;
+}
+
+.formLayout {
+    /*
+    background-color: #f3f3f3;
+    border: solid 1px #a1a1a1;
+    height: 300px;
+    padding: 10px;
+    */
+    width: 800px;
+}
+
+.formLayout label, .formLayout input {
+    display: block;
+    width: 300px;
+    float: left;
+    margin-bottom: 3px;
+}
+
+/*
+.formLayout label {
+    text-align: right;
+    padding-right: 20px;
+}
+
+br {
+    clear: left;
+}
+*/

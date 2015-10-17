@@ -5,6 +5,7 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
+
     <head>
         <title>Address Book</title>
         <meta charset="UTF-8">
@@ -12,11 +13,40 @@ and open the template in the editor.
         <script src="app.js"></script>
         <link rel="stylesheet" type="text/css" href="styles.css">
     </head>
+
     <body>
-        <div id="commands">
-            <button id="showAddressList" onclick="fillAddressList()">Fill Address List</button>
+
+        <div id="control-panel" style="width: 800px">
+            <button id="show-address-list" onclick="showAllContacts()">All</button>
+            <button id="cancel-button" style="display: none" onclick="cancel()">Cancel</button>
+            <button id="create-new-contact" onclick="createNewContact()">New</button>
+            <button id="save-contact-button" style="display: none" onclick="saveContact()">Save</button>
+            <button id="delete-contact-button" style="display: none" onclick="deleteContact()">Delete</button>
         </div>
-        <div id="address-list-view">
+
+        <hr>
+
+        <div id="edit-contact-panel" style="display: none">
+            <div class="formLayout">
+                <form id="contact-details-form">
+                    <!--
+                    <label>ID</label>
+                    -->
+                    <input type="hidden" name="contactId">
+                    <label>First name:</label>
+                    <input type="text" name="firstName">
+                    <label>Last name:</label>
+                    <input type="text" name="lastName">
+                    <label>Phone:</label>
+                    <input type="text" name="phone">
+                    <label>Email:</label>
+                    <input type="text" name="email">
+                </form>
+            </div>
+        </div>
+
+        <div id="address-list-panel" style="display: none">
+            <p>Click on ID to edit</p>
             <table id="address-list-table">
                 <thead>
                     <tr>
@@ -25,7 +55,6 @@ and open the template in the editor.
                         <th>Last Name</th>
                         <th>Phone</th>
                         <th>Email</th>
-                        <th>Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,20 +64,21 @@ and open the template in the editor.
                         <td>Smith</td>
                         <td>123-456-7890</td>
                         <td>john@example.com</td>
-                        <td>23/12/1945</td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td>*</td>
-                        <td>*</td>
-                        <td>*</td>
-                        <td>*</td>
-                        <td>*</td>
-                        <td>*</td>
+                        <td colspan="4">Last update</td>
+                        <td>N/A</td>
                     </tr>
                 </tfoot>
             </table>
         </div>
+
+        <div id="status-panel" style="display: none">
+            <p id="status-message">This is the status message</p>
+        </div>
+
     </body>
+
 </html>
