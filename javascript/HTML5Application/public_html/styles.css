@@ -10,10 +10,22 @@ and open the template in the editor.
 
 td,th {
     border: 1px solid black;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 th {
     text-align: left;
+}
+
+/* 
+tfoot,thead {
+    background-color: lightgray; 
+}
+*/
+
+#total-contacts {
+    text-align: center;
 }
 
 .formLayout {

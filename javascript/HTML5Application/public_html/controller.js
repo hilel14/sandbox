@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-var allPanels = ["status-panel", "edit-panel", "list-panel"];
+var allPanels = ["status-panel", "edit-panel", "contacts-panel"];
 var allButtons = ["all-button", "cancel-button", "create-button", "save-button", "delete-button"];
+var masterRow = undefined;
 
 /*
  * Event listeners
@@ -28,20 +29,22 @@ window.addEventListener("load", function () {
     document.getElementById("delete-button").addEventListener("click", function () {
         deleteButtonOnClick();
     });
+    // clone first row of contact table
+    masterRow = document.getElementById("master-row").cloneNode(true);
     // start with all-contacts view
     populateContactTable();
-    showSelectedPanel("list-panel");
+    showSelectedPanel("contacts-panel");
     showSelectedButtons(["all-button", "create-button"]);
 });
 
 function allButtonOnClick() {
     populateContactTable();
-    showSelectedPanel("list-panel");
+    showSelectedPanel("contacts-panel");
     showSelectedButtons(["all-button", "create-button"]);
 }
 
 function cancelButtonOnClick() {
-    showSelectedPanel("list-panel");
+    showSelectedPanel("contacts-panel");
     showSelectedButtons(["all-button", "create-button"]);
 }
 
@@ -76,7 +79,7 @@ function saveButtonOnClick() {
     }
 
     populateContactTable();
-    showSelectedPanel("list-panel");
+    showSelectedPanel("contacts-panel");
     showSelectedButtons(["all-button", "create-button"]);
 }
 
@@ -86,7 +89,7 @@ function deleteButtonOnClick() {
     deleteContact(contactId);
 
     populateContactTable();
-    showSelectedPanel("list-panel");
+    showSelectedPanel("contacts-panel");
     showSelectedButtons(["all-button", "create-button"]);
 }
 
@@ -103,7 +106,7 @@ function editButtonOnClick(contact) {
 }
 
 /*
- * Content manipulation functions
+ * DOM manipulation functions
  */
 
 function showSelectedPanel(selectedPanel) {
@@ -134,11 +137,8 @@ function showMessage(msg) {
 }
 
 function populateContactTable() {
-    //"use strict";
-    //window.alert(new Date());
     var table = document.getElementById("contact-table");
     var tbody = table.getElementsByTagName("tbody")[0];
-    var master = tbody.getElementsByTagName("tr")[0].cloneNode(true);
 
     for (i = tbody.rows.length; i > 0; i--) {
         tbody.deleteRow(i - 1);
@@ -148,25 +148,22 @@ function populateContactTable() {
     var n = contactList.length;
 
     for (i = 0; i < n; i++) {
-        var row = master.cloneNode(true);
+        var row = masterRow.cloneNode(true);
         fillOneRow(row, contactList[i]);
         tbody.appendChild(row);
     }
-
-    var tfoot = table.getElementsByTagName("tfoot")[0];
-    var td2 = tfoot.getElementsByTagName("tr")[0].getElementsByTagName("td")[1];
-    td2.innerHTML = new Date();
+    
+    document.getElementById("total-contacts").innerHTML = contactList.length;
 }
 
 function fillOneRow(row, input) {
-    //window.alert(i);
     var cells = row.getElementsByTagName("td");
     cells[0].innerHTML = input.id;
-    cells[0].addEventListener("click", function () {
-        editButtonOnClick(input);
-    });
     cells[1].innerHTML = input.first_name;
     cells[2].innerHTML = input.last_name;
     cells[3].innerHTML = input.phone;
     cells[4].innerHTML = input.email;
+    cells[5].addEventListener("click", function () {
+        editButtonOnClick(input);
+    });
 }

@@ -27,10 +27,6 @@ and open the template in the editor.
 
         <hr>
 
-        <div id="status-panel">
-            <p id="status-message">This is the status message</p>
-        </div>
-
         <div id="edit-panel" class="formLayout">
             <form id="contact-details-form">
                 <!--
@@ -48,7 +44,7 @@ and open the template in the editor.
             </form>
         </div>
 
-        <div id="list-panel">
+        <div id="contacts-panel">
             <table id="contact-table">
                 <thead>
                     <tr>
@@ -57,24 +53,32 @@ and open the template in the editor.
                         <th>Last Name</th>
                         <th>Phone</th>
                         <th>Email</th>
+                        <th>Edit</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr id="master-row">
                         <td>1</td>
                         <td>John</td>
                         <td>Smith</td>
                         <td>123-456-7890</td>
                         <td>john@example.com</td>
+                        <td>
+                            <button>Edit</button>
+                        </td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="4">Last update</td>
-                        <td>N/A</td>
+                        <td colspan="5">Total contacts</td>
+                        <td id="total-contacts">0</td>
                     </tr>
                 </tfoot>
             </table>
+        </div>
+
+        <div id="status-panel">
+            <p id="status-message">This is the status message</p>
         </div>
 
     </body>
