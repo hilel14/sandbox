@@ -10,43 +10,44 @@ and open the template in the editor.
         <title>Address Book</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="app.js"></script>
+        <script src="controller.js"></script>
         <link rel="stylesheet" type="text/css" href="styles.css">
     </head>
 
     <body>
 
-        <div id="control-panel" style="width: 800px">
-            <button id="show-address-list" onclick="showAllContacts()">All</button>
-            <button id="cancel-button" style="display: none" onclick="cancel()">Cancel</button>
-            <button id="create-new-contact" onclick="createNewContact()">New</button>
-            <button id="save-contact-button" style="display: none" onclick="saveContact()">Save</button>
-            <button id="delete-contact-button" style="display: none" onclick="deleteContact()">Delete</button>
+        <div id="control-panel">
+            <button id="all-button">All</button>
+            <button id="cancel-button">Cancel</button>
+            <button id="create-button">New</button>
+            <button id="save-button">Save</button>
+            <button id="delete-button">Delete</button>
         </div>
 
         <hr>
 
-        <div id="edit-contact-panel" style="display: none">
-            <div class="formLayout">
-                <form id="contact-details-form">
-                    <!--
-                    <label>ID</label>
-                    -->
-                    <input type="hidden" name="contactId">
-                    <label>First name:</label>
-                    <input type="text" name="firstName">
-                    <label>Last name:</label>
-                    <input type="text" name="lastName">
-                    <label>Phone:</label>
-                    <input type="text" name="phone">
-                    <label>Email:</label>
-                    <input type="text" name="email">
-                </form>
-            </div>
+        <div id="status-panel">
+            <p id="status-message">This is the status message</p>
         </div>
 
-        <div id="address-list-panel" style="display: none">
-            <p>Click on ID to edit</p>
+        <div id="edit-panel" class="formLayout">
+            <form id="contact-details-form">
+                <!--
+                <label>ID</label>
+                -->
+                <input type="hidden" name="contactId">
+                <label>First name:</label>
+                <input type="text" name="firstName">
+                <label>Last name:</label>
+                <input type="text" name="lastName">
+                <label>Phone:</label>
+                <input type="text" name="phone">
+                <label>Email:</label>
+                <input type="text" name="email">
+            </form>
+        </div>
+
+        <div id="list-panel">
             <table id="address-list-table">
                 <thead>
                     <tr>
@@ -73,10 +74,6 @@ and open the template in the editor.
                     </tr>
                 </tfoot>
             </table>
-        </div>
-
-        <div id="status-panel" style="display: none">
-            <p id="status-message">This is the status message</p>
         </div>
 
     </body>

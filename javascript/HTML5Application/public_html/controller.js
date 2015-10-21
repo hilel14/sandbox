@@ -4,41 +4,110 @@
  * and open the template in the editor.
  */
 
-function showAllContacts() {
-    document.getElementById("address-list-panel").style.display = "block";
-    document.getElementById("edit-contact-panel").style.display = "none";
-    document.getElementById("status-panel").style.display = "none";
-    allContactsButtons();
+var allPanels = ["status-panel", "edit-panel", "list-panel"];
+var allButtons = ["all-button", "cancel-button", "create-button", "save-button", "delete-button"];
+
+/*
+ * Event listeners
+ */
+
+window.addEventListener("load", function () {
+    // add mouse click event listeners
+    document.getElementById("all-button").addEventListener("click", function () {
+        allButtonOnClick();
+    });
+    document.getElementById("cancel-button").addEventListener("click", function () {
+        cancelButtonOnClick();
+    });
+    document.getElementById("create-button").addEventListener("click", function () {
+        createButtonOnClick();
+    });
+    document.getElementById("save-button").addEventListener("click", function () {
+        saveButtonOnClick();
+    });
+    document.getElementById("delete-button").addEventListener("click", function () {
+        deleteButtonOnClick();
+    });
+    // start with all-contacts view
     fillAddressList();
+    showSelectedPanel("list-panel");
+    showSelectedButtons(["all-button", "create-button"]);
+});
+
+function allButtonOnClick() {
+    fillAddressList();
+    showSelectedPanel("list-panel");
+    showSelectedButtons(["all-button", "create-button"]);
 }
 
-function cancel() {
-    document.getElementById("address-list-panel").style.display = "block";
-    document.getElementById("edit-contact-panel").style.display = "none";
-    document.getElementById("status-panel").style.display = "none";
-    allContactsButtons();
+function cancelButtonOnClick() {
+    showSelectedPanel("list-panel");
+    showSelectedButtons(["all-button", "create-button"]);
 }
 
-function createNewContact() {
-    document.getElementById("address-list-panel").style.display = "none";
-    document.getElementById("edit-contact-panel").style.display = "block";
-    document.getElementById("status-panel").style.display = "none";
-    newContactButtons();
-
+function createButtonOnClick() {
     var form = document.getElementById("contact-details-form");
     form.elements["contactId"].value = "";
     form.elements["firstName"].value = "";
     form.elements["lastName"].value = "";
     form.elements["phone"].value = "";
     form.elements["email"].value = "";
+
+    showSelectedPanel("edit-panel");
+    showSelectedButtons(["cancel-button", "save-button"]);
 }
+
+function saveButtonOnClick() {
+    saveContact();
+    fillAddressList();
+    showSelectedPanel("list-panel");
+    showSelectedButtons(["all-button", "create-button"]);
+}
+
+function deleteButtonOnClick() {
+    deleteContact();
+}
+
+/*
+ * Utility functions
+ */
+
+function showSelectedPanel(selectedPanel) {
+    //document.getElementById("save-contact-button").style.visibility = "hidden";
+    // hide all panels
+    for (i in allPanels) {
+        document.getElementById(allPanels[i]).style.display = "none";
+    }
+    // show selected panel
+    document.getElementById(selectedPanel).style.display = "block";
+}
+
+function showSelectedButtons(selectedButtons) {
+    // hide all buttons
+    for (i in allButtons) {
+        document.getElementById(allButtons[i]).style.display = "none";
+    }
+    // show selected buttons
+    for (i in selectedButtons) {
+        document.getElementById(selectedButtons[i]).style.display = "inline";
+    }
+}
+
+function showMessage(msg) {
+    document.getElementById("status-message").innerHTML = msg;
+    showSelectedPanel("status-panel");
+    showSelectedButtons(["all-button"]);
+}
+
+/*
+ * CRUD operations
+ */
 
 function saveContact() {
     var form = document.getElementById("contact-details-form");
     var contactId = form.elements["contactId"].value;
     if (contactId === "") {
-        contactId = findNextContactId();
-        //alert("contactId = " + contactId);
+        contactId = addressList.length > 0 ? addressList[addressList.length - 1].id + 1 : 101;
         // create and push new object to addressList
         var newContact = {id: contactId, first_name: "", last_name: "", phone: "", email: ""};
         addressList.push(newContact);
@@ -48,46 +117,21 @@ function saveContact() {
     selectedContact.last_name = form.elements["lastName"].value;
     selectedContact.phone = form.elements["phone"].value;
     selectedContact.email = form.elements["email"].value;
-    /*
-     document.write(addressList.length);
-     document.write("<br>");
-     document.write(addressList[0]);
-     document.write("<br>");
-     document.write(addressList[0].email);
-     */
-    showAllContacts();
-}
-
-function showMessage(msg) {
-    document.getElementById("address-list-panel").style.display = "none";
-    document.getElementById("edit-contact-panel").style.display = "none";
-    document.getElementById("status-panel").style.display = "block";
-    document.getElementById("status-message").innerHTML = msg;
-    allContactsButtons();
-}
-
-function findNextContactId() {
-    //alert("addressList.length = " + addressList.length);
-    if (addressList.length > 0) {
-        return addressList[addressList.length - 1].id + 1;
-    }
-    return 101;
 }
 
 function editContact(contactId) {
     var form = document.getElementById("contact-details-form");
     form.elements["contactId"].value = contactId;
     //document.getElementById("formContactId").innerHTML = contactId;
-    var contact = findContactById(contactId)
+    var contact = findContactById(contactId);
     //document.getElementById("formFirstName").innerHTML = contact.first_name;
     form.elements["firstName"].value = contact.first_name;
     form.elements["lastName"].value = contact.last_name;
     form.elements["phone"].value = contact.phone;
     form.elements["email"].value = contact.email;
 
-    document.getElementById("address-list-panel").style.display = "none";
-    document.getElementById("edit-contact-panel").style.display = "block";
-    editContactButtons();
+    showSelectedPanel("edit-panel");
+    showSelectedButtons(["cancel-button", "save-button", "delete-button"]);
 }
 
 function deleteContact() {
@@ -104,7 +148,10 @@ function deleteContact() {
             break;
         }
     }
-    showAllContacts();
+
+    fillAddressList();
+    showSelectedPanel("list-panel");
+    showSelectedButtons(["all-button", "create-button"]);
 }
 
 function fillAddressList() {
@@ -128,31 +175,6 @@ function fillAddressList() {
     var tfoot = table.getElementsByTagName("tfoot")[0];
     var td2 = tfoot.getElementsByTagName("tr")[0].getElementsByTagName("td")[1];
     td2.innerHTML = new Date();
-}
-
-function allContactsButtons() {
-    //document.getElementById("save-contact-button").style.visibility = "hidden";
-    document.getElementById("show-address-list").style.display = "inline";
-    document.getElementById("cancel-button").style.display = "none";
-    document.getElementById("create-new-contact").style.display = "inline";
-    document.getElementById("save-contact-button").style.display = "none";
-    document.getElementById("delete-contact-button").style.display = "none";
-}
-
-function newContactButtons() {
-    document.getElementById("show-address-list").style.display = "none";
-    document.getElementById("cancel-button").style.display = "inline";
-    document.getElementById("create-new-contact").style.display = "none";
-    document.getElementById("save-contact-button").style.display = "inline";
-    document.getElementById("delete-contact-button").style.display = "none";
-}
-
-function editContactButtons() {
-    document.getElementById("show-address-list").style.display = "none";
-    document.getElementById("cancel-button").style.display = "inline";
-    document.getElementById("create-new-contact").style.display = "none";
-    document.getElementById("save-contact-button").style.display = "inline";
-    document.getElementById("delete-contact-button").style.display = "inline";
 }
 
 function fillOneRow(row, i) {
