@@ -1,0 +1,51 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Oct 13, 2015, 4:07:04 PM
+    Author     : hilel
+*/
+
+#main-panel {
+    width: 640px;
+    margin: auto;
+}
+
+#edit-panel, #contacts-panel {
+    height: 480px;
+}
+
+#status-message {
+    font-style: italic;
+    font-weight: bold;
+}
+
+td,th {
+    border: 1px solid black;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+th {
+    text-align: left;
+}
+
+#total-contacts {
+    text-align: center;
+}
+
+.formLayout label, .formLayout input {
+    display: block;
+    float: left;
+    margin-bottom: 3px;
+}
+
+.formLayout label {
+    width: 100px;
+}
+
+.formLayout input {
+    width: 500px;
+}

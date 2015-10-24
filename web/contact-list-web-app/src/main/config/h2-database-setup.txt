@@ -1,0 +1,17 @@
+org.h2.Driver
+jdbc:h2:tcp://localhost/test
+user1 / 123456
+
+DROP TABLE IF EXISTS contacts;
+
+CREATE TABLE contacts (
+	ID INT auto_increment PRIMARY KEY, 
+	first_name VARCHAR(255),
+	last_name VARCHAR(255),
+	phone VARCHAR(255),
+	email VARCHAR(255)
+);
+
+INSERT INTO contacts (email) VALUES( 'a@b.c');
+
+java -cp  ~/.m2/repository/com/h2database/h2/1.4.190/h2-1.4.190.jar org.h2.tools.Server -tcp -web -baseDir /var/opt/h2
