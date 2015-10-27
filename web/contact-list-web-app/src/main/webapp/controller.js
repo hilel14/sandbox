@@ -77,14 +77,23 @@ function saveButtonOnClick() {
     var contactId = form.elements["contactId"].value;
     if (contactId === "") {
         contactId = createContact(contact);
+        var row = masterRow.cloneNode(true);
+        fillOneRow(row, contact);
+        $('#contact-table-body').append(row);
         showStatusMessage("Contact number " + contactId + " created successfully");
     } else {
         contact.id = contactId;
         updateContact(contact);
+
+        $('#c' + contactId).find('td').eq(1).text(contact.firstName);
+        $('#c' + contactId).find('td').eq(2).text(contact.lastName);
+        $('#c' + contactId).find('td').eq(3).text(contact.phone);
+        $('#c' + contactId).find('td').eq(4).text(contact.email);
+
         showStatusMessage("Contact number " + contactId + " updated successfully");
     }
 
-    populateContactTable();
+    //populateContactTable();
     showSelectedPanel("contacts-panel");
     showSelectedButtons(["all-button", "create-button"]);
 }
@@ -94,7 +103,17 @@ function deleteButtonOnClick() {
     var contactId = form.elements["contactId"].value;
     deleteContact(contactId);
 
-    populateContactTable();
+    //var tbody = document.getElementById("contact-table-body");
+    /*
+     $('#contact-table-body tr').each(function () {
+     $(this).find('td').each(function (td) {
+     console.log(td);
+     });
+     });
+     */
+    $('#c' + contactId).remove();
+
+    //populateContactTable();
     showSelectedPanel("contacts-panel");
     showSelectedButtons(["all-button", "create-button"]);
     showStatusMessage("Contact number " + contactId + " deleted");
@@ -161,6 +180,7 @@ function fillRows(data) {
 }
 
 function fillOneRow(row, input) {
+    row.id = "c" + input.id;
     var cells = row.getElementsByTagName("td");
     cells[0].innerHTML = input.id;
     cells[1].innerHTML = input.firstName;
