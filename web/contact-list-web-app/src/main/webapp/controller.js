@@ -85,15 +85,15 @@ function saveButtonOnClick() {
         contact.id = contactId;
         updateContact(contact);
 
-        $('#c' + contactId).find('td').eq(1).text(contact.firstName);
-        $('#c' + contactId).find('td').eq(2).text(contact.lastName);
-        $('#c' + contactId).find('td').eq(3).text(contact.phone);
-        $('#c' + contactId).find('td').eq(4).text(contact.email);
+        var row = $('#c' + contactId);
+        row.find('td').eq(1).text(contact.firstName);
+        row.find('td').eq(2).text(contact.lastName);
+        row.find('td').eq(3).text(contact.phone);
+        row.find('td').eq(4).text(contact.email);
 
         showStatusMessage("Contact number " + contactId + " updated successfully");
     }
 
-    //populateContactTable();
     showSelectedPanel("contacts-panel");
     showSelectedButtons(["all-button", "create-button"]);
 }
@@ -103,17 +103,8 @@ function deleteButtonOnClick() {
     var contactId = form.elements["contactId"].value;
     deleteContact(contactId);
 
-    //var tbody = document.getElementById("contact-table-body");
-    /*
-     $('#contact-table-body tr').each(function () {
-     $(this).find('td').each(function (td) {
-     console.log(td);
-     });
-     });
-     */
     $('#c' + contactId).remove();
 
-    //populateContactTable();
     showSelectedPanel("contacts-panel");
     showSelectedButtons(["all-button", "create-button"]);
     showStatusMessage("Contact number " + contactId + " deleted");
@@ -129,7 +120,7 @@ function editButtonOnClick(contact) {
 
     showSelectedPanel("edit-panel");
     showSelectedButtons(["cancel-button", "save-button", "delete-button"]);
-    showStatusMessage("Update contact details or Cancel");
+    showStatusMessage("Update contact details, Delete or Cancel");
 }
 
 /*
@@ -137,7 +128,6 @@ function editButtonOnClick(contact) {
  */
 
 function showSelectedPanel(selectedPanel) {
-    //document.getElementById("save-contact-button").style.visibility = "hidden";
     // hide all panels
     for (var i in allPanels) {
         document.getElementById(allPanels[i]).style.display = "none";
