@@ -9,17 +9,23 @@ and open the template in the editor.
 */
 
 #main-panel {
-    width: 640px;
+    width: 800px;
+    height: 600px;
     margin: auto;
 }
 
 #edit-panel, #contacts-panel {
-    height: 480px;
+    height: 300px;
+    overflow: auto;
 }
 
 #status-message {
     font-style: italic;
     font-weight: bold;
+}
+
+table {
+    width: 100%;
 }
 
 td,th {
@@ -47,5 +53,5 @@ th {
 }
 
 .formLayout input {
-    width: 500px;
+    width: 690px;
 }
