@@ -6,7 +6,7 @@
  Delete
  */
 
-var url = "http://localhost:8080/contact-list-web-app/webresources/generic";
+var url = "http://localhost:8080/contact-list-web-app/webapi/generic";
 
 function createContact(input) {
     $.ajax({

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.tomcat.rest.demo;
+package org.my.contactlist;
 
 import java.sql.SQLException;
 import java.util.List;

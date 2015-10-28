@@ -1,4 +1,4 @@
-package com.mycompany.tomcat.rest.demo;
+package org.my.contactlist;
 
 public class Contact {
 
