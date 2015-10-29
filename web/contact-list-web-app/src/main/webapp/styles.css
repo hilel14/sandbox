@@ -16,7 +16,10 @@ and open the template in the editor.
 
 #edit-panel, #contacts-panel {
     height: 300px;
+    margin-top: 30px;
+    margin-bottom: 40px;
     overflow: auto;
+    box-shadow: 10px 10px 5px #888888;
 }
 
 #status-message {
@@ -25,7 +28,7 @@ and open the template in the editor.
 }
 
 table {
-    width: 100%;
+    width: 95%;
 }
 
 td,th {
@@ -42,16 +45,22 @@ th {
     text-align: center;
 }
 
-.formLayout label, .formLayout input {
-    display: block;
-    float: left;
-    margin-bottom: 3px;
+.formLayout {
+    width: 95%;
 }
 
 .formLayout label {
+    display: block;
     width: 100px;
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .formLayout input {
-    width: 690px;
+    display: block;
+    width: 600px;
+    float: right;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
