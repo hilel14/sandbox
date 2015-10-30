@@ -1,7 +1,3 @@
-org.h2.Driver
-jdbc:h2:tcp://localhost/test
-user1 / 123456
-
 DROP TABLE IF EXISTS contacts;
 
 CREATE TABLE contacts (
@@ -12,7 +8,10 @@ CREATE TABLE contacts (
 	email VARCHAR(255)
 );
 
+/*
+
 INSERT INTO contacts (email) VALUES( 'a@b.c');
+
 Another option: Import data from file us-500.csv (source: https://www.briandunning.com/sample-data)
 
-java -cp  ~/.m2/repository/com/h2database/h2/1.4.190/h2-1.4.190.jar org.h2.tools.Server -tcp -web -baseDir /var/opt/h2
+*/
