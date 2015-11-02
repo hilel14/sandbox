@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+factory options:
+org.apache.commons.dbcp.BasicDataSourceFactory
+org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory
+-->
 <Context antiJARLocking="true" path="/contact-list-web-app">
     <Resource 
         name="jdbc/TestDB" 
-        type="javax.sql.DataSource" 
+        type="javax.sql.DataSource"         
+        factory="org.apache.commons.dbcp.BasicDataSourceFactory"
         auth="Container" 
         driverClassName="org.h2.Driver" 
         url="jdbc:h2:tcp://localhost/test" 

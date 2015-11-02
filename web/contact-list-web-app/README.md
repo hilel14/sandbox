@@ -16,7 +16,7 @@ My Contact List Web Application Notes
    * styles.css
    * controller.js
    * persistence.js
-2. Make sure the head section of **index.html** has a reference to**persistence.js**, and not persistence-rest.js
+2. Make sure the head section of **index.html** has a reference to **persistence.js**, and not persistence-rest.js
 3. Open **index.html** in your web browser
 
 # WebApp deployment
