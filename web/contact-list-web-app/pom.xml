@@ -7,6 +7,11 @@
     <artifactId>contact-list-web-app</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
+    
+    <properties>
+        <jersey.version>2.22.1</jersey.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <build>
         <finalName>contact-list-web-app</finalName>
@@ -50,9 +55,19 @@
             <artifactId>h2</artifactId>
             <version>1.4.190</version>
         </dependency>
-    </dependencies>
-    <properties>
-        <jersey.version>2.22.1</jersey.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+        <!-- 
+        If this WAR is deployed to a Tomcat distribution that doesn't include tomcat-dbcp.jar 
+        (CentOS 7 RPM, for example), then do one of the following:
+        1. Enable next dependency
+        2. Change factory in context.xml to org.apache.commons.dbcp.BasicDataSourceFactory
+        -->
+        <!--
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-dbcp</artifactId>
+            <version>8.0.28</version>
+        </dependency>
+        -->
+    </dependencies>    
+    
 </project>
