@@ -11,16 +11,20 @@
  * Primary Styles
  */
 
-#aspect_submission_StepTransformer_field_dc_contributor_author_first {
-	float: right;
-}
-
-#aspect_submission_StepTransformer_field_dc_contributor_author_last {
-	clear: right;
-}
-
 #ds-content-wrapper {
 	direction: rtl;
+}
+
+#aspect_submission_StepTransformer_list_submit-progress {
+	direction: ltr;
+}
+
+#ds-feed-option-head {
+	direction: ltr;
+}
+
+#ds-feed-option {
+	direction: ltr;
 }
 
 /*Font size percentages based on the tables at developer.yahoo.com/yui/fonts/ */
@@ -566,9 +570,9 @@ li.ds-form-item .ds-form-label{
 
 li.ds-form-item label.ds-composite-component{
     display: block;
-    float: left;
+    float: right;
     font-size: 93%;
-    padding:0 8px 0 0;
+    padding:0 0 0 8px;
 }
 
 li.ds-form-item label.ds-composite-component input.ds-text-field{
@@ -593,6 +597,7 @@ li.ds-form-item label.ds-composite-component.last{
 .ds-add-button {
     vertical-align: top;
     margin-left: 8px;
+	margin-right: 8px;
 }
 
 

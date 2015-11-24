@@ -178,7 +178,7 @@
     <themes>
         <!-- Example configuration -->
 
-        <theme name="Beeri" handle="123456789/2" path="Beeri/"/>
+        <theme name="MirageRTL" handle="123456789/2" path="MirageRTL/"/>
 
         <!-- <theme name="Test Theme 1" handle="123456789/1" path="theme1/"/>    -->
         <!-- <theme name="Test Theme 2" regex="community-list" path="theme2/"/> -->

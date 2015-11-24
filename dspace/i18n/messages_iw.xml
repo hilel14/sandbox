@@ -24,7 +24,7 @@
 		-->
 
 	<!-- General keys -->
-	<message key="xmlui.general.dspace_home">בית</message>
+	<message key="xmlui.general.dspace_home">ראשי</message>
 	<message key="xmlui.general.search">חיפוש</message>
 	<message key="xmlui.general.go">Go</message>
 	<message key="xmlui.general.go_home">Go to DSpace home</message>
@@ -630,16 +630,16 @@
 	<!-- general submission aspect messages -->
 	<message key="xmlui.Submission.general.mydspace_home">MyDSpace Home</message>
 	<message key="xmlui.Submission.general.go_mydspace">Go to MyDSpace Home</message>
-	<message key="xmlui.Submission.general.submission.title">Item submission</message>
-	<message key="xmlui.Submission.general.submission.trail">Item submission</message>
-	<message key="xmlui.Submission.general.submission.head">Item submission</message>
+	<message key="xmlui.Submission.general.submission.title">קליטת פריט</message>
+	<message key="xmlui.Submission.general.submission.trail">קליטת פריט</message>
+	<message key="xmlui.Submission.general.submission.head">קליטת פריט</message>
 	<message key="xmlui.Submission.general.submission.previous">&lt; Previous</message>
 	<message key="xmlui.Submission.general.submission.save">Save &amp; Exit</message>
 	<message key="xmlui.Submission.general.submission.next">Next &gt;</message>
 	<message key="xmlui.Submission.general.submission.complete">Complete submission</message>
-	<message key="xmlui.Submission.general.workflow.title">Item submission</message>
-	<message key="xmlui.Submission.general.workflow.trail">Item submission</message>
-	<message key="xmlui.Submission.general.workflow.head">Item submission</message>
+	<message key="xmlui.Submission.general.workflow.title">קליטת פריט</message>
+	<message key="xmlui.Submission.general.workflow.trail">קליטת פריט</message>
+	<message key="xmlui.Submission.general.workflow.head">קליטת פריט</message>
 	<message key="xmlui.Submission.general.showfull">Show full item record</message>
 	<message key="xmlui.Submission.general.showsimple">Show simple item record</message>
 	<message key="xmlui.Submission.general.default.title">Submission</message>
@@ -760,18 +760,18 @@
 	<message key="xmlui.Submission.submit.InitialQuestionsStep.publisher">Publisher</message>
 
 	<!-- org.dspace.app.xmlui.Submission.submit.DescribeStep -->
-	<message key="xmlui.Submission.submit.DescribeStep.head">Describe Item</message>
+	<message key="xmlui.Submission.submit.DescribeStep.head">תיאור הפריט</message>
 	<message key="xmlui.Submission.submit.DescribeStep.unknown_field">Error: Unknown field type</message>
-	<message key="xmlui.Submission.submit.DescribeStep.required_field">This field is required</message>
-	<message key="xmlui.Submission.submit.DescribeStep.last_name_help">Last name, <i>e.g. Smith</i></message>
-	<message key="xmlui.Submission.submit.DescribeStep.first_name_help">First name(s) + "Jr", <i>e.g. Donald Jr</i></message>
-	<message key="xmlui.Submission.submit.DescribeStep.year">Year</message>
-	<message key="xmlui.Submission.submit.DescribeStep.month">Month</message>
-	<message key="xmlui.Submission.submit.DescribeStep.day">Day</message>
+	<message key="xmlui.Submission.submit.DescribeStep.required_field">זהו שדה חובה</message>
+	<message key="xmlui.Submission.submit.DescribeStep.last_name_help">שם משפחה, <i>דוגמא: ישראלי</i></message>
+	<message key="xmlui.Submission.submit.DescribeStep.first_name_help">שם פרטי ותואר, <i>דוגמא: ד"ר ישראל</i></message>
+	<message key="xmlui.Submission.submit.DescribeStep.year">שנה</message>
+	<message key="xmlui.Submission.submit.DescribeStep.month">חודש</message>
+	<message key="xmlui.Submission.submit.DescribeStep.day">יום</message>
 	<message key="xmlui.Submission.submit.DescribeStep.series_name">Series Name</message>
 	<message key="xmlui.Submission.submit.DescribeStep.report_no">Report or paper No.</message>
-	<message key="xmlui.Submission.submit.DescribeStep.controlledvocabulary.link">Subject Categories</message>
-	<message key="xmlui.Submission.submit.DescribeStep.controlledvocabulary.title">Subject Categories</message>
+	<message key="xmlui.Submission.submit.DescribeStep.controlledvocabulary.link">קטגוריות של נושאים</message>
+	<message key="xmlui.Submission.submit.DescribeStep.controlledvocabulary.title">קטגוריות של נושאים</message>
 	<message key="xmlui.Submission.submit.DescribeStep.controlledvocabulary.filter.label">Filter subjects</message>
 	<message key="xmlui.Submission.submit.DescribeStep.controlledvocabulary.filter.button">Filter</message>
 	<message key="xmlui.Submission.submit.DescribeStep.controlledvocabulary.loading">Please wait while the controlled vocabulary is loading.</message>
