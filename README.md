@@ -1,4 +1,8 @@
-# Notes
+# FYI
+
+This is my personal playground. 
+It is just a conveniet place for me to play with new technologies.
+It does not suppose to be used by (or even make sense to) anyone else.
 
 ### Markdown syntext
 
