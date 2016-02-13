@@ -1,0 +1,1 @@
+cat ~/Desktop/pdffilter-parseRTL.patch | patch -p0 --verbose

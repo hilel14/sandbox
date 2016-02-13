@@ -28,3 +28,6 @@ Test if file exist:
 	else
 	   echo "File $1 does not exist."
 	fi
+
+Find and exec:
+find . -exec grep foo {} +
