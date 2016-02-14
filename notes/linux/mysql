@@ -1,0 +1,87 @@
+General
+
+1. Starting the server (as root?)
+   mysqld_safe
+2. Stopping the server: 
+   mysqladmin -u root -p shutdown
+
+Securing the Initial MySQL Accounts
+
+1. Login to the DB
+   mysql -u root
+
+2. Remove anonymous accounts
+   DELETE FROM mysql.user WHERE User = '';
+   FLUSH PRIVILEGES;
+
+3. Assign password to root accounts
+   UPDATE mysql.user SET Password = PASSWORD('newpassword') WHERE User = 'root';
+   FLUSH PRIVILEGES;
+
+4. Logout
+   quit
+
+-----------------------------------------------------------------------------------------------
+
+Create local user with privileges limited to the test database
+
+1. Login to the DB
+   mysql -u root -p
+
+2. Create the user and grant all privileges, except the GRANT privilege
+   GRANT ALL ON test.* to 'user1'@'localhost' IDENTIFIED BY '123456';
+
+3. Logout
+   quit
+
+-----------------------------------------------------------------------------------------------
+
+Creating remote superuser accounts
+
+1. Login to the DB
+   mysql -u root -p
+
+2. Create local account first
+   GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' IDENTIFIED BY 'password' WITH GRANT OPTION;
+
+3. Create the remote account
+   GRANT ALL PRIVILEGES ON *.* TO 'admin'@'192.168.2.100' IDENTIFIED BY 'password' WITH GRANT OPTION;
+
+4. Logout
+   quit
+
+-----------------------------------------------------------------------------------------------
+
+Creating remote regular user:
+
+GRANT ALL ON bugzilla_hybrid_mail.* to 'bugzilla'@'localhost';
+GRANT ALL ON alm.* to 'jdev'@'localhost' IDENTIFIED BY '123456';
+GRANT ALL ON alm.* to 'jdev'@'%' IDENTIFIED BY '123456';
+
+-----------------------------------------------------------------------------------------------
+
+Export:
+mysqldump --opt -u root -p filedeck > filedeck.db
+Import:
+cat filedeck.db | mysql -u grafika -p filedeck
+
+table structure only option: --no-data
+
+-----------------------------------------------------------------------------------------------
+
+Remove schema from priv list:
+
+DELETE FROM mysql.db WHERE Db='table_name'
+
+-----------------------------------------------------------------------------------------------
+
+Connect with unicode:
+mysql -h 192.168.1.10 -u admin -p --default-character-set=utf8
+
+-----------------------------------------------------------------------------------------------
+
+import from tab separated text file:
+mysqlimport --local -u admin -p <db> <file>
+
+show connection status:
+status;
