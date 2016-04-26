@@ -25,7 +25,7 @@
         ]]>
     </beans:description>
     
-    <context:property-placeholder location="classpath:META-INF/spring/batch/jobs/job1-postgresql.properties" ignore-unresolvable="true" />
+    <context:property-placeholder location="classpath:job1-mysql.properties" ignore-unresolvable="true" />
     
     <!--  Job 1 configuration -->
     <batch:job id="job2">
@@ -34,7 +34,10 @@
         </batch:step>
         <batch:step id="step2">
             <batch:tasklet>
+                <!--
                 <batch:chunk reader="reader1" processor="processor1" writer="writer1" commit-interval="5"/>
+                -->
+                <batch:chunk reader="reader1" writer="writer1" commit-interval="5"/>
             </batch:tasklet>
         </batch:step>
     </batch:job>
@@ -59,13 +62,16 @@
 
     <beans:bean id="job1DataSource" class="org.apache.commons.dbcp2.BasicDataSource"
                 p:driverClassName="${job1.jdbc.driver}"
-                p:url="${job1.jdbc.url}"
+                p:url="${job1.jdbc.url}"               
                 p:username="${job1.jdbc.user}"
-                p:password="${job1.jdbc.password}"/>
+                p:password="${job1.jdbc.password}"
+                p:connectionProperties="useUnicode=true;characterEncoding=UTF-8;"
+    />
     <!--
-        <jdbc:initialize-database data-source="job1DataSource" enabled="${job1.data.source.init}">
-            <jdbc:script location="${job1.schema.script}"/>
-            <jdbc:script location="${job1.drop.script}"/>
-        </jdbc:initialize-database>
     -->
+    
+    <jdbc:initialize-database data-source="job1DataSource" enabled="${job1.data.source.init}">
+        <jdbc:script location="${job1.drop.script}"/>
+        <jdbc:script location="${job1.schema.script}"/>
+    </jdbc:initialize-database>
 </beans:beans>
