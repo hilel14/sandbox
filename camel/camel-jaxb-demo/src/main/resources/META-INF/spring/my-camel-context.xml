@@ -11,18 +11,6 @@
             http://www.springframework.org/schema/context/spring-context.xsd
         http://camel.apache.org/schema/spring
             http://camel.apache.org/schema/spring/camel-spring.xsd">
-    <!--
-    <camelContext xmlns="http://camel.apache.org/schema/spring">
-        <route id="timer-to-console">
-            <from uri="timer://foo?fixedRate=true&amp;period=100s"/>
-            <transform>
-                <simple>Hello Web Application, how are you?</simple>
-            </transform>
-            <log message="${body}"/>
-        </route>
-    </camelContext>
-    -->
-    <bean id="myProcessor" class="com.mycompany.jaxbdemo.beans.MyProcessor" />
 
     <camelContext id="my-jaxb-demo" xmlns="http://camel.apache.org/schema/spring">
         <route>
@@ -30,9 +18,15 @@
             <unmarshal>
                 <jaxb prettyPrint="false" contextPath="com.mycompany.jaxbdemo.model"/>
             </unmarshal>
-            <bean ref="myProcessor" method="makeHello"/>
+            <log message="${body.user}"/>
+            <bean ref="personToEmployee" method="hireThisMan"/>
+            <process ref="prepareStatement" />
             <log message="${body}"/>
+            <log message="${in.header.CamelJdbcParameters}"/>
         </route>
     </camelContext>
+
+    <bean id="personToEmployee" class="com.mycompany.jaxbdemo.beans.PersonToEmployee" />
+    <bean id="prepareStatement" class="com.mycompany.jaxbdemo.processors.PrepareStatement" />
 
 </beans>
