@@ -76,7 +76,7 @@ public class MainTest {
     private JobParameters createJobParameters() {
         // classpath:/job1.xml job1 inputFile=/var/opt/data/sample-data.csv r=1003
         Map<String, JobParameter> map = new HashMap<>();
-        map.put("run.id", new JobParameter(new Date().getTime()));
+        //map.put("run.id", new JobParameter(new Date().getTime()));
         map.put("inputFile", new JobParameter("/var/opt/data/in/sample-data.csv"));
         return new JobParameters(map);
     }
