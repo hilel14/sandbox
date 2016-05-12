@@ -373,7 +373,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void heightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heightButtonActionPerformed
         Rectangle rect = areaLabel.getBounds();
-        int h = Integer.parseInt(widthText.getText());
+        int h = Integer.parseInt(heightText.getText());
         areaLabel.setBounds(rect.x, rect.y, rect.width, h);
     }//GEN-LAST:event_heightButtonActionPerformed
 
