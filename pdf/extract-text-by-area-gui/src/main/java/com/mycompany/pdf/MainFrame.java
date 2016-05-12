@@ -17,7 +17,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 
 /**
@@ -31,6 +30,8 @@ public class MainFrame extends javax.swing.JFrame {
     final JFileChooser chooser = new JFileChooser();
     File pdfFile;
     BufferedImage image;
+    int areaLabelX;
+    int areaLabelY;
 
     /**
      * Creates new form MainFrame
@@ -38,7 +39,12 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         loadPreferences();
+        setup();
+    }
+
+    private void setup() {
         chooser.setFileFilter(new FileNameExtensionFilter("PDF files", "pdf", "PDF"));
+        areaLabelToTextInput();
     }
 
     private void loadPreferences() {
@@ -68,30 +74,31 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
-        pdfFileLabel = new javax.swing.JLabel();
-        pdfFileText = new javax.swing.JTextField();
-        pdfFileButton = new javax.swing.JButton();
+        toolsPanel = new javax.swing.JPanel();
+        xLabel = new javax.swing.JLabel();
+        xText = new javax.swing.JTextField();
+        yLabel = new javax.swing.JLabel();
+        yText = new javax.swing.JTextField();
+        wLabel = new javax.swing.JLabel();
+        wText = new javax.swing.JTextField();
+        hLabel = new javax.swing.JLabel();
+        hText = new javax.swing.JTextField();
+        imageScroll = new javax.swing.JScrollPane();
         imageLayeredPane = new javax.swing.JLayeredPane();
         areaLabel = new javax.swing.JLabel();
         imageLabel = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        leftButton = new javax.swing.JButton();
-        leftText = new javax.swing.JTextField();
-        rightButton = new javax.swing.JButton();
-        rightText = new javax.swing.JTextField();
-        upButton = new javax.swing.JButton();
-        upText = new javax.swing.JTextField();
-        downButton = new javax.swing.JButton();
-        downText = new javax.swing.JTextField();
-        widthButton = new javax.swing.JButton();
-        widthText = new javax.swing.JTextField();
-        heightButton = new javax.swing.JButton();
-        heightText = new javax.swing.JTextField();
+        actionPanel = new javax.swing.JPanel();
         textScroll = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
         extractButton = new javax.swing.JButton();
         statusLabel = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        openPdfMenuItem = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        openJobMenuItem = new javax.swing.JMenuItem();
+        saveJobMenuItem = new javax.swing.JMenuItem();
+        saveJobAsMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PDF Text Marker");
@@ -102,185 +109,110 @@ public class MainFrame extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        jPanel1.setLayout(new java.awt.GridBagLayout());
+        xLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        xLabel.setText("X");
+        toolsPanel.add(xLabel);
 
-        pdfFileLabel.setText("PDF");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
-        jPanel1.add(pdfFileLabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
-        jPanel1.add(pdfFileText, gridBagConstraints);
-
-        pdfFileButton.setText("Open...");
-        pdfFileButton.addActionListener(new java.awt.event.ActionListener() {
+        xText.setColumns(3);
+        xText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        xText.setText("10");
+        xText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pdfFileButtonActionPerformed(evt);
+                xTextActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
-        jPanel1.add(pdfFileButton, gridBagConstraints);
+        toolsPanel.add(xText);
+
+        yLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        yLabel.setText("Y");
+        toolsPanel.add(yLabel);
+
+        yText.setColumns(3);
+        yText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        yText.setText("10");
+        yText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yTextActionPerformed(evt);
+            }
+        });
+        toolsPanel.add(yText);
+
+        wLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        wLabel.setText("W");
+        toolsPanel.add(wLabel);
+
+        wText.setColumns(3);
+        wText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        wText.setText("300");
+        wText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wTextActionPerformed(evt);
+            }
+        });
+        toolsPanel.add(wText);
+
+        hLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        hLabel.setText("H");
+        toolsPanel.add(hLabel);
+
+        hText.setColumns(3);
+        hText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        hText.setText("50");
+        hText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hTextActionPerformed(evt);
+            }
+        });
+        toolsPanel.add(hText);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        getContentPane().add(jPanel1, gridBagConstraints);
+        getContentPane().add(toolsPanel, gridBagConstraints);
+
+        imageLayeredPane.setPreferredSize(new java.awt.Dimension(595, 842));
 
         areaLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        areaLabel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                areaLabelMouseDragged(evt);
+            }
+        });
+        areaLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                areaLabelMousePressed(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                areaLabelMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                areaLabelMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                areaLabelMouseEntered(evt);
+            }
+        });
         imageLayeredPane.add(areaLabel);
-        areaLabel.setBounds(20, 60, 80, 30);
+        areaLabel.setBounds(100, 60, 300, 50);
 
         imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/hilel14.jpg"))); // NOI18N
         imageLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        imageLabel.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                imageLabelComponentResized(evt);
-            }
-        });
         imageLayeredPane.add(imageLabel);
         imageLabel.setBounds(0, 0, 200, 200);
+
+        imageScroll.setViewportView(imageLayeredPane);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        getContentPane().add(imageLayeredPane, gridBagConstraints);
+        gridBagConstraints.weighty = 0.3;
+        getContentPane().add(imageScroll, gridBagConstraints);
 
-        jPanel2.setLayout(new java.awt.GridBagLayout());
-
-        leftButton.setText("L");
-        leftButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                leftButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(leftButton, gridBagConstraints);
-
-        leftText.setText("50");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(leftText, gridBagConstraints);
-
-        rightButton.setText("R");
-        rightButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rightButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(rightButton, gridBagConstraints);
-
-        rightText.setText("50");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(rightText, gridBagConstraints);
-
-        upButton.setText("U");
-        upButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                upButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(upButton, gridBagConstraints);
-
-        upText.setText("50");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(upText, gridBagConstraints);
-
-        downButton.setText("D");
-        downButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                downButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(downButton, gridBagConstraints);
-
-        downText.setText("50");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(downText, gridBagConstraints);
-
-        widthButton.setText("Width");
-        widthButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                widthButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(widthButton, gridBagConstraints);
-
-        widthText.setText("200");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(widthText, gridBagConstraints);
-
-        heightButton.setText("Height");
-        heightButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                heightButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(heightButton, gridBagConstraints);
-
-        heightText.setText("100");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel2.add(heightText, gridBagConstraints);
+        actionPanel.setLayout(new java.awt.GridBagLayout());
 
         textArea.setColumns(20);
         textArea.setRows(5);
@@ -289,14 +221,14 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
-        gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
-        jPanel2.add(textScroll, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        actionPanel.add(textScroll, gridBagConstraints);
 
-        extractButton.setText("Extract");
+        extractButton.setText("Extract Text");
         extractButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 extractButtonActionPerformed(evt);
@@ -305,81 +237,108 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        jPanel2.add(extractButton, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        actionPanel.add(extractButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        getContentPane().add(jPanel2, gridBagConstraints);
+        getContentPane().add(actionPanel, gridBagConstraints);
 
         statusLabel.setText("Status...");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
         getContentPane().add(statusLabel, gridBagConstraints);
 
+        fileMenu.setText("File");
+
+        openPdfMenuItem.setText("Open PDF...");
+        openPdfMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openPdfMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(openPdfMenuItem);
+        fileMenu.add(jSeparator1);
+
+        openJobMenuItem.setText("Open Job...");
+        fileMenu.add(openJobMenuItem);
+
+        saveJobMenuItem.setText("Save Job");
+        fileMenu.add(saveJobMenuItem);
+
+        saveJobAsMenuItem.setText("Save Job As...");
+        fileMenu.add(saveJobAsMenuItem);
+
+        jMenuBar1.add(fileMenu);
+
+        setJMenuBar(jMenuBar1);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void pdfFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pdfFileButtonActionPerformed
-        showOpenDialog();
-    }//GEN-LAST:event_pdfFileButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         storePreferences();
     }//GEN-LAST:event_formWindowClosing
 
-    private void imageLabelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_imageLabelComponentResized
-        //imageLabel.getGraphics().drawImage(image, 0, 0, null);
-    }//GEN-LAST:event_imageLabelComponentResized
-
-    private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
-        Rectangle rect = areaLabel.getBounds();
-        int offset = Integer.parseInt(downText.getText());
-        areaLabel.setBounds(rect.x, rect.y + offset, rect.width, rect.height);
-    }//GEN-LAST:event_downButtonActionPerformed
-
-    private void upButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upButtonActionPerformed
-        Rectangle rect = areaLabel.getBounds();
-        int offset = Integer.parseInt(upText.getText());
-        areaLabel.setBounds(rect.x, rect.y - offset, rect.width, rect.height);
-    }//GEN-LAST:event_upButtonActionPerformed
-
-    private void rightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightButtonActionPerformed
-        Rectangle rect = areaLabel.getBounds();
-        int offset = Integer.parseInt(rightText.getText());
-        areaLabel.setBounds(rect.x + offset, rect.y, rect.width, rect.height);
-    }//GEN-LAST:event_rightButtonActionPerformed
-
-    private void leftButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftButtonActionPerformed
-        Rectangle rect = areaLabel.getBounds();
-        int offset = Integer.parseInt(leftText.getText());
-        areaLabel.setBounds(rect.x - offset, rect.y, rect.width, rect.height);
-    }//GEN-LAST:event_leftButtonActionPerformed
-
-    private void widthButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_widthButtonActionPerformed
-        Rectangle rect = areaLabel.getBounds();
-        int w = Integer.parseInt(widthText.getText());
-        areaLabel.setBounds(rect.x, rect.y, w, rect.height);
-    }//GEN-LAST:event_widthButtonActionPerformed
-
-    private void heightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heightButtonActionPerformed
-        Rectangle rect = areaLabel.getBounds();
-        int h = Integer.parseInt(heightText.getText());
-        areaLabel.setBounds(rect.x, rect.y, rect.width, h);
-    }//GEN-LAST:event_heightButtonActionPerformed
-
     private void extractButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_extractButtonActionPerformed
         extractTextByArea();
     }//GEN-LAST:event_extractButtonActionPerformed
+
+    private void areaLabelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaLabelMouseDragged
+        int x = areaLabel.getBounds().x + evt.getX() - areaLabelX;
+        xText.setText(String.valueOf(x));
+        int y = areaLabel.getBounds().y + evt.getY() - areaLabelY;
+        yText.setText(String.valueOf(y));
+        areaLabel.setBounds(x, y, areaLabel.getBounds().width, areaLabel.getBounds().height);
+    }//GEN-LAST:event_areaLabelMouseDragged
+
+    private void areaLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaLabelMouseClicked
+
+    }//GEN-LAST:event_areaLabelMouseClicked
+
+    private void openPdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openPdfMenuItemActionPerformed
+        showOpenDialog();
+    }//GEN-LAST:event_openPdfMenuItemActionPerformed
+
+    private void areaLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaLabelMouseEntered
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_areaLabelMouseEntered
+
+    private void areaLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaLabelMouseExited
+        setCursor(Cursor.getDefaultCursor());
+    }//GEN-LAST:event_areaLabelMouseExited
+
+    private void xTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xTextActionPerformed
+        setAreaLabelBounds();
+    }//GEN-LAST:event_xTextActionPerformed
+
+    private void yTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yTextActionPerformed
+        setAreaLabelBounds();
+    }//GEN-LAST:event_yTextActionPerformed
+
+    private void wTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wTextActionPerformed
+        setAreaLabelBounds();
+    }//GEN-LAST:event_wTextActionPerformed
+
+    private void hTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hTextActionPerformed
+        setAreaLabelBounds();
+    }//GEN-LAST:event_hTextActionPerformed
+
+    private void areaLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaLabelMousePressed
+        areaLabelX = evt.getX();
+        areaLabelY = evt.getY();
+    }//GEN-LAST:event_areaLabelMousePressed
 
     /**
      * @param args the command line arguments
@@ -418,30 +377,31 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel actionPanel;
     private javax.swing.JLabel areaLabel;
-    private javax.swing.JButton downButton;
-    private javax.swing.JTextField downText;
     private javax.swing.JButton extractButton;
-    private javax.swing.JButton heightButton;
-    private javax.swing.JTextField heightText;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JLabel hLabel;
+    private javax.swing.JTextField hText;
     private javax.swing.JLabel imageLabel;
     private javax.swing.JLayeredPane imageLayeredPane;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JButton leftButton;
-    private javax.swing.JTextField leftText;
-    private javax.swing.JButton pdfFileButton;
-    private javax.swing.JLabel pdfFileLabel;
-    private javax.swing.JTextField pdfFileText;
-    private javax.swing.JButton rightButton;
-    private javax.swing.JTextField rightText;
+    private javax.swing.JScrollPane imageScroll;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JMenuItem openJobMenuItem;
+    private javax.swing.JMenuItem openPdfMenuItem;
+    private javax.swing.JMenuItem saveJobAsMenuItem;
+    private javax.swing.JMenuItem saveJobMenuItem;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JTextArea textArea;
     private javax.swing.JScrollPane textScroll;
-    private javax.swing.JButton upButton;
-    private javax.swing.JTextField upText;
-    private javax.swing.JButton widthButton;
-    private javax.swing.JTextField widthText;
+    private javax.swing.JPanel toolsPanel;
+    private javax.swing.JLabel wLabel;
+    private javax.swing.JTextField wText;
+    private javax.swing.JLabel xLabel;
+    private javax.swing.JTextField xText;
+    private javax.swing.JLabel yLabel;
+    private javax.swing.JTextField yText;
     // End of variables declaration//GEN-END:variables
 
     private void showOpenDialog() {
@@ -449,7 +409,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             pdfFile = chooser.getSelectedFile();
-            pdfFileText.setText(pdfFile.getAbsolutePath());
+            //pdfFileText.setText(pdfFile.getAbsolutePath());
             new Worker().execute();
         }
     }
@@ -467,12 +427,28 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
+    private void areaLabelToTextInput() {
+        Rectangle rect = areaLabel.getBounds();
+        xText.setText(String.valueOf(rect.x));
+        yText.setText(String.valueOf(rect.y));
+        wText.setText(String.valueOf(rect.width));
+        hText.setText(String.valueOf(rect.height));
+    }
+
+    private void setAreaLabelBounds() {
+        int x = Integer.parseInt(xText.getText());
+        int y = Integer.parseInt(yText.getText());
+        int w = Integer.parseInt(wText.getText());
+        int h = Integer.parseInt(hText.getText());
+        areaLabel.setBounds(x, y, w, h);
+    }
+
     class Worker extends SwingWorker<Void, Integer> {
 
         @Override
         protected Void doInBackground() {
             // adjust gui controls
-            pdfFileButton.setEnabled(false);
+            openPdfMenuItem.setEnabled(false);
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             statusLabel.setText("Loading PDF file...");
             // render first page of PDF file and display it in image label
@@ -493,7 +469,7 @@ public class MainFrame extends javax.swing.JFrame {
                 statusLabel.setText(ex.toString());
             }
             // restore gui controls
-            pdfFileButton.setEnabled(true);
+            openPdfMenuItem.setEnabled(true);
             setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             // done
             return null;
