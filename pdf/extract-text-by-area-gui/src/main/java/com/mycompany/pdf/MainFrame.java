@@ -4,8 +4,12 @@ import java.awt.Cursor;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Calendar;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -27,7 +31,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     static final Logger LOGGER = Logger.getLogger(MainFrame.class.getName());
     static Preferences preferences = Preferences.userNodeForPackage(MainFrame.class);
-    final JFileChooser chooser = new JFileChooser();
+    final JFileChooser pdfFileChooser = new JFileChooser();
+    final JFileChooser jobFileChooser = new JFileChooser();
     File pdfFile;
     BufferedImage image;
     int areaLabelX;
@@ -43,8 +48,11 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void setup() {
-        chooser.setFileFilter(new FileNameExtensionFilter("PDF files", "pdf", "PDF"));
-        areaLabelToTextInput();
+        pdfFileChooser.setFileFilter(new FileNameExtensionFilter("PDF files", "pdf", "PDF"));
+        jobFileChooser.setFileFilter(new FileNameExtensionFilter("Job properties files", "properties"));
+        statusLabel.setText("Use the File menu to open a PDF file");
+        imageLayeredPane.setPreferredSize(new java.awt.Dimension(595, 842));
+        updateTextInputFields();
     }
 
     private void loadPreferences() {
@@ -95,10 +103,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openPdfMenuItem = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        openJobMenuItem = new javax.swing.JMenuItem();
-        saveJobMenuItem = new javax.swing.JMenuItem();
-        saveJobAsMenuItem = new javax.swing.JMenuItem();
+        exportJobMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PDF Text Marker");
@@ -184,9 +189,6 @@ public class MainFrame extends javax.swing.JFrame {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 areaLabelMousePressed(evt);
             }
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                areaLabelMouseClicked(evt);
-            }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 areaLabelMouseExited(evt);
             }
@@ -195,12 +197,13 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         imageLayeredPane.add(areaLabel);
-        areaLabel.setBounds(100, 60, 300, 50);
+        areaLabel.setBounds(130, 75, 300, 50);
 
-        imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/hilel14.jpg"))); // NOI18N
+        imageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/225px-Adobe_PDF.svg.png"))); // NOI18N
         imageLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        imageLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         imageLayeredPane.add(imageLabel);
-        imageLabel.setBounds(0, 0, 200, 200);
+        imageLabel.setBounds(0, 0, 225, 220);
 
         imageScroll.setViewportView(imageLayeredPane);
 
@@ -229,6 +232,7 @@ public class MainFrame extends javax.swing.JFrame {
         actionPanel.add(textScroll, gridBagConstraints);
 
         extractButton.setText("Extract Text");
+        extractButton.setEnabled(false);
         extractButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 extractButtonActionPerformed(evt);
@@ -269,16 +273,14 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         fileMenu.add(openPdfMenuItem);
-        fileMenu.add(jSeparator1);
 
-        openJobMenuItem.setText("Open Job...");
-        fileMenu.add(openJobMenuItem);
-
-        saveJobMenuItem.setText("Save Job");
-        fileMenu.add(saveJobMenuItem);
-
-        saveJobAsMenuItem.setText("Save Job As...");
-        fileMenu.add(saveJobAsMenuItem);
+        exportJobMenuItem.setText("Export Job...");
+        exportJobMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportJobMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(exportJobMenuItem);
 
         jMenuBar1.add(fileMenu);
 
@@ -303,12 +305,8 @@ public class MainFrame extends javax.swing.JFrame {
         areaLabel.setBounds(x, y, areaLabel.getBounds().width, areaLabel.getBounds().height);
     }//GEN-LAST:event_areaLabelMouseDragged
 
-    private void areaLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaLabelMouseClicked
-
-    }//GEN-LAST:event_areaLabelMouseClicked
-
     private void openPdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openPdfMenuItemActionPerformed
-        showOpenDialog();
+        showOpenPdfDialog();
     }//GEN-LAST:event_openPdfMenuItemActionPerformed
 
     private void areaLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaLabelMouseEntered
@@ -340,6 +338,10 @@ public class MainFrame extends javax.swing.JFrame {
         areaLabelY = evt.getY();
     }//GEN-LAST:event_areaLabelMousePressed
 
+    private void exportJobMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportJobMenuItemActionPerformed
+        showExportJobDialog();
+    }//GEN-LAST:event_exportJobMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -347,7 +349,7 @@ public class MainFrame extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -379,6 +381,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel actionPanel;
     private javax.swing.JLabel areaLabel;
+    private javax.swing.JMenuItem exportJobMenuItem;
     private javax.swing.JButton extractButton;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JLabel hLabel;
@@ -387,11 +390,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLayeredPane imageLayeredPane;
     private javax.swing.JScrollPane imageScroll;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JMenuItem openJobMenuItem;
     private javax.swing.JMenuItem openPdfMenuItem;
-    private javax.swing.JMenuItem saveJobAsMenuItem;
-    private javax.swing.JMenuItem saveJobMenuItem;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JTextArea textArea;
     private javax.swing.JScrollPane textScroll;
@@ -404,13 +403,37 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField yText;
     // End of variables declaration//GEN-END:variables
 
-    private void showOpenDialog() {
-        int returnVal = chooser.showOpenDialog(this);
+    private void showOpenPdfDialog() {
+        int returnVal = pdfFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            pdfFile = chooser.getSelectedFile();
-            //pdfFileText.setText(pdfFile.getAbsolutePath());
+            pdfFile = pdfFileChooser.getSelectedFile();
             new Worker().execute();
+        }
+    }
+
+    private void showExportJobDialog() {
+        int returnVal = jobFileChooser.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File jobFile = jobFileChooser.getSelectedFile();
+            if (!jobFile.getName().toLowerCase().endsWith("properties")) {
+                Path folder = Paths.get(jobFile.getAbsolutePath()).getParent();
+                String fileName = jobFile.getName().concat(".properties");
+                jobFile = folder.resolve(fileName).toFile();
+            }
+            Properties props = new Properties();
+            Rectangle rect = areaLabel.getBounds();
+            props.put("x", String.valueOf(rect.x));
+            props.put("y", String.valueOf(rect.y));
+            props.put("width", String.valueOf(rect.width));
+            props.put("height", String.valueOf(rect.height));
+            try (FileOutputStream outStream = new FileOutputStream(jobFile)) {
+                props.store(outStream, "PDF text area bounds");
+                statusLabel.setText(rect + " saved to " + jobFile.getName());
+            } catch (Exception ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+                statusLabel.setText(ex.toString());
+            }
         }
     }
 
@@ -427,7 +450,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void areaLabelToTextInput() {
+    private void updateTextInputFields() {
         Rectangle rect = areaLabel.getBounds();
         xText.setText(String.valueOf(rect.x));
         yText.setText(String.valueOf(rect.y));
@@ -461,12 +484,14 @@ public class MainFrame extends javax.swing.JFrame {
                 //imageLabel.getGraphics().drawImage(image, 0, 0, null);
                 imageLabel.setIcon(new ImageIcon(image));
                 long end = Calendar.getInstance().getTimeInMillis();
-                String msg = "Document loaded in " + String.valueOf(end - start) + " milliseconds";
+                String msg = "Document " + pdfFile.getName() + "loaded in " + String.valueOf(end - start) + " milliseconds";
                 statusLabel.setText(msg);
-                repaint();
+                extractButton.setEnabled(true);
+                //repaint();
             } catch (Exception ex) {
                 LOGGER.log(Level.SEVERE, "Error loading PDF file", ex);
                 statusLabel.setText(ex.toString());
+                extractButton.setEnabled(false);
             }
             // restore gui controls
             openPdfMenuItem.setEnabled(true);
