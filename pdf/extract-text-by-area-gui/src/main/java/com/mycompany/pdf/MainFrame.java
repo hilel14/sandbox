@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -37,7 +38,6 @@ public class MainFrame extends javax.swing.JFrame {
     BufferedImage image;
     int areaLabelX;
     int areaLabelY;
-    boolean sortBy;
 
     /**
      * Creates new form MainFrame
@@ -99,6 +99,7 @@ public class MainFrame extends javax.swing.JFrame {
         wText = new javax.swing.JTextField();
         hLabel = new javax.swing.JLabel();
         hText = new javax.swing.JTextField();
+        sortByPositionCheckBox = new javax.swing.JCheckBox();
         imageScroll = new javax.swing.JScrollPane();
         imageLayeredPane = new javax.swing.JLayeredPane();
         areaLabel = new javax.swing.JLabel();
@@ -266,6 +267,10 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         textAreaPanel.add(hText, gridBagConstraints);
 
+        sortByPositionCheckBox.setSelected(true);
+        sortByPositionCheckBox.setText("Sort by position");
+        textAreaPanel.add(sortByPositionCheckBox, new java.awt.GridBagConstraints());
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -350,7 +355,7 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
         getContentPane().add(actionPanel, gridBagConstraints);
 
-        statusLabel.setText("Status...");
+        statusLabel.setText("Open PDF file...");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -486,6 +491,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel pdfPageLabel;
     private javax.swing.JTextField pdfPageTextField;
     private javax.swing.JLabel pdfTotalPagesLabel;
+    private javax.swing.JCheckBox sortByPositionCheckBox;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JTextArea textArea;
     private javax.swing.JPanel textAreaPanel;
@@ -522,6 +528,7 @@ public class MainFrame extends javax.swing.JFrame {
             props.put("y", String.valueOf(rect.y));
             props.put("width", String.valueOf(rect.width));
             props.put("height", String.valueOf(rect.height));
+            props.put("sortByPosition", String.valueOf(sortByPositionCheckBox.isSelected()));
             try (FileOutputStream outStream = new FileOutputStream(jobFile)) {
                 props.store(outStream, "PDF text area bounds");
                 statusLabel.setText(rect + " saved to " + jobFile.getName());
@@ -536,9 +543,15 @@ public class MainFrame extends javax.swing.JFrame {
         try (PDDocument document = PDDocument.load(pdfFile)) {
             PDPage page = document.getPage(Integer.parseInt(pdfPageTextField.getText()) - 1);
             PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+            stripper.setSortByPosition(sortByPositionCheckBox.isSelected());
             stripper.addRegion("region1", areaLabel.getBounds());
             stripper.extractRegions(page);
-            textArea.setText(stripper.getTextForRegion("region1"));
+            String data = stripper.getTextForRegion("region1").trim();
+            if (data.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No text found");
+            } else {
+                textArea.setText(data);
+            }
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             statusLabel.setText(ex.toString());
@@ -576,6 +589,7 @@ public class MainFrame extends javax.swing.JFrame {
                 PDFRenderer renderer = new PDFRenderer(document);
                 image = renderer.renderImageWithDPI(Integer.parseInt(pdfPageTextField.getText()) - 1, 72, ImageType.RGB);
                 //imageLabel.setBackground(new Color(0,0,0,0));
+                imageLayeredPane.setPreferredSize(new java.awt.Dimension(image.getWidth() + 10, image.getHeight() + 10));
                 imageLabel.setBounds(0, 0, image.getWidth(), image.getHeight());
                 //imageLabel.getGraphics().drawImage(image, 0, 0, null);
                 imageLabel.setIcon(new ImageIcon(image));
@@ -583,7 +597,7 @@ public class MainFrame extends javax.swing.JFrame {
                 pdfPageTextField.setEnabled(true);
                 extractButton.setEnabled(true);
                 long end = Calendar.getInstance().getTimeInMillis();
-                String msg = "Document " + pdfFile.getName() + " loaded in " + String.valueOf(end - start) + " milliseconds";
+                String msg = "Page " + pdfPageTextField.getText() + " loaded in " + String.valueOf(end - start) + " milliseconds";
                 statusLabel.setText(msg);
                 //repaint();
             } catch (Exception ex) {
