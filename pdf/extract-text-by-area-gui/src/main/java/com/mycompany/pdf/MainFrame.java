@@ -169,7 +169,7 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         filePanel.add(pdfPageTextField, gridBagConstraints);
 
-        pdfTotalPagesLabel.setText("/ 12");
+        pdfTotalPagesLabel.setText("/ 99");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -509,6 +509,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             pdfFile = pdfFileChooser.getSelectedFile();
+            pdfPageTextField.setText("1");;
             new Worker().execute();
         }
     }
