@@ -37,6 +37,7 @@ public class MainFrame extends javax.swing.JFrame {
     BufferedImage image;
     int areaLabelX;
     int areaLabelY;
+    boolean sortBy;
 
     /**
      * Creates new form MainFrame
@@ -82,7 +83,14 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        toolsPanel = new javax.swing.JPanel();
+        filePanel = new javax.swing.JPanel();
+        pdfFileLabel = new javax.swing.JLabel();
+        pdfFileTextField = new javax.swing.JTextField();
+        pdfOpenFileButton = new javax.swing.JButton();
+        pdfPageLabel = new javax.swing.JLabel();
+        pdfPageTextField = new javax.swing.JTextField();
+        pdfTotalPagesLabel = new javax.swing.JLabel();
+        textAreaPanel = new javax.swing.JPanel();
         xLabel = new javax.swing.JLabel();
         xText = new javax.swing.JTextField();
         yLabel = new javax.swing.JLabel();
@@ -102,7 +110,6 @@ public class MainFrame extends javax.swing.JFrame {
         statusLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        openPdfMenuItem = new javax.swing.JMenuItem();
         exportJobMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -114,9 +121,77 @@ public class MainFrame extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
+        filePanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        filePanel.setLayout(new java.awt.GridBagLayout());
+
+        pdfFileLabel.setText("PDF");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        filePanel.add(pdfFileLabel, gridBagConstraints);
+
+        pdfFileTextField.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.3;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        filePanel.add(pdfFileTextField, gridBagConstraints);
+
+        pdfOpenFileButton.setText("..");
+        pdfOpenFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pdfOpenFileButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        filePanel.add(pdfOpenFileButton, gridBagConstraints);
+
+        pdfPageLabel.setText("Page");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        filePanel.add(pdfPageLabel, gridBagConstraints);
+
+        pdfPageTextField.setColumns(3);
+        pdfPageTextField.setText("1");
+        pdfPageTextField.setEnabled(false);
+        pdfPageTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pdfPageTextFieldActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        filePanel.add(pdfPageTextField, gridBagConstraints);
+
+        pdfTotalPagesLabel.setText("/ 12");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        filePanel.add(pdfTotalPagesLabel, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.2;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        getContentPane().add(filePanel, gridBagConstraints);
+
+        textAreaPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        textAreaPanel.setLayout(new java.awt.GridBagLayout());
+
         xLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         xLabel.setText("X");
-        toolsPanel.add(xLabel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        textAreaPanel.add(xLabel, gridBagConstraints);
 
         xText.setColumns(3);
         xText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -126,11 +201,17 @@ public class MainFrame extends javax.swing.JFrame {
                 xTextActionPerformed(evt);
             }
         });
-        toolsPanel.add(xText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        textAreaPanel.add(xText, gridBagConstraints);
 
         yLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         yLabel.setText("Y");
-        toolsPanel.add(yLabel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        textAreaPanel.add(yLabel, gridBagConstraints);
 
         yText.setColumns(3);
         yText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -140,11 +221,17 @@ public class MainFrame extends javax.swing.JFrame {
                 yTextActionPerformed(evt);
             }
         });
-        toolsPanel.add(yText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        textAreaPanel.add(yText, gridBagConstraints);
 
         wLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         wLabel.setText("W");
-        toolsPanel.add(wLabel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        textAreaPanel.add(wLabel, gridBagConstraints);
 
         wText.setColumns(3);
         wText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -154,11 +241,17 @@ public class MainFrame extends javax.swing.JFrame {
                 wTextActionPerformed(evt);
             }
         });
-        toolsPanel.add(wText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        textAreaPanel.add(wText, gridBagConstraints);
 
         hLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         hLabel.setText("H");
-        toolsPanel.add(hLabel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        textAreaPanel.add(hLabel, gridBagConstraints);
 
         hText.setColumns(3);
         hText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -168,14 +261,18 @@ public class MainFrame extends javax.swing.JFrame {
                 hTextActionPerformed(evt);
             }
         });
-        toolsPanel.add(hText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        textAreaPanel.add(hText, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        getContentPane().add(toolsPanel, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        getContentPane().add(textAreaPanel, gridBagConstraints);
 
         imageLayeredPane.setPreferredSize(new java.awt.Dimension(595, 842));
 
@@ -209,7 +306,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.3;
@@ -224,7 +321,6 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
@@ -241,14 +337,13 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
-        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         actionPanel.add(extractButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.weighty = 0.1;
@@ -258,21 +353,11 @@ public class MainFrame extends javax.swing.JFrame {
         statusLabel.setText("Status...");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
         getContentPane().add(statusLabel, gridBagConstraints);
 
         fileMenu.setText("File");
-
-        openPdfMenuItem.setText("Open PDF...");
-        openPdfMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openPdfMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(openPdfMenuItem);
 
         exportJobMenuItem.setText("Export Job...");
         exportJobMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -304,10 +389,6 @@ public class MainFrame extends javax.swing.JFrame {
         yText.setText(String.valueOf(y));
         areaLabel.setBounds(x, y, areaLabel.getBounds().width, areaLabel.getBounds().height);
     }//GEN-LAST:event_areaLabelMouseDragged
-
-    private void openPdfMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openPdfMenuItemActionPerformed
-        showOpenPdfDialog();
-    }//GEN-LAST:event_openPdfMenuItemActionPerformed
 
     private void areaLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaLabelMouseEntered
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -341,6 +422,14 @@ public class MainFrame extends javax.swing.JFrame {
     private void exportJobMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportJobMenuItemActionPerformed
         showExportJobDialog();
     }//GEN-LAST:event_exportJobMenuItemActionPerformed
+
+    private void pdfOpenFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pdfOpenFileButtonActionPerformed
+        showOpenPdfDialog();
+    }//GEN-LAST:event_pdfOpenFileButtonActionPerformed
+
+    private void pdfPageTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pdfPageTextFieldActionPerformed
+        new Worker().execute();
+    }//GEN-LAST:event_pdfPageTextFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -384,17 +473,23 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem exportJobMenuItem;
     private javax.swing.JButton extractButton;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JPanel filePanel;
     private javax.swing.JLabel hLabel;
     private javax.swing.JTextField hText;
     private javax.swing.JLabel imageLabel;
     private javax.swing.JLayeredPane imageLayeredPane;
     private javax.swing.JScrollPane imageScroll;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem openPdfMenuItem;
+    private javax.swing.JLabel pdfFileLabel;
+    private javax.swing.JTextField pdfFileTextField;
+    private javax.swing.JButton pdfOpenFileButton;
+    private javax.swing.JLabel pdfPageLabel;
+    private javax.swing.JTextField pdfPageTextField;
+    private javax.swing.JLabel pdfTotalPagesLabel;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JTextArea textArea;
+    private javax.swing.JPanel textAreaPanel;
     private javax.swing.JScrollPane textScroll;
-    private javax.swing.JPanel toolsPanel;
     private javax.swing.JLabel wLabel;
     private javax.swing.JTextField wText;
     private javax.swing.JLabel xLabel;
@@ -439,7 +534,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void extractTextByArea() {
         try (PDDocument document = PDDocument.load(pdfFile)) {
-            PDPage page = document.getPage(0);
+            PDPage page = document.getPage(Integer.parseInt(pdfPageTextField.getText()) - 1);
             PDFTextStripperByArea stripper = new PDFTextStripperByArea();
             stripper.addRegion("region1", areaLabel.getBounds());
             stripper.extractRegions(page);
@@ -471,30 +566,34 @@ public class MainFrame extends javax.swing.JFrame {
         @Override
         protected Void doInBackground() {
             // adjust gui controls
-            openPdfMenuItem.setEnabled(false);
+            pdfOpenFileButton.setEnabled(false);
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             statusLabel.setText("Loading PDF file...");
             // render first page of PDF file and display it in image label
             try (PDDocument document = PDDocument.load(pdfFile)) {
                 long start = Calendar.getInstance().getTimeInMillis();
+                pdfTotalPagesLabel.setText(" / " + String.valueOf(document.getNumberOfPages()));
                 PDFRenderer renderer = new PDFRenderer(document);
-                image = renderer.renderImageWithDPI(0, 72, ImageType.RGB);
+                image = renderer.renderImageWithDPI(Integer.parseInt(pdfPageTextField.getText()) - 1, 72, ImageType.RGB);
                 //imageLabel.setBackground(new Color(0,0,0,0));
                 imageLabel.setBounds(0, 0, image.getWidth(), image.getHeight());
                 //imageLabel.getGraphics().drawImage(image, 0, 0, null);
                 imageLabel.setIcon(new ImageIcon(image));
-                long end = Calendar.getInstance().getTimeInMillis();
-                String msg = "Document " + pdfFile.getName() + "loaded in " + String.valueOf(end - start) + " milliseconds";
-                statusLabel.setText(msg);
+                pdfFileTextField.setText(pdfFile.getName());
+                pdfPageTextField.setEnabled(true);
                 extractButton.setEnabled(true);
+                long end = Calendar.getInstance().getTimeInMillis();
+                String msg = "Document " + pdfFile.getName() + " loaded in " + String.valueOf(end - start) + " milliseconds";
+                statusLabel.setText(msg);
                 //repaint();
             } catch (Exception ex) {
                 LOGGER.log(Level.SEVERE, "Error loading PDF file", ex);
                 statusLabel.setText(ex.toString());
                 extractButton.setEnabled(false);
+                pdfPageTextField.setEnabled(false);
             }
             // restore gui controls
-            openPdfMenuItem.setEnabled(true);
+            pdfOpenFileButton.setEnabled(true);
             setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             // done
             return null;
