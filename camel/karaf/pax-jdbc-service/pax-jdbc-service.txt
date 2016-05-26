@@ -1,0 +1,23 @@
+feature:repo-add pax-jdbc
+feature:install transaction jndi pax-jdbc-mariadb pax-jdbc-pool-dbcp2 pax-jdbc-config jdbc
+
+service:list DataSourceFactory
+
+copy org.ops4j.datasource-test.cfg to <karaf-home>/etc
+
+service:list DataSource
+
+jdbc:ds-list
+jdbc:tables jdbc/test
+jdbc:query jdbc/test SELECT * FROM product
+
+Use in blueprint context:
+
+<blueprint>
+	<reference id="testds" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=jdbc/test)"/>
+	<camelContext>
+		<route>
+			<to uri="jdbc:testds" />
+        </route>
+	</camelContext>
+</blueprint>
