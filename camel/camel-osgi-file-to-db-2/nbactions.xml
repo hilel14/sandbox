@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-camel</actionName>
+            <displayName>camel.run</displayName>
+            <goals>
+                <goal>camel:run</goal>
+            </goals>
+        </action>
+    </actions>
