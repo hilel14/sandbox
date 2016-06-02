@@ -11,6 +11,9 @@ public class MyTask extends Task<Void> {
     @Override
     protected Void call() throws Exception {
         final int max = 10;
+        updateMessage("Preparing the task...");
+        updateProgress(-1, 1);
+        Thread.sleep(3000);
         updateMessage("Task started...");
         for (int i = 1; i <= max; i++) {
             Thread.sleep(200);

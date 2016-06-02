@@ -1,6 +1,7 @@
 package my.fx.demo;
 
 import java.io.File;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -30,6 +32,7 @@ import javafx.stage.WindowEvent;
 public class MyFxApp extends Application {
 
     final Preferences preferences = Preferences.userNodeForPackage(Application.class);
+    static final Logger LOGGER = Logger.getLogger(MyFxApp.class.getName());
 
     Scene scene;
 
@@ -37,7 +40,8 @@ public class MyFxApp extends Application {
     Label fileLable = new Label("File");
     TextField fileTextField = new TextField();
     Button fileButton = new Button("Open");
-    ProgressBar progressBar = new ProgressBar(0.3);
+    ProgressBar progressBar = new ProgressBar(0);
+    ProgressIndicator progressIndicator = new ProgressIndicator(0);
     Label statusLable = new Label("Status...");
     Button runButton = new Button("Run");
 
@@ -82,7 +86,7 @@ public class MyFxApp extends Application {
         grid.add(fileLable, 0, 1);
         grid.add(fileTextField, 1, 1);
         grid.add(fileButton, 2, 1);
-        grid.add(new HBox(10, progressBar, statusLable), 1, 2);
+        grid.add(new HBox(10, progressIndicator, progressBar, statusLable), 1, 2);
         //grid.add(statusLable, 0, 2);
         //grid.add(progressBar, 1, 2);
         grid.add(runButton, 2, 2);
@@ -110,6 +114,7 @@ public class MyFxApp extends Application {
     private void runButtonOnAction(ActionEvent event) {
         MyTask task = new MyTask();
         progressBar.progressProperty().bind(task.progressProperty());
+        progressIndicator.progressProperty().bind(task.progressProperty());
         statusLable.textProperty().bind(task.messageProperty());
         new Thread(task).start();
     }
