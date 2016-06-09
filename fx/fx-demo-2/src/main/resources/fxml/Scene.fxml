@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane id="borderPane" prefHeight="300" prefWidth="800"
+            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+            fx:controller="my.fx.demo.FXMLController">
+    <center>
+        <GridPane hgap="10" vgap="10">
+            <padding>
+                <Insets bottom="25" left="25" right="25" top="25" />
+            </padding>
+            <!-- row 0 -->
+            <Text fx:id="sceneTitle" text="My File Processor"
+                  GridPane.rowIndex="0" GridPane.columnIndex="0"
+                  GridPane.columnSpan="3" >
+                <font>
+                    <Font size="36"/>
+                </font>
+            </Text>
+            <!-- row 1 -->
+            <Label fx:id="fileLabel" text="File:"
+                   GridPane.rowIndex="1" GridPane.columnIndex="0" />
+
+            <TextField fx:id="fileTextField"
+                       GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       GridPane.hgrow="ALWAYS"/>
+
+            <Button fx:id="fileButton"
+                    GridPane.rowIndex="1" GridPane.columnIndex="2"
+                    text="Open" onAction="#fileButtonOnAction" />
+            
+            <!-- row 2 -->
+            
+            <TextArea fx:id="contentTextArea" wrapText="true"
+                      GridPane.rowIndex="2" GridPane.columnIndex="0" 
+                      GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" 
+            />
+            
+            <!-- row 3 -->
+
+            <Label fx:id="progressLabel" text="Progress:"
+                   GridPane.rowIndex="3" GridPane.columnIndex="0" />
+
+            <ProgressBar fx:id="progressBar" progress="0"                         
+                         GridPane.rowIndex="3" GridPane.columnIndex="1">
+                <maxWidth>
+                    <Double fx:constant="MAX_VALUE" />
+                </maxWidth>
+            </ProgressBar>
+
+            <ProgressIndicator fx:id="progressIndicator" progress="0"
+                               GridPane.rowIndex="3" GridPane.columnIndex="2" />
+
+            <!-- row 4 -->
+
+            <Label fx:id="statusLabel" text="Status:"
+                   GridPane.rowIndex="4" GridPane.columnIndex="0" />
+
+            <TextField fx:id="statusTextField" text="Open file and run..." editable="false" 
+                       GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+            <Button fx:id="runButton"
+                    GridPane.rowIndex="4" GridPane.columnIndex="2"
+                    text="Run" onAction="#runButtonOnAction" />            
+        </GridPane>
+    </center>
+</BorderPane>
