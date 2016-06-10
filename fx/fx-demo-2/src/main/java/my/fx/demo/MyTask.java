@@ -29,6 +29,7 @@ public class MyTask extends Task<List<String>> {
         List<String> lines = Files.readAllLines(file, Charset.defaultCharset());
         for (int i = 1; i <= max; i++) {
             if (isCancelled()) {
+                //updateMessage("Task stopped");
                 break;
             }
             updateProgress(i, max);
