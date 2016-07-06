@@ -1,10 +1,10 @@
 package org.ganshaqed.sql2mail;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import org.ganshaqed.sql2mail.statement.DefaultParamSetter;
 import org.ganshaqed.sql2mail.statement.LastDaysParamSetter;
 import org.ganshaqed.sql2mail.statement.LimitResultsParamSetter;
 import org.junit.After;
@@ -20,15 +20,21 @@ import org.ganshaqed.sql2mail.statement.PreparedStatementParamSetter;
  */
 public class JdbcControllerTest {
 
-    public JdbcControllerTest() {
+    Charset charset = Charset.defaultCharset();
+    Path outFolder = Paths.get("/var/opt/data/reports");
+
+    public JdbcControllerTest() throws IOException {
+
     }
 
     @BeforeClass
     public static void setUpClass() {
+
     }
 
     @AfterClass
     public static void tearDownClass() {
+
     }
 
     @Before
@@ -38,18 +44,17 @@ public class JdbcControllerTest {
 
     @After
     public void tearDown() {
+
     }
 
     @Test
     public void testLimitResultsParamSetter() throws Exception {
         JdbcController controller = new JdbcController();
-        // job
+        Path out = outFolder.resolve("testLimitResultsParamSetter.csv");
         String qry = "SELECT * FROM people LIMIT ?";
         PreparedStatementParamSetter paramSetter = new LimitResultsParamSetter();
-        // cli args
-        Path out = Paths.get("/var/opt/data/reports/testLimitResultsParamSetter.csv");
         String[] params = new String[]{"3"};
-        controller.exportData(out, qry, paramSetter, params);
+        controller.exportData(out, charset, qry, paramSetter, params);
     }
 
     @Test
@@ -57,17 +62,17 @@ public class JdbcControllerTest {
         JdbcController controller = new JdbcController();
         String qry = "SELECT * FROM people WHERE birth_date > ? and birth_date < ?";
         PreparedStatementParamSetter paramSetter = new LastDaysParamSetter();
-        Path out = Paths.get("/var/opt/data/reports/testLastDaysParamSetter.csv");
+        Path out = outFolder.resolve("testLastDaysParamSetter.csv");
         String[] params = new String[]{"365"};
-        controller.exportData(out, qry, paramSetter, params);
+        controller.exportData(out, charset, qry, paramSetter, params);
     }
 
     @Test
     public void testDefaultParamSetter() throws Exception {
         JdbcController controller = new JdbcController();
         String qry = "SELECT first_name FROM people";
-        PreparedStatementParamSetter paramSetter = new DefaultParamSetter();
-        Path out = Paths.get("/var/opt/data/reports/testDefaultParamSetter.csv");
-        controller.exportData(out, qry, paramSetter, null);
+        PreparedStatementParamSetter paramSetter = (PreparedStatementParamSetter) Class.forName("org.ganshaqed.sql2mail.statement.DefaultParamSetter").newInstance();
+        Path out = outFolder.resolve("testDefaultParamSetter.csv");
+        controller.exportData(out, charset, qry, paramSetter, null);
     }
 }

@@ -5,6 +5,7 @@
  */
 
 CREATE TABLE people (id INT PRIMARY KEY, first_name VARCHAR(255), birth_date DATE, height DECIMAL(20, 2));
+
 INSERT INTO people (id, first_name, birth_date, height) VALUES (1, 'James', '1974-11-17', 2.07);
 INSERT INTO people (id, first_name, birth_date, height) VALUES (2, 'Josephine', '1984-03-13', 1.64);
 INSERT INTO people (id, first_name, birth_date, height) VALUES (3, 'Simona', '1992-01-01', 1.73);

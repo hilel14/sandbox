@@ -1,7 +1,9 @@
 package org.ganshaqed.sql2mail;
 
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,9 +24,9 @@ import org.ganshaqed.sql2mail.statement.PreparedStatementParamSetter;
 public class JdbcController {
 
     static final Logger LOGGER = Logger.getLogger(JdbcController.class.getName());
-    String url;
-    String user;
-    String password;
+    private String url;
+    private String user;
+    private String password;
 
     public JdbcController() throws IOException {
         loadConnectionProperties();
@@ -39,13 +41,13 @@ public class JdbcController {
         LOGGER.log(Level.INFO, "Database connection string {0}", url);
     }
 
-    public void exportData(Path outPath, String query, PreparedStatementParamSetter paramSetter, String[] params)
+    public void exportData(Path outPath, Charset charset, String query, PreparedStatementParamSetter paramSetter, String[] params)
             throws SQLException, IOException {
         try (Connection connection = DriverManager.getConnection(url, user, password);
                 PreparedStatement statement = connection.prepareStatement(query)) {
             paramSetter.setParams(statement, params);
             try (ResultSet resultSet = statement.executeQuery();
-                    FileWriter out = new FileWriter(outPath.toFile());
+                    OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(outPath.toFile()), charset);
                     CSVPrinter printer = CSVFormat.DEFAULT.withHeader(resultSet).print(out)) {
                 printer.printRecords(resultSet);
                 LOGGER.log(Level.INFO, "Results saved to file {0}", outPath.toString());

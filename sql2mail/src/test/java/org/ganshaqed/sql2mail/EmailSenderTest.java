@@ -1,5 +1,6 @@
 package org.ganshaqed.sql2mail;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.After;
@@ -14,7 +15,10 @@ import org.junit.Test;
  */
 public class EmailSenderTest {
 
-    public EmailSenderTest() {
+    Path inFolder;
+
+    public EmailSenderTest() throws IOException {
+        inFolder = Paths.get("/var/opt/data/reports");
     }
 
     @BeforeClass
@@ -35,7 +39,7 @@ public class EmailSenderTest {
 
     @Test
     public void testSendEmail() throws Exception {
-        Path reportFile = Paths.get("/var/opt/data/reports/testDefaultParamSetter.csv");
+        Path reportFile = inFolder.resolve("testDefaultParamSetter.csv");
         String[] recipients = new String[]{"user1@localhost", "user2@localhost"};
         String subject = "testDefaultParamSetter report";
         String body = "testDefaultParamSetter report attached";

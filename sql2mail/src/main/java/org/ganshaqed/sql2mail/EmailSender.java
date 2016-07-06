@@ -11,7 +11,6 @@ import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
-import static org.ganshaqed.sql2mail.JdbcController.LOGGER;
 
 /**
  *
@@ -20,11 +19,11 @@ import static org.ganshaqed.sql2mail.JdbcController.LOGGER;
 public class EmailSender {
 
     static final Logger LOGGER = Logger.getLogger(EmailSender.class.getName());
-    String host;
-    String user;
-    String password;
-    String sender;
-    boolean debug;
+    private String host;
+    private String user;
+    private String password;
+    private String sender;
+    private boolean debug;
 
     public EmailSender() throws IOException {
         loadSmtpProperties();
