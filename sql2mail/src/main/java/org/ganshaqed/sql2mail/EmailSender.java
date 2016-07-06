@@ -24,6 +24,8 @@ public class EmailSender {
     private String password;
     private String sender;
     private boolean debug;
+    private boolean sslOnConnect;
+    private boolean startTLSEnabled;
 
     public EmailSender() throws IOException {
         loadSmtpProperties();
@@ -37,6 +39,8 @@ public class EmailSender {
         password = p.getProperty("password");
         sender = p.getProperty("sender");
         debug = Boolean.parseBoolean(p.getProperty("debug"));
+        sslOnConnect = Boolean.parseBoolean(p.getProperty("sslOnConnect"));
+        startTLSEnabled = Boolean.parseBoolean(p.getProperty("startTLSEnabled"));
         LOGGER.log(Level.INFO, "SMTP host {0}", host);
     }
 
@@ -47,12 +51,13 @@ public class EmailSender {
         email.setHostName(host);
         //email.setSmtpPort(25);
         email.setAuthenticator(new DefaultAuthenticator(user, password));
-        //email.setSSLOnConnect(true);
+        email.setSSLOnConnect(sslOnConnect);
+        email.setStartTLSEnabled(startTLSEnabled);
+        email.setFrom(sender);
         for (String recipient : recipients) {
             LOGGER.log(Level.INFO, "Adding recipient {0}", recipient);
             email.addTo(recipient);
         }
-        email.setFrom(sender);
         email.setSubject(subject);
         email.setMsg(body);
 
@@ -60,13 +65,13 @@ public class EmailSender {
         EmailAttachment attachment = new EmailAttachment();
         attachment.setPath(reportFile.toString());
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
-        attachment.setDescription("letter-by-click report");
+        attachment.setDescription("sql2mail data");
         attachment.setName(reportFile.getFileName().toString());
         email.attach(attachment);
 
         // send the email
-        email.buildMimeMessage();
         if (debug) {
+            email.buildMimeMessage();
             Path out = reportFile.getParent().resolve(reportFile.getFileName().toString().concat(".eml"));
             email.getMimeMessage().writeTo(new FileOutputStream(out.toFile()));
             LOGGER.log(Level.INFO, "Email saved in file {0}", out.toString());
