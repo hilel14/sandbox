@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.ganshaqed.sql2mail.statement.ParamSetter;
+import org.ganshaqed.sql2mail.statement.PreparedStatementParamSetter;
 
 /**
  *
@@ -36,16 +36,14 @@ public class JdbcController {
         url = p.getProperty("url");
         user = p.getProperty("user");
         password = p.getProperty("password");
-        LOGGER.log(Level.INFO, "Found database connection string {0}", url);
+        LOGGER.log(Level.INFO, "Database connection string {0}", url);
     }
 
-    public void exportData(Path outPath, String query, ParamSetter paramSetter, String[] params)
+    public void exportData(Path outPath, String query, PreparedStatementParamSetter paramSetter, String[] params)
             throws SQLException, IOException {
         try (Connection connection = DriverManager.getConnection(url, user, password);
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            if (paramSetter != null) {
-                paramSetter.setParams(statement, params);
-            }
+            paramSetter.setParams(statement, params);
             try (ResultSet resultSet = statement.executeQuery();
                     FileWriter out = new FileWriter(outPath.toFile());
                     CSVPrinter printer = CSVFormat.DEFAULT.withHeader(resultSet).print(out)) {

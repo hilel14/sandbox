@@ -7,7 +7,7 @@ import java.sql.SQLException;
  *
  * @author hilel
  */
-public interface ParamSetter {
+public interface PreparedStatementParamSetter {
 
     public void setParams(PreparedStatement statement, String[] params)
             throws SQLException;

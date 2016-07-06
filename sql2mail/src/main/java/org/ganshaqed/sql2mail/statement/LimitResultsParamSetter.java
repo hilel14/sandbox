@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  *
  * @author hilel
  */
-public class LimitResultsParamSetter implements ParamSetter {
+public class LimitResultsParamSetter implements PreparedStatementParamSetter {
 
     static final Logger LOGGER = Logger.getLogger(LimitResultsParamSetter.class.getName());
 
