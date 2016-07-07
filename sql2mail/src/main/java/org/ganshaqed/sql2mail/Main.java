@@ -43,13 +43,13 @@ public class Main {
         try {
             CommandLine commandLine = parser.parse(options, args);
             String job = commandLine.getOptionValue("job").trim();
-            String params = commandLine.getOptionValue("statement-params").trim();
+            String params = commandLine.getOptionValue("statement-params");
             Main main = new Main(job, params);
             main.exportData();
             main.sendMail();
             LOGGER.info("The operation completed successfully");
         } catch (ParseException ex) {
-            new HelpFormatter().printHelp("java -cp sql2mail.jar " + Main.class.getCanonicalName(), options);
+            new HelpFormatter().printHelp("java -cp sql2mail.jar " + Main.class.getCanonicalName(), options, true);
             System.exit(1);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
