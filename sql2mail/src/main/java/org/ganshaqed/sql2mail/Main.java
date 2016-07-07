@@ -42,8 +42,8 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine commandLine = parser.parse(options, args);
-            String job = commandLine.getOptionValue("job");
-            String params = commandLine.getOptionValue("statement-params");
+            String job = commandLine.getOptionValue("job").trim();
+            String params = commandLine.getOptionValue("statement-params").trim();
             Main main = new Main(job, params);
             main.exportData();
             main.sendMail();
