@@ -1,0 +1,27 @@
+' usage: java -jar plantuml.jar source.uml
+
+@startuml
+
+	title Newsletter Usecases
+	left to right direction
+
+	actor "Operator" as operator
+	actor "Client" as client
+		
+	usecase (Get list file from ActiveTrail) as getList
+	usecase (Create email files) as createEmails
+	usecase (Import emails to database) as importEmails
+	usecase (Send emails) as sendEmails
+	
+	operator --> getList
+	operator --> createEmails
+	createEmails -> importEmails
+	importEmails -> sendEmails
+	
+	client --> (Open)
+	(Open) --> (Click)
+	(Open) --> (Unsubscribe)
+	
+	
+@enduml
+

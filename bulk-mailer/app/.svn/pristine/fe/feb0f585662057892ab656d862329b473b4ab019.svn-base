@@ -1,0 +1,187 @@
+package beeriprint.newsletter.batch.mailer.model;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ *
+ * @author Hilel Y.
+ */
+public class EmailRecord {
+
+    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private String id;
+    private Long campaignId;
+    private String campaignDate;
+    private String templateName;
+    private String recipientAddress;
+    private String recipientName;
+    private String actionCode;
+    private String statusCode;
+    private String diagnosticCode;
+    private Date creationTime;
+    private Date lastUpdate;
+
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the actionCode
+     */
+    public String getActionCode() {
+        return actionCode;
+    }
+
+    /**
+     * @param actionCode the actionCode to set
+     */
+    public void setActionCode(String actionCode) {
+        this.actionCode = actionCode;
+    }
+
+    /**
+     * @return the statusCode
+     */
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    /**
+     * @param statusCode the statusCode to set
+     */
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    /**
+     * @return the diagnosticCode
+     */
+    public String getDiagnosticCode() {
+        return diagnosticCode;
+    }
+
+    /**
+     * @param diagnosticCode the diagnosticCode to set
+     */
+    public void setDiagnosticCode(String diagnosticCode) {
+        this.diagnosticCode = diagnosticCode;
+    }
+
+    /**
+     * @return the creationTime
+     */
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    /**
+     * @param creationTime the creationTime to set
+     */
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    /**
+     * @return the lastUpdate
+     */
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    /**
+     * @param lastUpdate the lastUpdate to set
+     */
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public String getUserPart() {
+        return getRecipientAddress().split("@")[0];
+    }
+
+    public String getDomainPart() {
+        return getRecipientAddress().split("@")[1];
+    }
+
+    /**
+     * @return the recipientName
+     */
+    public String getRecipientName() {
+        return recipientName;
+    }
+
+    /**
+     * @param recipientName the recipientName to set
+     */
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
+    }
+
+    /**
+     * @return the recipientAddress
+     */
+    public String getRecipientAddress() {
+        return recipientAddress.toLowerCase().trim();
+    }
+
+    /**
+     * @param recipientAddress the recipientAddress to set
+     */
+    public void setRecipientAddress(String recipientAddress) {
+        this.recipientAddress = recipientAddress.toLowerCase().trim();
+    }
+
+    /**
+     * @return the campaignDate
+     */
+    public String getCampaignDate() {
+        return campaignDate;
+    }
+
+    /**
+     * @param campaignDate the campaignDate to set
+     */
+    public void setCampaignDate(String campaignDate) {
+        this.campaignDate = campaignDate;
+    }
+
+    /**
+     * @return the templateName
+     */
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    /**
+     * @param templateName the templateName to set
+     */
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    /**
+     * @return the campaignId
+     */
+    public Long getCampaignId() {
+        return campaignId;
+    }
+
+    /**
+     * @param campaignId the campaignId to set
+     */
+    public void setCampaignId(Long campaignId) {
+        this.campaignId = campaignId;
+    }
+}

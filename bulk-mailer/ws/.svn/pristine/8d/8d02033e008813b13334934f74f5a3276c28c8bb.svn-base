@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Newsletter Tomcat installation and configuration script
+
+# exit on first error
+set -e
+
+# install package
+yum -y install tomcat
+
+# enable service and (optionally) allow access in firewall
+systemctl enable tomcat
+#firewall-cmd --permanent --add-port 8080/tcp
+
+# configure proxy
+cat <<EOF > /etc/httpd/conf.d/tomcat-proxy.conf
+ProxyPass        /newsletter/ ajp://localhost:8009/newsletter/
+ProxyPassReverse /newsletter/ ajp://localhost:8009/newsletter/
+EOF
+restorecon /etc/httpd/conf.d/tomcat-proxy.conf 
+
+# optionally, install admin webapps:
+#yum -y install tomcat-admin-webapps
+
+# set admin password in /etc/tomcat/tomcat-users.xml
+# deploy targets.tab to /opt/beeri/newsletter/config/

@@ -1,0 +1,27 @@
+package beeriprint.newsletter.camel.processors;
+
+import beeriprint.newsletter.camel.DsnParser;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ *
+ * @author hilel
+ */
+public class PrepareUpdateEmail implements Processor {
+
+    final Logger logger = LoggerFactory.getLogger(getClass());
+    final String query
+            = "UPDATE email SET action_code  = :?actionCode, status_code = :?statusCode, diagnostic_code = :?diagnosticCode "
+            + "WHERE id = :?messageCode";
+
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        DsnParser parser = exchange.getIn(DsnParser.class);
+        exchange.getOut().setHeader("CamelJdbcParameters", parser.getJdbcParameters());
+        exchange.getOut().setBody(query);
+    }
+
+}

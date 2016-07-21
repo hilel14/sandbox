@@ -1,0 +1,145 @@
+<!--
+Based on newsletter-traditional template from
+https://litmus.com/community/templates/11-pook-newsletter
+-->
+<!doctype html>
+<html>
+    <head>
+        <title>Letter by Click upgrade</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style type="text/css">
+            /* CLIENT-SPECIFIC STYLES */
+            body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+            table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+            img { -ms-interpolation-mode: bicubic; }
+
+            /* RESET STYLES */
+            img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+            table { border-collapse: collapse !important; }
+            body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+
+            /* iOS BLUE LINKS */
+            a[x-apple-data-detectors] {
+                color: inherit !important;
+                text-decoration: none !important;
+                font-size: inherit !important;
+                font-family: inherit !important;
+                font-weight: inherit !important;
+                line-height: inherit !important;
+            }
+
+            /* MOBILE STYLES */
+            @media screen and (max-width: 600px) {
+                .img-max {
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    height: auto !important;
+                }
+
+                .max-width {
+                    max-width: 100% !important;
+                }
+
+                .mobile-wrapper {
+                    width: 85% !important;
+                    max-width: 85% !important;
+                }
+
+                .mobile-padding {
+                    padding-left: 5% !important;
+                    padding-right: 5% !important;
+                }
+            }
+
+            /* ANDROID CENTER FIX */
+            div[style*="margin: 16px 0;"] { margin: 0 !important; }
+        </style>
+    </head>
+    <body style="margin: 0 !important; padding: 0 !important;">
+        <!-- HIDDEN PREHEADER TEXT -->
+        <div style="display: none; font-size: 1px; line-height: 1px; font-family: Open Sans, Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+            מערכת מכתב בקליק
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td align="center" height="100%" valign="top" width="100%" bgcolor="#f6f6f6" style="padding: 50px 15px;" class="mobile-padding">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" class="mobile-wrapper">
+                        <tr>
+                            <td align="center" valign="top" style="padding: 0 0 25px 0; font-family: Open Sans, Helvetica, Arial, sans-serif;">
+                                <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td align="center" bgcolor="#ffffff" style="border-radius: 0 0 3px 3px; padding: 25px;">
+                                            <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                <tr>
+                                                    <td align="center" style="font-family: Open Sans, Helvetica, Arial, sans-serif; text-align: left; direction: ltr;">
+                                                        19.7.2016
+                                                    </td>
+                                                <tr>
+                                                    <td align="center" style="font-family: Open Sans, Helvetica, Arial, sans-serif; text-align: right; direction: rtl;">
+                                                        <p style="font-size: medium; margin: 0;">
+                                                        <p>
+                                                            שלום רב ${item.recipientName},
+                                                        </p>
+                                                        <p>
+                                                            לקוח/ה נכבד/ה
+                                                        </p>
+                                                        <p style="text-decoration: underline; font-weight: bold;">
+                                                            הנדון: השבתה קצרה של מערכת מכתב בקליק לצורך שדרוגה.
+                                                        </p>
+                                                        <p>
+                                                            ביום חמישי 21.7.2016 החל משעה 13.00 תושבת מערכת מכתב בקליק לצורך שדרוג ושיפור שלה.
+                                                        </p>
+                                                        המערכת מתוכננת לשוב לפעולה עד צאת השבת (23.7.2016).
+                                                        <p>
+                                                            אנו מתנצלים על אי הנוחות שתגרם לכם עקב ההשבתה הזו. אנו בטוחים כי תוכלו להנות בהמשך מהביצועים המשופרים שלה כמפורט:
+                                                        </p>
+                                                        <ul>
+                                                            <li>
+                                                                שדרוג המערכת יאפשר לכם לשלוח מכתבים במעטפות חלון בגודל  34*23 ס"מ אשר יכולות להכיל עד 70 דפי 4A. לעיון בעיצוב המעטפות הגדולות
+                                                                <a href="http://www.beeriprint-content.co.il/static/clickb-upgrade/100070_Flayer105_2mail.pdf">
+                                                                    לחצו כאן
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                שדרוג המערכת יוסיף אפשרות למשלוח מכתבים רשומים עם אישורי מסירה (מתוך שלושה סוגים שונים).לעיון באפשרויות אישורי המסירה השונים
+                                                                <a href="http://www.beeriprint-content.co.il/static/clickb-upgrade/ishur-mesira.pdf">
+                                                                    לחצו כאן
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                        <p>
+                                                            נשמח לעזור בכל שאלה ובעיה.
+                                                            <br>
+                                                            ארז גתי
+                                                            <br>
+                                                            טלפון: 054-7383383, 03-5376031
+                                                            <br>
+                                                            מייל:
+                                                            <a href="mailto:support@clickb.co.il">
+                                                                support@clickb.co.il
+                                                            </a>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" bgcolor="#ffffff" style="border-radius: 3px 3px 0 0;">
+                                            <img
+                                                alt="16x16"
+                                                src="${appServer}/newsletter/webapi/controller/images/${item.id}"
+                                                width="16"
+                                                height="16"
+                                                style="display: block;"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>REST Test Page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h2>Jersey RESTful Web Application!</h2>
+        <div style="background-color: red;">
+            <img
+                alt="16x16"
+                src="webapi/controller/images/abc"
+                width="16"
+                height="16"
+                style="display: block;"/>
+        </div>
+        <p>
+            <a href="webapi/controller/links/1/def">
+                Link 1
+            </a>
+        </p>
+        <p>
+            <a href="webapi/controller/links/2/ghi">
+                Link 2
+            </a>
+        </p>
+    </body>
+</html>

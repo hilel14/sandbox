@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Ebill inbound postfix configuration script
+
+# exit on first error
+set -e
+
+# postfix is installed by default
+#yum -y install postfix
+
+# enable service and allow access
+systemctl enable postfix
+firewall-cmd --permanent --add-service smtp
+
+# /etc/postfix/main.cf
+cat <<EOF >> /etc/postfix/main.cf
+virtual_alias_domains = ebill.co.il, printernet.co.il, ellcom2.co.il, basic2.co.il, orangebill.co.il
+virtual_alias_maps = hash:/etc/postfix/virtual
+EOF
+
+# /etc/postfix/virtual
+cat <<EOF >> /etc/postfix/virtual
+@ebill.co.il importer
+@printernet.co.il importer
+@cellcom2.co.il importer
+@basic2.co.il importer
+@orangebill.co.il importer
+EOF
+#
+postmap /etc/postfix/virtual 
+

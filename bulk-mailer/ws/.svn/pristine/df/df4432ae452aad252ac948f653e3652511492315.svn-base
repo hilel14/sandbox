@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Newsletter inbound postfix configuration script
+
+# exit on first error
+set -e
+
+# postfix is installed by default
+#yum -y install postfix
+
+# enable service and allow access
+systemctl enable postfix
+firewall-cmd --permanent --add-service smtp
+
+# /etc/postfix/main.cf
+# Set inet_interfaces = all
+cat <<EOF >> /etc/postfix/main.cf
+virtual_alias_domains = beeriprint-content.co.il
+virtual_alias_maps = hash:/etc/postfix/virtual
+EOF
+
+# /etc/postfix/virtual
+cat <<EOF >> /etc/postfix/virtual
+@beeriprint-content.co.il importer
+EOF
+#
+postmap /etc/postfix/virtual 

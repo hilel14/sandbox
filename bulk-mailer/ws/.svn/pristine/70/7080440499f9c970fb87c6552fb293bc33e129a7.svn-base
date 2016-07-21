@@ -1,0 +1,135 @@
+package beeriprint.newsletter.model;
+
+import java.util.Calendar;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+
+/**
+ *
+ * @author hilel
+ */
+@XmlRootElement(name = "msg")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class StatusUpdate {
+
+    /*
+     <msg ebillMessageCode="r1" requestTime="2015-09-16 11:13:05" resourceId="2"/>
+     */
+    @XmlAttribute(name = "messageCode")
+    private String messageCode;
+
+    private String actionCode;
+    private String statusCode;
+    private String diagnosticCode;
+    private boolean dsn = false;
+
+    @XmlAttribute(name = "requestTime")
+    //@XmlSchemaType(name = "date", type = javax.xml.datatype.XMLGregorianCalendar.class)
+    @XmlSchemaType(name = "date")
+    //private XMLGregorianCalendar requestTime;
+    private Calendar requestTime;
+
+    private int resourceId;
+
+    /**
+     * @return the messageCode
+     */
+    public String getMessageCode() {
+        return messageCode;
+    }
+
+    /**
+     * @param messageCode the messageCode to set
+     */
+    public void setMessageCode(String messageCode) {
+        this.messageCode = messageCode;
+    }
+
+    /**
+     * @return the requestTime
+     */
+    public Calendar getRequestTime() {
+        return requestTime;
+    }
+
+    /**
+     * @param requestTime the requestTime to set
+     */
+    public void setRequestTime(Calendar requestTime) {
+        this.requestTime = requestTime;
+    }
+
+    /**
+     * @return the resourceId
+     */
+    public int getResourceId() {
+        return resourceId;
+    }
+
+    /**
+     * @param resourceId the resourceId to set
+     */
+    public void setResourceId(int resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    /**
+     * @return the actionCode
+     */
+    public String getActionCode() {
+        return actionCode;
+    }
+
+    /**
+     * @param actionCode the actionCode to set
+     */
+    public void setActionCode(String actionCode) {
+        this.actionCode = actionCode;
+    }
+
+    /**
+     * @return the statusCode
+     */
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    /**
+     * @param statusCode the statusCode to set
+     */
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    /**
+     * @return the diagnosticCode
+     */
+    public String getDiagnosticCode() {
+        return diagnosticCode;
+    }
+
+    /**
+     * @param diagnosticCode the diagnosticCode to set
+     */
+    public void setDiagnosticCode(String diagnosticCode) {
+        this.diagnosticCode = diagnosticCode;
+    }
+
+    /**
+     * @return the dsn
+     */
+    public boolean isDsn() {
+        return dsn;
+    }
+
+    /**
+     * @param dsn the dsn to set
+     */
+    public void setDsn(boolean dsn) {
+        this.dsn = dsn;
+    }
+
+}

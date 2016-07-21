@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Beeriprint Newsleter Unsubscribe</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+    <body>
+        <div style="margin-left: auto; margin-right: auto; width: 600px;">
+            <div>
+                <img
+                    alt="logo"
+                    src="http://www.beeriprint-content.co.il/static/logo.jpg"
+                    width="600"
+                    height="150"
+                    />
+            </div>
+            <h1 style="direction: rtl; text-align: right; color: #2caccf; font-family: sans-serif;">
+                ההסרה התקבלה בהצלחה.
+            </h1>
+            <p style="direction: rtl; text-align: right; color: black; font-family: sans-serif;">
+                אנו מכבדים את החלטתך לעזוב, הסרנו את שמך מרשימת התפוצה שלנו.
+                <br>
+                אם התחרטת ואתה מעוניין בכל זאת לקבל את הניוזלטר החודשי שלנו, תוכל להירשם שוב
+                <a href="http://beeriprint.activetrail.biz/%D7%93%D7%A3-%D7%94%D7%A8%D7%A9%D7%9E%D7%94-%D7%9C%D7%A0%D7%99%D7%95%D7%96%D7%9C%D7%98%D7%A8">
+                    כאן
+                </a>
+                <br>
+                בכל מקרה, תוכל לקרוא מה שמעניין אותך
+                <a href="https://blog.beeriprint.co.il/">
+                    בבלוג
+                </a>
+                של דפוס בארי ולעקוב אחרינו
+                <a href="https://www.facebook.com/%D7%93%D7%A4%D7%95%D7%A1-%D7%91%D7%90%D7%A8%D7%99-Beeri-Print-856891094378925/">
+                    בפייסבוק
+                </a>
+            </p>
+        </div>
+    </body>
+</html>

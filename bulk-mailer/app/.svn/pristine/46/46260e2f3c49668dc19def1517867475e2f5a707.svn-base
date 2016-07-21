@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Newsletter User Guide</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body dir="rtl">
+        <h1>מדריך משתמש עלק</h1>
+        <h2>יצוא מוסרים ממערכת active-trail </h2>
+        <ol>
+            <li>
+                תפריט: נמענים
+            </li>
+            <li>
+                קבוצות
+            </li>
+            <li>
+                נמעני הניוזלטר החודשי
+            </li>
+            <li>
+                סנן: מוסרים / תלונות ספאם
+            </li>
+            <li>
+                יצא
+            </li>
+        </ol>
+        <h2>יצוא רשימת נמענים למשלוח</h2>
+        <ol>
+            <li>
+                תפריט: דוחות
+            </li>
+            <li>
+                ניוזלטר # ללקוחות
+            </li>
+            <li>
+                מידע מלא
+            </li>
+            <li>
+                לא פתחו
+            </li>
+            <li>
+                ייצוא
+            </li>
+        </ol>
+        <h2>הוספת מוסרים לבסיס הנתונים</h2>
+        <h2>הכנת קובץ נמענים למשלוח</h2>
+        <ol>
+            <li>
+                פתיחה והמרה לקובץ מופרד פסיק בקידוד utf-8
+            </li>
+            <li>
+                סינון מוסרים
+            </li>
+        </ol>
+    </body>
+</html>

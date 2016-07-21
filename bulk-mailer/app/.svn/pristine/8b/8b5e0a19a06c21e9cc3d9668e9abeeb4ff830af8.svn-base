@@ -1,0 +1,7 @@
+-- CREATE VIEW campaign_2016_05_09 AS
+SELECT user_part, domain_part, recipient_name, action_code, 
+	(SELECT COUNT(*) FROM activity WHERE activity_type = 'opened' AND email.id = activity.email_id ) AS 'opened',
+	(SELECT COUNT(*) FROM activity WHERE activity_type = 'clicked' AND email.id = activity.email_id ) AS 'clicked'
+FROM email, campaign
+WHERE email.campaign_id = campaign.id
+AND campaign.campaign_date = '2016-05-09';

@@ -1,0 +1,45 @@
+package beeriprint.newsletter.camel.processors;
+
+import com.sun.mail.dsn.MultipartReport;
+import com.sun.mail.imap.IMAPInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import javax.mail.internet.MimeMessage;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ *
+ * @author hilel
+ */
+public class ImapInputStreamToMailMessage implements Processor {
+
+    final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Override
+    public void process(Exchange exchange) throws Exception {
+
+        if (exchange.getIn().getBody().getClass().equals(MultipartReport.class)) {
+            return;
+        }
+
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[16384];
+        try (IMAPInputStream imapStream = exchange.getIn(IMAPInputStream.class)) {
+            while ((nRead = imapStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+        }
+        MimeMessage message = new MimeMessage(null, new ByteArrayInputStream(buffer.toByteArray()));
+
+        //MailMessage mailMessage = exchange.getIn(MailMessage.class);
+        //Message message = mailMessage.getOriginalMessage();
+        logger.info("Analyzing message with subject: " + message.getSubject());
+        exchange.getOut().setBody(message);
+    }
+
+}

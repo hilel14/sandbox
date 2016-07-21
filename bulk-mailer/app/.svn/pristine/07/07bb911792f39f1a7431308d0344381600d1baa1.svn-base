@@ -1,0 +1,5 @@
+list.file.encoding=utf-8
+#newsletter.unsubscribe.email=postmaster@beeriprint-content.co.il
+#newsletter.base.folder=/var/opt/newsletter
+#newsletter.web.server=http://www.beeriprint-content.co.il
+newsletter.web.server=http://localhost:8080

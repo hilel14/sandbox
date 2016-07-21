@@ -1,0 +1,2 @@
+newsletter.jks.keystore=/opt/beeri/newsletter/config/newsletter.jks
+newsletter.jks.password=123456

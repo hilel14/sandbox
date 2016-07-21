@@ -1,0 +1,46 @@
+package beeriprint.newsletter.batch.mailer.processors;
+
+import beeriprint.newsletter.batch.mailer.model.EmailRecord;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+/**
+ *
+ * @author Hilel Y.
+ */
+public class MimeToRecordTransformer implements ItemProcessor<MimeMessage, EmailRecord> {
+
+    private static final Log LOGGER = LogFactory.getLog(MimeToRecordTransformer.class);
+    Long campaignId;
+
+    public MimeToRecordTransformer(String templateName, String campaignDate, JdbcTemplate jdbcTemplate) {
+        String sqlSelect = "SELECT id FROM campaign WHERE template_name = ? AND campaign_date = ?";
+        Object[] args = new Object[]{templateName, campaignDate};
+        try {
+            campaignId = jdbcTemplate.queryForObject(sqlSelect, args, Long.class);
+        } catch (EmptyResultDataAccessException ex) {
+            LOGGER.info("Creating campaign " + templateName + " " + campaignDate);
+            String sqlUpdate = "INSERT INTO campaign (template_name, campaign_date) VALUES (?,?)";
+            jdbcTemplate.update(sqlUpdate, args);
+            campaignId = jdbcTemplate.queryForObject(sqlSelect, args, Long.class);
+        }
+    }
+
+    @Override
+    public EmailRecord process(MimeMessage message) throws Exception {
+        EmailRecord record = new EmailRecord();
+        record.setCampaignId(campaignId);
+        record.setId(message.getHeader("X-recordId", null));
+        record.setCampaignDate(message.getHeader("X-campaignDate", null));
+        record.setRecipientAddress(message.getHeader("X-recipientAddress", null));
+        String recipientName = MimeUtility.decodeWord(message.getHeader("X-recipientName", null));
+        record.setRecipientName(recipientName);
+        record.setCreationTime(EmailRecord.DATE_FORMAT.parse(message.getHeader("X-creationTime", null)));
+        return record;
+    }
+}

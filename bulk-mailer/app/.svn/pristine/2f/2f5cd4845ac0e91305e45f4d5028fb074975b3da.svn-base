@@ -1,0 +1,42 @@
+package beeriprint.newsletter.batch.mailer.writers;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import javax.mail.internet.MimeMessage;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.item.ItemWriter;
+
+/**
+ *
+ * @author hilel
+ */
+public class EmailFileWriter implements ItemWriter<MimeMessage> {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(EmailFileWriter.class);
+    Path outFolder;
+
+    public EmailFileWriter(String messageFolder) throws IOException {
+        outFolder = Paths.get(messageFolder);
+        if (Files.exists(outFolder)) {
+            LOGGER.info("Out folder already exists: " + outFolder);
+        } else {
+            LOGGER.info("Creating out folder: " + outFolder);
+            Files.createDirectories(outFolder);
+        }
+    }
+
+    @Override
+    public void write(List<? extends MimeMessage> items) throws Exception {
+        for (MimeMessage item : items) {
+            StringBuilder b = new StringBuilder();
+            b.append(item.getHeader("X-recordId", null));
+            b.append(".eml").toString();
+            FileOutputStream out = new FileOutputStream(outFolder.resolve(b.toString()).toFile());
+            item.writeTo(out);
+        }
+    }
+}

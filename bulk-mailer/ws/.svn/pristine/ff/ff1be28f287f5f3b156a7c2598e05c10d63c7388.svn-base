@@ -1,0 +1,30 @@
+package beeriprint.newsletter.camel.processors;
+
+import beeriprint.newsletter.camel.DsnParser;
+import com.sun.mail.dsn.MultipartReport;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+
+/**
+ *
+ * @author hilel
+ */
+public class DsnProcessor implements Processor {
+
+    final DsnParser dsnParser = new DsnParser();
+    final String sql
+            = "UPDATE email SET action_code  = :?actionCode, status_code = :?statusCode, diagnostic_code = :?diagnosticCode "
+            + "WHERE id = :?messageCode";
+
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        MultipartReport multipartReport = exchange.getIn().getBody(MultipartReport.class);
+        dsnParser.processMultipartReport(multipartReport);
+        exchange.getOut().setHeader("NewsletterValidDsn", dsnParser.isValidDsn());
+        if (dsnParser.isValidDsn()) {
+            exchange.getOut().setBody(sql);
+            exchange.getOut().setHeader("CamelJdbcParameters", dsnParser.getJdbcParameters());
+        }
+    }
+
+}

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Newsletter HTTPd installation and configuration script
+
+# exit on first error
+set -e
+
+# install package
+yum -y install httpd
+
+# enable service and allow access in firewall
+systemctl enable httpd
+firewall-cmd --permanent --add-service http
+firewall-cmd --permanent --add-service https
+
+# configure newsletter static content
+mkdir /var/www/static
+cat <<EOF > /etc/httpd/conf.d/static.conf
+Alias /static /var/www/static
+<Directory "/var/www/static">
+   Options Indexes MultiViews
+   AllowOverride None
+   Order allow,deny
+   Allow from all
+</Directory>
+EOF
+restorecon /etc/httpd/conf.d/static.conf
+restorecon /var/www/static
