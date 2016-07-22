@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Newsletter www machine setup script
+
+# exit on first error
+set -e
+
+# install package
+yum -y install dovecot
+
+# enable service and allow access to it
+systemctl enable dovecot
+firewall-cmd --permanent --add-service imaps
+
+# fix file permissions
+chmod 0600 /var/mail/*
+
+# uncoment in /etc/dovecot/conf.d/10-mail.conf 
+# mail_location = mbox:~/mail:INBOX=/var/mail/%u

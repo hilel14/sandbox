@@ -1,0 +1,2 @@
+DROP INDEX unique_campaign ON campaign;
+CREATE UNIQUE INDEX unique_campaign ON campaign (template_name, list_file, campaign_date);

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring         http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       xmlns:context="http://www.springframework.org/schema/context">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+
+        <route id="process-opened" autoStartup="true">
+            <from uri="activemq:queue:newsletter.opened"/>
+            <unmarshal>
+                <jaxb prettyPrint="false" contextPath="beeriprint.newsletter.model"/>
+            </unmarshal>
+            <bean id = "updateOpenedQuery" ref="queryBuilder" method="updateOpened"/>
+            <to uri="jdbc:newsletterDataSource?useHeadersAsParameters=true" />
+        </route>
+        
+        <route id="process-clicked" autoStartup="true">
+            <from uri="activemq:queue:newsletter.clicked"/>
+            <unmarshal>
+                <jaxb prettyPrint="false" contextPath="beeriprint.newsletter.model"/>
+            </unmarshal>
+            <bean id = "updateClickedQuery" ref="queryBuilder" method="updateClicked"/>
+            <to uri="jdbc:newsletterDataSource?useHeadersAsParameters=true" />
+        </route>
+        
+    </camelContext>
+    
+    <context:property-placeholder location="classpath:newsletter.mysql.properties" />
+    
+    <bean id="queryBuilder" class="beeriprint.newsletter.camel.QueryBuilder" />
+    
+    <!-- ActiveMQ configuration -->
+    
+    <bean id="jmsConnectionFactory" 
+          class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+    </bean>
+ 
+    <bean id="pooledConnectionFactory" 
+          class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" destroy-method="stop">
+        <property name="maxConnections" value="8" />
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+    </bean>
+ 
+    <bean id="jmsConfig" 
+          class="org.apache.camel.component.jms.JmsConfiguration">
+        <property name="connectionFactory" ref="pooledConnectionFactory"/>
+        <property name="concurrentConsumers" value="10"/>
+    </bean>
+ 
+    <bean id="activemq" 
+          class="org.apache.activemq.camel.component.ActiveMQComponent">
+        <property name="configuration" ref="jmsConfig"/> 
+    </bean>        
+   
+    <!-- database configuration -->
+
+    <bean id="newsletterDataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+          p:driverClassName="${newsletter.jdbc.driver}"
+          p:url="${newsletter.jdbc.url}"
+          p:username="${newsletter.jdbc.user}"
+          p:password="${newsletter.jdbc.password}"/>
+
+</beans>

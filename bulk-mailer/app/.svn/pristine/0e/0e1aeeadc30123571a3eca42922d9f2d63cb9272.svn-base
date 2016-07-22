@@ -1,0 +1,53 @@
+package beeriprint.newsletter.batch.mailer;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ *
+ * @author hilel
+ */
+public class Main {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Main.class);
+
+    public static void main(String[] args) {
+        if (args.length != 5) {
+            System.out.println("Mandatory arguments: launch-context job-name template_name last_step list-file");
+            System.out.println("Exmaple: launch-context.xml newsletter-1 template-1 create /var/opt/newsletter/2016-04-01/list-1.csv");
+            System.exit(1);
+        }
+        // assing values to variables
+        String launchContext = args[0];
+        String jobName = args[1];
+        String templateName = args[2];
+        String lastStep = args[3];
+        String listFile = args[4];
+        // calculate variables values
+        Path inFile = Paths.get(listFile);
+        String campaignDate = inFile.getParent().getFileName().toString();
+        String messageFolder = inFile.getParent().resolve(inFile.getFileName().toString().concat("_messages")).toString();
+        // run job
+        ApplicationContext context = new ClassPathXmlApplicationContext(launchContext);
+        JobLauncher launcher = context.getBean(JobLauncher.class);
+        Job job = context.getBean(jobName, Job.class);
+        JobParametersBuilder builder = new JobParametersBuilder();
+        builder.addString("template_name", templateName, true);
+        builder.addString("last_step", lastStep, false); // create | import | send
+        builder.addString("list_file", listFile, true);
+        builder.addString("campaign_date", campaignDate, true);
+        builder.addString("message_folder", messageFolder, false);
+        try {
+            JobExecution jobExecution = launcher.run(job, builder.toJobParameters());
+        } catch (Exception ex) {
+            LOGGER.error(null, ex);
+        }
+    }
+}

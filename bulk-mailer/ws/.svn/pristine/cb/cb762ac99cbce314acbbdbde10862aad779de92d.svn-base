@@ -1,0 +1,2 @@
+newsletter.jks.keystore=file:///opt/ebill/status-updater/ebill.jks
+newsletter.jks.password=123456

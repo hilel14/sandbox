@@ -1,0 +1,26 @@
+package beeriprint.newsletter.batch.mailer.listeners;
+
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
+
+/**
+ *
+ * @author hilel
+ */
+public class StopListener implements StepExecutionListener {
+
+    @Override
+    public void beforeStep(StepExecution stepExecution) {
+        // do nothing
+    }
+
+    @Override
+    public ExitStatus afterStep(StepExecution stepExecution) {
+        if (stepExecution.getJobParameters().getString("action", "default").equals(stepExecution.getStepName())) {
+            stepExecution.setTerminateOnly();
+            //return ExitStatus.COMPLETED;
+        }
+        return stepExecution.getExitStatus();
+    }
+}

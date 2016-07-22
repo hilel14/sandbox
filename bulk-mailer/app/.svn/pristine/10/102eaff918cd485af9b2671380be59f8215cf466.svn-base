@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Newsletter User Guide</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+    <body dir="rtl">
+
+        <h1>מדריך משתמש עלק</h1>
+
+        <ol>
+            <li>
+                עדכון קובץ התבנית והפצה לשרת
+            </li>
+            <li>
+                עדכון קובץ targets.csv והפצה לשרת
+            </li>
+            <li>
+                יצוא רשימת נמענים למשלוח ממערכת אקטיב טרייל והעברה לשרת
+            </li>
+            <li>
+                משלוח קובץ טסטים
+            </li>
+            <li>
+                משלוח קובץ אמיתי
+            </li>
+        </ol>
+
+        <h2>יצוא רשימת נמענים למשלוח</h2>
+        <ol>
+            <li>
+                תפריט: דוחות
+            </li>
+            <li>
+                ניוזלטר # ללקוחות
+            </li>
+            <li>
+                מידע מלא
+            </li>
+            <li>
+                לא פתחו
+            </li>
+            <li>
+                ייצוא
+            </li>
+        </ol>
+
+    </body>
+
+</html>

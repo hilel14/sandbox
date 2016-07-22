@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://camel.apache.org/schema/spring         http://camel.apache.org/schema/spring/camel-spring.xsd
+       ">
+
+   
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        
+        <dataFormats>
+            <jaxb id="jack" prettyPrint="false" contextPath="beeriprint.newsletter.model"/>
+        </dataFormats>
+
+        <route id="process-dsn" autoStartup="false">
+            <from uri="imaps://{{newsletter.imap.uri}}" />
+            <bean ref="dsnAnalyzer" />
+            <filter>
+                <simple>${body.validDsn}</simple>
+                <process ref="prepareUpdateEmail" />
+                <to uri="jdbc:newsletterDataSource?useHeadersAsParameters=true" />
+            </filter>
+        </route>
+
+        <route id="process-activity" autoStartup="true">
+            <from uri="activemq:queue:newsletter.user.activity"/>
+            <unmarshal ref="jack"/>
+            <process ref="prepareSelectEmail" />
+            <to uri="jdbc:newsletterDataSource?useHeadersAsParameters=true" />
+            <filter>
+                <simple>${in.header.CamelJdbcRowCount} == 1</simple>
+                <process ref="prepareInsertActivity" />
+                <to uri="jdbc:newsletterDataSource?useHeadersAsParameters=true" />
+            </filter>
+        </route>
+
+    </camelContext>   
+
+    <bean id="bridgePropertyPlaceholder" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:///opt/beeri/newsletter/resources/newsletter.imap.properties</value>
+                <value>file:///opt/beeri/newsletter/resources/newsletter.jks.properties</value>
+                <value>file:///opt/beeri/newsletter/resources/newsletter.mysql.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="dsnAnalyzer" class="beeriprint.newsletter.camel.beans.DsnAnalyzer" />
+    <bean id="prepareUpdateEmail" class="beeriprint.newsletter.camel.processors.PrepareUpdateEmail" />
+    <bean id="prepareSelectEmail" class="beeriprint.newsletter.camel.processors.PrepareSelectEmail" />
+    <bean id="prepareInsertActivity" class="beeriprint.newsletter.camel.processors.PrepareInsertActivity" />
+
+    <!-- IMAP SSL configuration -->
+    <sslContextParameters id="sslContextParameters" xmlns="http://camel.apache.org/schema/spring">
+        <trustManagers>
+            <keyStore resource="file://{{newsletter.jks.keystore}}" password="{{newsletter.jks.password}}"/>
+        </trustManagers>
+    </sslContextParameters>
+    
+    <!-- ActiveMQ configuration -->
+
+    <bean id="jmsConnectionFactory"
+          class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="vm://localhost" />
+    </bean>
+    <!--
+        <property name="brokerURL" value="tcp://localhost:61616" />
+    -->
+
+    <bean id="pooledConnectionFactory"
+          class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" destroy-method="stop">
+        <property name="maxConnections" value="8" />
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+    </bean>
+
+    <bean id="jmsConfig"
+          class="org.apache.camel.component.jms.JmsConfiguration">
+        <property name="connectionFactory" ref="pooledConnectionFactory"/>
+        <property name="concurrentConsumers" value="10"/>
+    </bean>
+
+    <bean id="activemq"
+          class="org.apache.activemq.camel.component.ActiveMQComponent">
+        <property name="configuration" ref="jmsConfig"/>
+    </bean>
+
+    <!-- database configuration -->
+
+    <bean id="newsletterDataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="${newsletter.jdbc.driver}"/>
+        <property name="url" value="${newsletter.jdbc.url}"/>
+        <property name="username" value="${newsletter.jdbc.user}"/>
+        <property name="password" value="${newsletter.jdbc.password}"/>
+    </bean>
+
+</beans>

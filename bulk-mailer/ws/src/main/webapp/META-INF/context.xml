@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/newsletter">
+    <Resource
+        name="jms/newsletter"
+        auth="Container"
+        type="org.apache.activemq.ActiveMQConnectionFactory"
+        description="JMS Connection Factory"
+        factory="org.apache.activemq.jndi.JNDIReferenceFactory"
+        brokerURL="vm://localhost"
+        brokerName="LocalActiveMQBroker"/>
+</Context>
+
+<!--
+        brokerURL="tcp://localhost:61616"
+-->

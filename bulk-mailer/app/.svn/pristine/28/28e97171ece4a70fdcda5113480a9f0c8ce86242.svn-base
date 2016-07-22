@@ -1,0 +1,61 @@
+package beeriprint.newsletter.batch.mailer;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ *
+ * @author hilel
+ */
+public class TestJob extends TestCase {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TestJob.class);
+    //org.springframework.batch.core.launch.support.CommandLineJobRunner runner;
+
+    /**
+     * Create the test case
+     *
+     * @param testName name of the test case
+     */
+    public TestJob(String testName) {
+        super(testName);
+    }
+
+    /**
+     * @return the suite of tests being tested
+     */
+    public static Test suite() {
+        return new TestSuite(TestJob.class);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+    }
+
+    public void testImport() throws Exception {
+        ApplicationContext context = new ClassPathXmlApplicationContext("test-launch-context.xml");
+        JobLauncher launcher = context.getBean(JobLauncher.class);
+        Job job = context.getBean("customers-newsletter", Job.class);
+        LOGGER.info("Adding parameters to job " + job.getName());
+        JobParametersBuilder builder = new JobParametersBuilder();
+        //builder.addString("list_file", "file:///var/opt/newsletter/2016-04-01/list-1.csv", true);
+        builder.addString("list_file", "classpath:data/list-1.csv", true);
+        builder.addString("campaign_date", "2016-04-02", true);
+        builder.addString("template_name", "customers-newsletter.template", false);
+        builder.addString("message_folder", "/var/opt/newsletter/testim/imported", false);
+        builder.addString("last_step", "create", false); // create | import | send
+        //builder.addString("k1", new Date().toString(), true);
+        JobExecution jobExecution = launcher.run(job, builder.toJobParameters());
+        assertNotSame(BatchStatus.FAILED, jobExecution.getStatus());
+        //logger.info("job execution {0} ended with status: {1}", new Object[]{jobExecution.getId(), jobExecution.getStatus()});
+    }
+}

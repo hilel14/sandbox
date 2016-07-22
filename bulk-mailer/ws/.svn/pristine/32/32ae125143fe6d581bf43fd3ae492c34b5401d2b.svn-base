@@ -1,0 +1,55 @@
+package beeriprint.newsletter.camel;
+
+import beeriprint.newsletter.model.StatusUpdate;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.camel.Exchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ *
+ * @author hilel
+ */
+public class QueryBuilder {
+
+    final Logger logger = LoggerFactory.getLogger(getClass());
+    //final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    final String updateDsn
+            = "UPDATE email SET action_code  = :?actionCode, status_code = :?statusCode, diagnostic_code = :?diagnosticCode "
+            + "WHERE id = :?messageCode";
+    final String updateOpened
+            = "INSERT INTO activity (email_id, activity_time, activity_type, resource_id) "
+            + "VALUES (:?messageCode, :?requestTime, 'opened', 0)";
+    final String updateClicked
+            = "INSERT INTO activity (email_id, activity_time, activity_type, resource_id) "
+            + "VALUES (:?messageCode, :?requestTime, 'clicked', :?resourceId)";
+    Map updateParameters;
+
+    public void updateDsn(Exchange exchange, StatusUpdate statusUpdate) throws Exception {
+        updateParameters = new HashMap();
+        updateParameters.put("messageCode", statusUpdate.getMessageCode());
+        updateParameters.put("actionCode", statusUpdate.getActionCode());
+        updateParameters.put("statusCode", statusUpdate.getStatusCode());
+        updateParameters.put("diagnosticCode", statusUpdate.getDiagnosticCode());
+        exchange.getOut().setBody(updateDsn);
+        exchange.getOut().setHeader("CamelJdbcParameters", updateParameters);
+    }
+
+    public void updateOpened(Exchange exchange, StatusUpdate statusUpdate) throws Exception {
+        updateParameters = new HashMap();
+        updateParameters.put("messageCode", statusUpdate.getMessageCode());
+        updateParameters.put("requestTime", statusUpdate.getRequestTime().getTime());
+        exchange.getOut().setBody(updateOpened);
+        exchange.getOut().setHeader("CamelJdbcParameters", updateParameters);
+    }
+
+    public void updateClicked(Exchange exchange, StatusUpdate statusUpdate) throws Exception {
+        updateParameters = new HashMap();
+        updateParameters.put("messageCode", statusUpdate.getMessageCode());
+        updateParameters.put("requestTime", statusUpdate.getRequestTime().getTime());
+        updateParameters.put("resourceId", statusUpdate.getResourceId());
+        exchange.getOut().setBody(updateClicked);
+        exchange.getOut().setHeader("CamelJdbcParameters", updateParameters);
+    }
+}

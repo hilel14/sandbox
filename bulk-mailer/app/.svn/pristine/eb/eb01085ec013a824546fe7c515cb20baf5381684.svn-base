@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+
+<jasperReport name="Campaign List"
+              pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30">
+    <queryString>
+		<![CDATA[SELECT * FROM campaign]]>
+    </queryString>
+    <field name="id" class="java.lang.Integer"/>
+    <field name="template_name" class="java.lang.String"/>
+    <field name="campaign_date" class="java.sql.Date"/>
+    <field name="list_file" class="java.lang.String"/>
+    <title>
+        <band height="80">
+            <staticText>
+                <reportElement x="0" y="0" width="300" height="80"/>
+                <textElement textAlignment="Left">
+                    <font size="36"/>
+                </textElement>
+                <text><![CDATA[Campaign List]]></text>
+            </staticText>
+        </band>
+    </title>
+    <columnHeader>
+        <band height="80">
+            <staticText>
+                <reportElement x="0" y="60" width="50" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="50" y="60" width="150" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Template]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="200" y="60" width="150" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="350" y="60" width="150" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[File]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="20">
+            <textField hyperlinkType="ReportExecution">
+                <reportElement x="0" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+                <hyperlinkParameter name="_report">
+                    <hyperlinkParameterExpression><![CDATA["/newsletter/campaign_summary"]]></hyperlinkParameterExpression>
+                </hyperlinkParameter>
+                <hyperlinkParameter name="campaign_id">
+                    <hyperlinkParameterExpression><![CDATA[$F{id}]]></hyperlinkParameterExpression>
+                </hyperlinkParameter>
+                <hyperlinkParameter name="campaign_title">
+                    <hyperlinkParameterExpression><![CDATA[$F{template_name} + " / " + $F{campaign_date}]]></hyperlinkParameterExpression>
+                </hyperlinkParameter>
+            </textField>
+            <textField>
+                <reportElement x="50" y="0" width="150" height="20"/>
+                <textFieldExpression><![CDATA[$F{template_name}.substring(0,$F{template_name}.length()-9)]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="150" height="20"/>
+                <textFieldExpression><![CDATA[DATEFORMAT($F{campaign_date},"dd MMM yyyy")]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="350" y="0" width="150" height="20"/>
+                <textFieldExpression><![CDATA[$F{list_file}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+</jasperReport>

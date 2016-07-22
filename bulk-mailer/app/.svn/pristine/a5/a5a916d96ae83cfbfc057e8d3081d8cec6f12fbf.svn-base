@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Newsletter Overview</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Newsletter system configuration</h1>
+        <h2>CentOS</h2>
+        <ol>
+			<li>
+                echo "beeriprint-content.co.il" > /etc/hostname
+            </li>
+            <li>
+                Add user newsman
+            </li>
+        </ol>
+        <h2>Newsletter applications</h2>
+        /opt/beeri/newsletter
+        <ol>
+            <li>
+                resources
+            </li>
+            <li>
+                config
+            </li>
+            <li>
+                batch-mailer
+            </li>
+            <li>
+                web-app
+            </li>
+        </ol>
+        <h2>HTTPd</h2>
+        <ol>
+            <li>
+                /var/www/html/index.html
+            </li>
+            <li>
+                /var/www/html/static/logo.jpg
+            </li>
+        </ol>
+        <h2>MariaDB</h2>
+        <ol>
+            <li>
+                mysqladmin -u root -p create batch
+            </li>
+            <li>
+                mysqladmin -u root -p  create newsletter
+            </li>
+            <li>
+                mysql -u root -p
+                <br>
+                GRANT ALL ON batch.* TO newsman@localhost identified by '123456';
+                <br>
+                GRANT ALL ON newsletter.* TO newsman@localhost;
+            </li>
+        </ol>
+        <h2>Postfix</h2>
+        <p>
+			<a href="http://www.postfix.org/BASIC_CONFIGURATION_README.html">Basic configuration</a> defaults works.
+			<br>
+			Add to /etc/postfix/main.cf
+        </p>
+        <ol>
+            <li>
+                default_destination_rate_delay = 6s
+            </li>
+            <li>
+                default_destination_concurrency_failed_cohort_limit = 10
+            </li>
+            <li>
+				default_destination_concurrency_limit = 1
+            </li>
+        </ol>
+        <h2>Tomcat</h2>
+        <ol>
+            <li>
+                yum install tomcat-admin-webapps
+            </li>
+            <li>
+                vi /etc/tomcat/tomcat-users.xml
+            </li>
+            <li>
+                Create /etc/httpd/conf.d/tomcat-proxy.conf:
+                <br>
+                ProxyPass        /newsletter/ ajp://localhost:8009/newsletter/
+                <br>
+                ProxyPassReverse /newsletter/ ajp://localhost:8009/newsletter/
+            </li>
+            <li>
+                If server startup is slow (INFO: Server startup in 202442 ms, for example), 
+                edit /etc/tomcat/tomcat.conf:
+                <br>
+                JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
+            </li>
+        </ol>
+        <h2>Dovecot</h2>
+        <ol>
+            <li>
+                chmod 0600 /var/mail/*
+            </li>
+            <li>
+                Edit /etc/dovecot/conf.d/10-mail.conf
+                <br>
+                mail_location = mbox:~/mail:INBOX=/var/mail/%u
+            </li>
+            <li>
+                Edit /etc/dovecot/dovecot.conf
+                <br>
+                protocols = imap
+            </li>
+            <li>
+                keytool -importcert -file /etc/pki/dovecot/certs/dovecot.pem -alias dovecot-1 -keystore /opt/beeri/newsletter/config/newsletter.jks
+            </li>
+        </ol>
+    </body>
+</html>

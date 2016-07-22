@@ -1,0 +1,6 @@
+SELECT COUNT(*) AS sent,
+(SELECT COUNT(*) FROM campaign_2016_06_08 WHERE action_code IN ('relayed') OR opened > 0 OR clicked > 0) as delivered,
+(SELECT COUNT(*) FROM campaign_2016_06_08 WHERE opened > 0 OR clicked > 0) as opened,
+(SELECT COUNT(*) FROM campaign_2016_06_08 WHERE clicked > 0) as clicked,
+(SELECT COUNT(*) FROM campaign_2016_06_08 WHERE unsubscribe > 0) as unsubscribed
+FROM campaign_2016_06_08;

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>clickb upgrade template properties</comment>
+    <entry key="subject">השבתה קצרה של מערכת מכתב בקליק לצורך שדרוג</entry>
+    <entry key="sender.name">מכתב בקליק</entry>
+    <entry key="sender.address">newsman@beeriprint-content.co.il</entry>
+    <entry key="reply.to.address">support@clickb.co.il</entry>
+</properties>

@@ -1,0 +1,26 @@
+package beeriprint.newsletter.camel.processors;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+
+/**
+ *
+ * @author hilel
+ */
+public class PrepareInsertUnsubscribe implements Processor {
+
+    final String query = "INSERT INTO unsubscribe (email, request_time) VALUES (:?email, :?requestTime)";
+
+    @Override
+    public void process(Exchange exchange) throws Exception {
+        Map jdbcParameters = new HashMap();
+        jdbcParameters.put("email", exchange.getIn().getHeader("NewsletterUnsubscriber"));
+        jdbcParameters.put("requestTime", Calendar.getInstance().getTime());
+        exchange.getOut().setBody(query);
+        exchange.getOut().setHeader("CamelJdbcParameters", jdbcParameters);
+    }
+
+}

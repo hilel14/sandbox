@@ -1,0 +1,39 @@
+id	cust	description	content
+1	100	pixel	pixel.jpg
+2	100	download acrobat	http://get.adobe.com/reader/
+3	311	cellcom personal zone	https://www.cellcom.co.il/login/pages/default.aspx?authtype=2&TYPE=33554433&REALMOID=06-0fe395c5-92fc-4aaf-bc55-7ba5fb5f70aa&GUID=1&SMAUTHREASON=0&METHOD=GET&SMAGENTNAME=cellcomsite&href=$SM$http%3a%2f%2fwww%2ecellcom%2eco%2eil%2fmyzone%2fpages%2fdefault%2easpx&utm_source=cellcom&utm_medium=email&utm_campaign=invoice
+4	311	listing registration	http://www.cellcom.co.il/myzone/registration/pages/default.aspx?invoice
+5	311	cellcom personal zone	http://qr.moblin.com/cellcom/default.aspx?qr=customermail
+6	380	bezeq phone	http://www.bezeq.co.il/Telephony/PhoneLines/Pages/bphone.aspx
+9	380	bezeq bill enrollment	https://www.bezeq.co.il/SelfService/Pages/default.aspx
+10	380	bezeq 144 home	http://www.b144.co.il/
+11	410	smart magazine	http://www.smart-magazine.co.il/dif/land_page_film_invoice/orang_filminvoice_landpage_0512.html?utm_source=sniper&utm_medium=email&utm_campaign=invoice
+12	411	012mobile home	http://www.012mobile.co.il
+13	311	cellcom iPhone-5	http://www.cellcom.co.il/shop/phones/apple/iphone_5/Pages/default.aspx
+14	411	012elevate	http://elevate.co.il/clients/012mobile/2013/01/bill2/form.html
+15	411	personal info	http://www.012mobile.co.il/he-il/abroad/012-travel/
+16	311	cellcom abroad	http://www.cellcom.co.il/abroad/pages/default.aspx?utm_source=cellcom&utm_medium=bill_email&utm_campaign=digital_invoice
+17	311	hamtana	http://www.cellcom.co.il/shop/fundial/pages/default.aspx?mail_post
+18	311	iPad-4	https://www.cellcomshop.co.il/item/apple_ipad4_16gb.aspx?utm_source=cellcom&utm_medium=email&utm_campaign=email_bill
+19	311	mobile store	https://www.cellcomshop.co.il/?utm_source=cellcom&utm_medium=email&utm_campaign=email
+20	311	cellcom home	http://www.cellcom.co.il
+21	311	cellcom personal zone	https://www.cellcom.co.il/login/pages/default.aspx
+22	311	cellcom unsubscribe	http://www.cellcom.co.il/support/info/unsubscribe/pages/default.aspx
+23	311	mobile shop	https://www.cellcomshop.co.il/?utm_source=cellcom.co.il&utm_medium=referral&utm_campaign=cellcom.co.il
+24	311	shirut digitali	http://clm.co.il/L/?777
+25	311	ipad air	https://www.cellcomshop.co.il/item/apple_ipad_air_16gb.aspx?utm_source=cellcom&utm_medium=email&utm_campaign=digital_invoice
+26	311	new statement clip	http://www.youtube.com/watch?v=kjwmcFs1Mr4&feature=youtu.be&utm_source=cellcom&utm_medium=bill_email&utm_campaign=digital_invoice
+27	311	personal zone - private	https://www.cellcom.co.il/myzone/pages/default.aspx?utm_source=cellcom&utm_medium=bill_email&utm_campaign=digital_invoice
+28	311	personal zone - business	http://business.cellcom.co.il/?utm_source=cellcom&utm_medium=bill_email&utm_campaign=digital_invoice
+29	311	abroad - business	http://business.cellcom.co.il/support/abroad/pages/default.aspx?utm_source=cellcom&utm_medium=bill_email&utm_campaign=digital_invoice
+30	297	chat	https://meuchedet.wizsupport.com/chat/rchat.aspx?profile=2&lang=he&url=httpsCHRDOTDOTCHRSHLASHBCHRSHLASHBwwwCHRPERIODmeuhedetCHRPERIODcoCHRPERIODilCHRSHLASHBmeuhedetCHRSHLASHBviewsCHRSHLASHBindexCHRPERIODjsp
+31	297	siudi	https://www.meuhedet.co.il/meuhedet/views/engine?rnd=0.09089490691846036&templateName=meuhedetMenu.txt&idorItemId=topMenu&menuBarView=menu&menuBarSubjectParam=991309486409&menuBarOpenCategoryParam=&menuBarStartMenuParam=subSubject&formView=formLink&formLinkParam=insuranceFormUpdate&formFormTypeParam=42&mainView=article&mainId=&mainSubjectParam=991309486409&mainFormTypeParam=42&topMenu=insurancesLink&headerFlashParam=zaav
+32	297	bikur bari	http://bikurbari.co.il/
+33	297	cellular app	https://www.meuhedet.co.il/meuhedet/views/engine?idorItemId=menuBar&templateName=menu.txt&templateKey=1408954594125&menuBarview=menu&mainView=article&menuBaropencategoryParam=&menuBarstartMenuParam=subSubject&menuBaropenCategorymParam=&menuBarsubjectParam=1324290762641&menuBarstartmenuParam=subSubject&headerFlashParam=&mainId=1324291713344
+34	297	hishtatfuyot	https://www.meuhedet.co.il/meuhedet/views/engine?rnd=0.7106221357268542&templateName=menu.txt&idorItemId=topMenu&templateKey=1412583850412&menuBarView=menu&menuBarSubjectParam=1211196727562&menuBarStartMenuParam=subSubject&menuBarOpenCategoryParam=&mainView=article&mainSubjectParam=1211196727562&headerFlashParam=etsot&topMenu=infoLink
+35	471	pay.disabled	https://secure.hagihon.co.il/PayGihon/Payment/Fill_Mobile?accountNumber=${msg.billingStatement.customData.hoze}&clientId=${msg.billingStatement.clientId}&ref_src=EML/
+36	471	view	https://secure.hagihon.co.il/paygihon/InvoiceCheck/
+37	471	home	http://www.hagihon.co.il
+38	311	LTE	http://www.cellcom.co.il/shop/lte/pages/default.aspx?hp_001=lte&utm_source=cellcom&utm_medium=email&utm_campaign=digital_invoice
+39	471	nefashot	http://www.hagihon.co.il/SystemFiles/nefashot2014.pdf
+40	471	adv_keva	http://www.hagihon.co.il/SystemFiles/adv_keva2014.pdf

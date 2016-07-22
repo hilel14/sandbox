@@ -1,0 +1,11 @@
+SELECT email.id ,unsubscribe.request_time, 'unsubscribe'
+FROM email, unsubscribe
+WHERE unsubscribe.email = CONCAT(email.user_part , "@" , email.domain_part);
+
+SELECT user_part, domain_part, activity_time
+FROM activity, email
+WHERE activity_type = 'unsubscribe'
+AND activity.email_id = email.id
+ORDER BY  activity_time;
+
+select * from activity where activity_type = 'unsubscribe' ORDER BY  activity_time;
