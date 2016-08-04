@@ -1,21 +1,17 @@
 package org.ganshaqed.sql2mail;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-import org.ganshaqed.sql2mail.statement.PreparedStatementParamSetter;
+import org.ganshaqed.sql2mail.model.Job;
 
 /**
  *
@@ -41,17 +37,25 @@ public class JdbcController {
         LOGGER.log(Level.INFO, "Database connection string {0}", url);
     }
 
-    public void exportData(Path outPath, Charset charset, String query, PreparedStatementParamSetter paramSetter, String[] params)
-            throws SQLException, IOException {
+    public List<List<String>> exportData(Job job, String params) throws SQLException, IOException {
+        List<List<String>> results = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, user, password);
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            paramSetter.setParams(statement, params);
-            try (ResultSet resultSet = statement.executeQuery();
-                    OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(outPath.toFile()), charset);
-                    CSVPrinter printer = CSVFormat.DEFAULT.withHeader(resultSet).print(out)) {
-                printer.printRecords(resultSet);
-                LOGGER.log(Level.INFO, "Results saved to file {0}", outPath.toString());
+                PreparedStatement statement = connection.prepareStatement(job.getQuery())) {
+            if (params != null) {
+                LOGGER.log(Level.CONFIG, "Parsing statement params: {0}", params);
+                job.getParamSetter().setParams(statement, params.split(","));
+            }
+            try (ResultSet rs = statement.executeQuery();) {
+                final int columnCount = rs.getMetaData().getColumnCount();
+                while (rs.next()) {
+                    List<String> list = new ArrayList<>();
+                    for (int i = 1; i <= columnCount; i++) {
+                        list.add(rs.getString(i));
+                    }
+                    results.add(list);
+                }
             }
         }
+        return results;
     }
 }
