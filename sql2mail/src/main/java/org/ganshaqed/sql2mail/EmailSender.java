@@ -11,6 +11,7 @@ import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
+import org.ganshaqed.sql2mail.model.Job;
 
 /**
  *
@@ -19,19 +20,15 @@ import org.apache.commons.mail.MultiPartEmail;
 public class EmailSender {
 
     static final Logger LOGGER = Logger.getLogger(EmailSender.class.getName());
-    private String host;
-    private String user;
-    private String password;
-    private String sender;
-    private boolean debug;
-    private boolean sslOnConnect;
-    private boolean startTLSEnabled;
+    private final String host;
+    private final String user;
+    private final String password;
+    private final String sender;
+    private final boolean debug;
+    private final boolean sslOnConnect;
+    private final boolean startTLSEnabled;
 
     public EmailSender() throws IOException {
-        loadSmtpProperties();
-    }
-
-    private void loadSmtpProperties() throws IOException {
         Properties p = new Properties();
         p.load(EmailSender.class.getClassLoader().getResourceAsStream("smtp.properties"));
         host = p.getProperty("host");
@@ -44,7 +41,8 @@ public class EmailSender {
         LOGGER.log(Level.INFO, "SMTP host {0}", host);
     }
 
-    public void sendEmail(Path reportFile, String[] recipients, String subject, String body)
+    //public void sendEmail(Path reportFile, String[] recipients, String subject, String body)
+    public void sendEmail(Job job)
             throws EmailException, IOException, MessagingException {
         // Create the email message
         MultiPartEmail email = new MultiPartEmail();
@@ -54,30 +52,30 @@ public class EmailSender {
         email.setSSLOnConnect(sslOnConnect);
         email.setStartTLSEnabled(startTLSEnabled);
         email.setFrom(sender);
-        for (String recipient : recipients) {
+        for (String recipient : job.getRecipients()) {
             LOGGER.log(Level.INFO, "Adding recipient {0}", recipient);
             email.addTo(recipient);
         }
-        email.setSubject(subject);
-        email.setMsg(body);
+        email.setSubject(job.getSubject());
+        email.setMsg(job.getBody());
 
         // add the attachment
         EmailAttachment attachment = new EmailAttachment();
-        attachment.setPath(reportFile.toString());
+        attachment.setPath(job.getReportFile().toString());
         attachment.setDisposition(EmailAttachment.ATTACHMENT);
         attachment.setDescription("sql2mail data");
-        attachment.setName(reportFile.getFileName().toString());
+        attachment.setName(job.getReportFile().getFileName().toString());
         email.attach(attachment);
 
         // send the email
         if (debug) {
             email.buildMimeMessage();
-            Path out = reportFile.getParent().resolve(reportFile.getFileName().toString().concat(".eml"));
+            Path out = job.getReportFile().getParent().resolve(job.getReportFile().getFileName().toString().concat(".eml"));
             email.getMimeMessage().writeTo(new FileOutputStream(out.toFile()));
             LOGGER.log(Level.INFO, "Email saved in file {0}", out.toString());
         } else {
             email.send();
-            LOGGER.log(Level.INFO, "Email sent to {0} recipients", recipients.length);
+            LOGGER.log(Level.INFO, "Email sent to {0} recipients", job.getRecipients().length);
         }
     }
 }

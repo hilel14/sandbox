@@ -31,11 +31,22 @@ public class MainTest {
     public void tearDown() {
     }
 
-    @Test
-    public void testMain() {
+    //@Test
+    public void testJob1() {
         String[] args = new String[]{"--job=job1"};
         Main.main(args);
-        args = new String[]{"--job=job2", "--statement-params=3"};
+
+    }
+
+    //@Test
+    public void testJob2() {
+        String[] args = new String[]{"--job=job2", "--statement-params=3"};
+        Main.main(args);
+    }
+
+    @Test
+    public void testJob3() {
+        String[] args = new String[]{"--job=job3", "--statement-params=365"};
         Main.main(args);
     }
 
