@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tomcat config demo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h1>Tomcat configuration demo</h1>
+
+        <h2>Static configuration (set by deployer, changed infrequently )</h2>
+
+        <h3>Global resources </h3>
+        <ol>
+            <li>
+                Put drive jar file in
+                <code>$CATALINA_BASE/lib (optional)</code>
+            </li>
+            <li>
+                Add Context and Resource entry to
+                <code>$CATALINA_BASE/conf/[enginename]/[hostname]/context.xml.default</code>
+            </li>
+            <li>
+                <strong>Restart Tomcat</strong>
+            </li>
+            <li>
+                Access from Servlet with:
+                <br>
+                <code>
+                    Context context = (Context) new InitialContext().lookup("java:comp/env");
+                    <br>
+                    DataSource dataSource = (DataSource) context.lookup(“jdbc/Test”);
+                </code>
+            </li>
+        </ol>
+
+        <h3>Application properties</h3>
+        <p>Method A:</p>
+        <ol>
+            <li>
+                Put application.properties in /path/to/application/properties
+            </li>
+            <li>
+                Add Context and Environment entry to
+                <code>$CATALINA_BASE/conf/[enginename]/[hostname]/app-name.xml</code>
+            </li>
+            <li>
+                <strong>Changes will be lost on re-deploy</strong>
+            </li>
+            <li>
+                Access from Servlet with:
+                <br>
+                <code>
+                    Context context = (Context) new InitialContext().lookup("java:comp/env");
+                    <br>
+                    String mypath = context.lookup("mypath").toString();
+                </code>
+            </li>
+        </ol>
+        <p>Method B:</p>
+        <ol>
+            <li>
+                Put application.properties in $CATALINA_BASE/lib
+            </li>
+            <li>
+                <strong>Restart Tomcat</strong>
+            </li>
+            <li>
+                Access from Servlet with:
+                <br>
+                <code>
+                    Properties p = new Properties();
+                    <br>
+                    InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat-config-demo.properties");
+                    <br>
+                    p.load(inStream);
+                    <br>
+                    String myvar = p.getProperty("my.var");
+                </code>
+            </li>
+        </ol>
+
+        <h2>Dynamic configuration (set by admin/user, changed frequently)</h2>
+        <p>Use database, directory-server, etc.</p>
+
+        <h2>Links</h2>
+        <p>
+            https://tomcat.apache.org/tomcat-8.0-doc/config/context.html
+            <br>
+            http://stackoverflow.com/questions/1300780/adding-a-directory-to-tomcat-classpath
+        </p>
+
+        <h2>Tests</h2>
+        <ul>
+            <li>
+                <a href="/tomcat-config-demo-1.0-SNAPSHOT/ShowEnv">Environment</a>
+            </li>
+            <li>
+                <a href="/tomcat-config-demo-1.0-SNAPSHOT/ShowDb">Database</a>
+            </li>
+        </ul>
+    </body>
+</html>
