@@ -54,12 +54,10 @@ public class ShowDb extends HttpServlet {
             out.println("<body>");
             out.println("<h1>Servlet MyServlet at " + request.getContextPath() + "</h1>");
             try (Connection conn = dataSource.getConnection()) {
-                PreparedStatement preparedStatement = conn.prepareStatement("SELECT id, first_name, birth_date, height FROM people");
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT NAME FROM APP.CUSTOMER");
                 ResultSet rs = preparedStatement.executeQuery();
                 while (rs.next()) {
-                    out.println(rs.getString("id"));
-                    out.println(" - ");
-                    out.println(rs.getString("first_name"));
+                    out.println(rs.getString("NAME"));
                     out.println("<br>");
                 }
             }
