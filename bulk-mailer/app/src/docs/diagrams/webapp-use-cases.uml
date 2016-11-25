@@ -1,0 +1,22 @@
+' usage: java -jar plantuml.jar source.uml
+
+@startuml
+
+	title Webapp Usecases
+	left to right direction
+
+	actor "IMPA server" as imap
+	actor "Recipient" as recipient
+		
+	usecase (Produce delivery status notification) as dsn
+	usecase (Open mail message) as open
+	usecase (Click on link) as click
+	usecase (Reques to unsubscribe) as unsubscribe
+	
+	imap --> dsn
+	recipient --> open
+	recipient --> click
+	recipient --> unsubscribe
+	
+@enduml
+
