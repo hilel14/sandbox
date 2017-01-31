@@ -6,6 +6,6 @@ var rd = readline.createInterface({
     terminal: false
 });
 
-rd.on('line', function(line) {
+rd.on('line', function (line) {
     console.log(line);
 });

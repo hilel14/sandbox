@@ -7,6 +7,9 @@
     <body>
         <h1>Tomcat configuration demo</h1>
 
+        <h2>Dynamic configuration (set by admin/user, changed frequently)</h2>
+        <p>Use database, directory-server, etc.</p>
+
         <h2>Static configuration (set by deployer, changed infrequently )</h2>
 
         <h3>Global resources </h3>
@@ -34,7 +37,7 @@
         </ol>
 
         <h3>Application properties</h3>
-        <p>Method A:</p>
+        <h4>Method A:</h4>
         <ol>
             <li>
                 Put application.properties in /path/to/application/properties
@@ -42,10 +45,7 @@
             <li>
                 Add Context and Environment entry to
                 <code>$CATALINA_BASE/conf/[enginename]/[hostname]/app-name.xml</code>
-            </li>
-            <li>
-                <strong>Changes will be lost on re-deploy</strong>
-            </li>
+            </li>            
             <li>
                 Access from Servlet with:
                 <br>
@@ -56,7 +56,12 @@
                 </code>
             </li>
         </ol>
-        <p>Method B:</p>
+        <p>
+            <strong>Remark:</strong> 
+            If using  Tomcat Web Application Manager to re-deploy (un-deploy, deploy) , changes will be lost.
+            Putting new WAR file in $CATALINA_BASE/webapps works.
+        </p>
+        <h4>Method B:</h4>
         <ol>
             <li>
                 Put application.properties in $CATALINA_BASE/lib
@@ -79,8 +84,28 @@
             </li>
         </ol>
 
-        <h2>Dynamic configuration (set by admin/user, changed frequently)</h2>
-        <p>Use database, directory-server, etc.</p>
+        <h4>Method C:</h4>
+        <ol>
+            <li>
+                Edit
+                <code>
+                    $CATALINA_BASE/conf/catalina.properties
+                </code>
+                Set
+                <code>
+                    shared.loader=/opt/myapp/lib
+                </code>
+            </li>
+            <li>
+                Put application.properties in /opt/myapp/lib
+            </li>
+            <li>
+                <strong>Restart Tomcat</strong>
+            </li>
+            <li>
+                Access from Servlet the same way as method B.
+            </li>
+        </ol>
 
         <h2>Links</h2>
         <p>

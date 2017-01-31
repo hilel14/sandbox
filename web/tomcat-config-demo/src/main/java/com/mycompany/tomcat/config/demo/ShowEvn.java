@@ -47,7 +47,7 @@ public class ShowEvn extends HttpServlet {
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "my app error", ex);
         }
-        String mypath2 = "unknown";
+        String mypath2 = "unknown2";
         try {
             Properties p = new Properties();
             InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("tomcat-config-demo.properties");

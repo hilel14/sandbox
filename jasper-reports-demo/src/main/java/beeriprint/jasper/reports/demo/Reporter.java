@@ -14,6 +14,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRPrintElement;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -21,6 +22,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.HtmlExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.engine.fill.JRTemplatePrintText;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
 import net.sf.jasperreports.export.SimpleHtmlReportConfiguration;
@@ -52,11 +54,13 @@ public class Reporter {
 
             // Export PDF
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
+            printTitle(jasperPrint);
             exportPdf(jasperPrint, outFolder, parameters);
 
             // Export Excell and HTML
             parameters.put("IS_IGNORE_PAGINATION", true);
             jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, connection);
+
             exportExcell(jasperPrint, outFolder, parameters);
             exportHtml(jasperPrint, outFolder, parameters);
 
@@ -77,7 +81,7 @@ public class Reporter {
 
     private void exportExcell(JasperPrint jasperPrint, Path outFolder, HashMap<String, Object> parameters)
             throws JRException {
-        
+
         // create report configuration
         SimpleXlsxReportConfiguration reportConfig = new SimpleXlsxReportConfiguration();
         reportConfig.setRemoveEmptySpaceBetweenColumns(true);
@@ -119,6 +123,19 @@ public class Reporter {
                         outFolder.resolve(jasperPrint.getName() + ".html").toString()));
         // export
         exporter.exportReport();
+    }
+
+    private void printTitle(JasperPrint jasperPrint) {
+        // Works only with textFieldExpression
+        JRPrintElement firstElement = jasperPrint.getPages().get(0).getElements().get(0);
+        switch (firstElement.getClass().getCanonicalName()) {
+            case "net.sf.jasperreports.engine.fill.JRTemplatePrintText":
+                JRTemplatePrintText title = (JRTemplatePrintText) firstElement;
+                LOGGER.log(Level.INFO, "Title: {0}", title.getValue());
+                break;
+            default:
+                LOGGER.log(Level.INFO, "Unknown title class: {0}", firstElement.getClass().getCanonicalName());
+        }
     }
 
     public Connection loadConnection() throws IOException, SQLException, ClassNotFoundException {

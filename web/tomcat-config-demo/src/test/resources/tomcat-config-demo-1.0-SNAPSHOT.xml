@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-    <Environment 
-        name="mypath" 
+    <Environment
+        name="mypath"
         value="/opt/my/path"
-        type="java.lang.String" 
-        override="false"/>    
+        type="java.lang.String"
+        override="false"/>
+    <Resource
+        name="jdbc/Test"
+        type="javax.sql.DataSource"
+        driverClassName="org.apache.derby.jdbc.ClientDriver"
+        url="jdbc:derby://localhost:1527/sample"
+        auth="Container"
+        username="app"
+        password="app"
+    />
 </Context>
+
+<!--
+Centos:
+factory=org.apache.commons.dbcp.BasicDataSourceFactory
+-->
