@@ -28,7 +28,7 @@ public class FileProcessor {
     }
 
     private void setup() throws IOException {
-        InputStream in = FileProcessor.class.getClassLoader().getResourceAsStream("io.properties");
+        InputStream in = FileProcessor.class.getClassLoader().getResourceAsStream("application.properties");
         Properties props = new Properties();
         props.load(in);
         charset = Charset.forName(props.getProperty("charset"));

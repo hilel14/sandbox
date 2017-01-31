@@ -1,9 +1,14 @@
 package org.hilel14.swing.sample.application;
 
+import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -19,6 +24,8 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
 
     static final Logger LOGGER = Logger.getLogger(MainFrame.class.getName());
     static Preferences preferences = Preferences.userNodeForPackage(MainFrame.class);
+    Locale currentLocale = Locale.ENGLISH;
+    ResourceBundle bundle;
     Path inFile;
     Path outFile;
 
@@ -28,6 +35,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
     public MainFrame() {
         initComponents();
         loadPreferences();
+        localize();
     }
 
     /**
@@ -40,12 +48,12 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        inputLabel = new javax.swing.JLabel();
-        inputText = new javax.swing.JTextField();
-        selectInputButton = new javax.swing.JButton();
-        outputLabel = new javax.swing.JLabel();
-        outputText = new javax.swing.JTextField();
-        selectOutputButton = new javax.swing.JButton();
+        inLabel = new javax.swing.JLabel();
+        inText = new javax.swing.JTextField();
+        inButton = new javax.swing.JButton();
+        outLabel = new javax.swing.JLabel();
+        outText = new javax.swing.JTextField();
+        outButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
         statusLabel = new javax.swing.JLabel();
 
@@ -58,38 +66,38 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         });
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        inputLabel.setText("input");
+        inLabel.setText("input");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(inputLabel, gridBagConstraints);
+        getContentPane().add(inLabel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(inputText, gridBagConstraints);
+        getContentPane().add(inText, gridBagConstraints);
 
-        selectInputButton.setText("...");
-        selectInputButton.addActionListener(new java.awt.event.ActionListener() {
+        inButton.setText("...");
+        inButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectInputButtonActionPerformed(evt);
+                inButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(selectInputButton, gridBagConstraints);
+        getContentPane().add(inButton, gridBagConstraints);
 
-        outputLabel.setText("output");
+        outLabel.setText("output");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(outputLabel, gridBagConstraints);
+        getContentPane().add(outLabel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -97,12 +105,12 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(outputText, gridBagConstraints);
+        getContentPane().add(outText, gridBagConstraints);
 
-        selectOutputButton.setText("...");
-        selectOutputButton.addActionListener(new java.awt.event.ActionListener() {
+        outButton.setText("...");
+        outButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectOutputButtonActionPerformed(evt);
+                outButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -110,7 +118,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        getContentPane().add(selectOutputButton, gridBagConstraints);
+        getContentPane().add(outButton, gridBagConstraints);
 
         progressBar.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -159,40 +167,37 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         storePreferences();
     }//GEN-LAST:event_formWindowClosing
 
-    private void selectInputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectInputButtonActionPerformed
+    private void inButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
         if (inFile.getParent() != null) {
             chooser.setCurrentDirectory(inFile.getParent().toFile());
         }
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            inputText.setText(chooser.getSelectedFile().getAbsolutePath());
+            inText.setText(chooser.getSelectedFile().getAbsolutePath());
             enableRunButton();
         }
-    }//GEN-LAST:event_selectInputButtonActionPerformed
+    }//GEN-LAST:event_inButtonActionPerformed
 
-    private void selectOutputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectOutputButtonActionPerformed
+    private void outButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
         if (outFile.getParent() != null) {
             chooser.setCurrentDirectory(outFile.toFile());
         }
         int returnVal = chooser.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            outputText.setText(chooser.getSelectedFile().getAbsolutePath());
+            outText.setText(chooser.getSelectedFile().getAbsolutePath());
             enableRunButton();
         }
-    }//GEN-LAST:event_selectOutputButtonActionPerformed
+    }//GEN-LAST:event_outButtonActionPerformed
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
-        inFile = Paths.get(inputText.getText());
-        outFile = Paths.get(outputText.getText());
+        inFile = Paths.get(inText.getText());
+        outFile = Paths.get(outText.getText());
         if (outFile.toFile().exists()) {
-            //JOptionPane.showMessageDialog(this, "File already exist: \n" + outFile.getFileName(), "Warning", JOptionPane.WARNING_MESSAGE);
-            int returnVal = JOptionPane.showConfirmDialog(
-                    this,
-                    "A file named " + outFile.getFileName() + " already exists. Replace it?",
-                    "Confirmation",
-                    JOptionPane.YES_NO_OPTION);
+            MessageFormat formatter = new MessageFormat(bundle.getString("file.exists"), currentLocale);
+            String msg = formatter.format(new Object[]{outFile.getFileName()});
+            int returnVal = JOptionPane.showConfirmDialog(this, msg, "Confirmation", JOptionPane.YES_NO_OPTION);
             if (returnVal != JOptionPane.YES_OPTION) {
                 return;
             }
@@ -238,14 +243,14 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel inputLabel;
-    private javax.swing.JTextField inputText;
-    private javax.swing.JLabel outputLabel;
-    private javax.swing.JTextField outputText;
+    private javax.swing.JButton inButton;
+    private javax.swing.JLabel inLabel;
+    private javax.swing.JTextField inText;
+    private javax.swing.JButton outButton;
+    private javax.swing.JLabel outLabel;
+    private javax.swing.JTextField outText;
     private final javax.swing.JProgressBar progressBar = new javax.swing.JProgressBar();
     private javax.swing.JButton runButton;
-    private javax.swing.JButton selectInputButton;
-    private javax.swing.JButton selectOutputButton;
     private javax.swing.JLabel statusLabel;
     private final javax.swing.JTextField statusText = new javax.swing.JTextField();
     // End of variables declaration//GEN-END:variables
@@ -273,14 +278,41 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         preferences.put("MainFrame.outFile", outFile.toString());
     }
 
+    private void localize() {
+        try {
+            // read locale from properties
+            Properties props = new Properties();
+            props.load(FileProcessor.class.getClassLoader().getResourceAsStream("application.properties"));
+            currentLocale = new Locale(props.getProperty("currentLocale"));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            statusText.setText(ex.toString());
+        }
+        LOGGER.log(Level.INFO, "current language is {0}", currentLocale.getDisplayLanguage());
+        // set components orientation
+        applyComponentOrientation(ComponentOrientation.getOrientation(currentLocale));
+        inText.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        outText.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        // set labels
+        bundle = ResourceBundle.getBundle("locals/strings", currentLocale);
+        setTitle(bundle.getString("title"));
+        inLabel.setText(bundle.getString("in.label"));
+        inButton.setToolTipText(bundle.getString("in.button.tooltip"));
+        outLabel.setText(bundle.getString("out.label"));
+        outButton.setToolTipText(bundle.getString("out.button.tooltip"));
+        runButton.setText(bundle.getString("run.button"));
+        statusLabel.setText(bundle.getString("status.label"));
+        statusText.setText(bundle.getString("welcome"));
+    }
+
     private void enableRunButton() {
         runButton.setEnabled(false);
         // input field not empty
-        if (inputText.getText().trim().isEmpty()) {
+        if (inText.getText().trim().isEmpty()) {
             return;
         }
         // output field not empty
-        if (outputText.getText().trim().isEmpty()) {
+        if (outText.getText().trim().isEmpty()) {
             return;
         }
         // ready to run
@@ -303,8 +335,8 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         protected Void doInBackground() {
             // adjust gui controls
             runButton.setEnabled(false);
-            selectInputButton.setEnabled(false);
-            selectOutputButton.setEnabled(false);
+            inButton.setEnabled(false);
+            outButton.setEnabled(false);
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             progressBar.setValue(0);
             statusText.setText("");
@@ -312,16 +344,18 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
             try {
                 FileProcessor processor = new FileProcessor(MainFrame.this);
                 processor.processFile(inFile, outFile);
-                JOptionPane.showMessageDialog(null, "The operation completed successfully", "Information", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, bundle.getString("operation.completed.successfully"), "Information", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 LOGGER.log(Level.SEVERE, null, ex);
                 statusText.setText(ex.toString());
-                JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                MessageFormat formatter = new MessageFormat(bundle.getString("error.occurred"), currentLocale);
+                String msg = formatter.format(new Object[]{ex.toString()});
+                JOptionPane.showMessageDialog(null, msg, "Error", JOptionPane.ERROR_MESSAGE);
             }
             // restpre gui controls
             runButton.setEnabled(true);
-            selectInputButton.setEnabled(true);
-            selectOutputButton.setEnabled(true);
+            inButton.setEnabled(true);
+            outButton.setEnabled(true);
             setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             // done
             return null;
