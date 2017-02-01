@@ -11,7 +11,7 @@ package org.hilel14.swing.sample.application;
  */
 public interface ProgressListener {
 
-    public void showProgress(int percent);
+    public void showProgress(int current, int total);
 
     public void showMessage(String message);
 }

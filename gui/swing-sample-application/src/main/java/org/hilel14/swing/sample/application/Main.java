@@ -34,8 +34,10 @@ public class Main implements ProgressListener {
     }
 
     @Override
-    public void showProgress(int percent) {
-        //System.out.println(percent + "% completed");
+    public void showProgress(int currentLine, int totalLines) {
+        if (currentLine % 100 == 0) {
+            System.out.println("Line " + currentLine + " of " + totalLines);
+        }
     }
 
     @Override

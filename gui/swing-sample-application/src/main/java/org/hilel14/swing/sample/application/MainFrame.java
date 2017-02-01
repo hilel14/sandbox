@@ -282,7 +282,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         try {
             // read locale from properties
             Properties props = new Properties();
-            props.load(FileProcessor.class.getClassLoader().getResourceAsStream("application.properties"));
+            props.load(MainFrame.class.getClassLoader().getResourceAsStream("application.properties"));
             currentLocale = new Locale(props.getProperty("currentLocale"));
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -320,8 +320,8 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
     }
 
     @Override
-    public void showProgress(int percent) {
-        progressBar.setValue(percent);
+    public void showProgress(int currentLine, int totalLines) {
+        progressBar.setValue((int) (currentLine * 100 / totalLines));
     }
 
     @Override

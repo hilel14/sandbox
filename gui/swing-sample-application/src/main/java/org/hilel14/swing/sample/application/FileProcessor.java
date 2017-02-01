@@ -45,7 +45,7 @@ public class FileProcessor {
                 BufferedWriter writer = Files.newBufferedWriter(outFile, charset, StandardOpenOption.CREATE)) {
             while ((line = reader.readLine()) != null) {
                 currentLine++;
-                listener.showProgress((int) (currentLine * 100 / totalLines));
+                listener.showProgress(currentLine, totalLines);
                 String data = porcessLine(line);
                 writer.write(data);
                 writer.newLine();
@@ -66,13 +66,11 @@ public class FileProcessor {
     }
 
     private String porcessLine(String line) {
-        /*
-         try {
-         Thread.sleep(1);
-         } catch (InterruptedException ex) {
-         Logger.getLogger(FileProcessor.class.getName()).log(Level.SEVERE, null, ex);
-         }
-         */
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
         return line.toUpperCase();
     }
 
