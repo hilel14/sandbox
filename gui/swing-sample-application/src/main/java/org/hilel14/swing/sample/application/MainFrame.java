@@ -1,8 +1,12 @@
 package org.hilel14.swing.sample.application;
 
 import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -36,6 +40,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         initComponents();
         loadPreferences();
         localize();
+        setFont();
     }
 
     /**
@@ -70,6 +75,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(inLabel, gridBagConstraints);
@@ -80,7 +86,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(inText, gridBagConstraints);
 
-        inButton.setText("...");
+        inButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/folder.png"))); // NOI18N
         inButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inButtonActionPerformed(evt);
@@ -95,6 +101,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(outLabel, gridBagConstraints);
@@ -107,7 +114,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(outText, gridBagConstraints);
 
-        outButton.setText("...");
+        outButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/floppy-disk.png"))); // NOI18N
         outButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 outButtonActionPerformed(evt);
@@ -128,7 +135,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(progressBar, gridBagConstraints);
 
-        runButton.setText("run");
+        runButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/navigation-right.png"))); // NOI18N
         runButton.setEnabled(false);
         runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -160,7 +167,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(statusText, gridBagConstraints);
 
-        setBounds(0, 0, 648, 246);
+        setBounds(0, 0, 719, 408);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -278,6 +285,24 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         preferences.put("MainFrame.outFile", outFile.toString());
     }
 
+    private void setFont() {
+        try {
+            InputStream stream = MainFrame.class.getClassLoader().getResourceAsStream("fonts/OpenSansHebrew-Regular.ttf");
+            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, stream);
+            Font font = baseFont.deriveFont(Font.PLAIN, (float) 18.0);
+            inLabel.setFont(font);
+            inText.setFont(font);
+            outLabel.setFont(font);
+            outText.setFont(font);
+            progressBar.setFont(font);
+            statusLabel.setFont(font);
+            statusText.setFont(font);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            statusText.setText(ex.toString());
+        }
+    }
+
     private void localize() {
         try {
             // read locale from properties
@@ -300,7 +325,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         inButton.setToolTipText(bundle.getString("in.button.tooltip"));
         outLabel.setText(bundle.getString("out.label"));
         outButton.setToolTipText(bundle.getString("out.button.tooltip"));
-        runButton.setText(bundle.getString("run.button"));
+        //runButton.setText(bundle.getString("run.button"));
         statusLabel.setText(bundle.getString("status.label"));
         statusText.setText(bundle.getString("welcome"));
     }
