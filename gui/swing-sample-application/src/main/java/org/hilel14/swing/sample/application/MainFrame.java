@@ -1,10 +1,8 @@
 package org.hilel14.swing.sample.application;
 
 import java.awt.ComponentOrientation;
-import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -40,7 +38,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         initComponents();
         loadPreferences();
         localize();
-        setFont();
+        setFonts();
     }
 
     /**
@@ -285,7 +283,7 @@ public class MainFrame extends javax.swing.JFrame implements ProgressListener {
         preferences.put("MainFrame.outFile", outFile.toString());
     }
 
-    private void setFont() {
+    private void setFonts() {
         try {
             InputStream stream = MainFrame.class.getClassLoader().getResourceAsStream("fonts/OpenSansHebrew-Regular.ttf");
             Font baseFont = Font.createFont(Font.TRUETYPE_FONT, stream);
