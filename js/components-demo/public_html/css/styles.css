@@ -1,0 +1,11 @@
+h2 {
+    color: blue;
+}
+p {
+    color:red;
+}
+.component {
+    border: 1px solid green;
+    margin: 1em;
+    padding: 1em;
+}
