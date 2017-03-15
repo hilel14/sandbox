@@ -1,12 +1,11 @@
 $(document).ready(function () {
     $("#text-button").click(function () {
-        //TextComponent.render();
-        TextModule.render();
+        TextModule.load();
     });
     $("#image-button").click(function () {
-        ImageComponent.render();
+        ImageModule.load();
     });
     $("#video-button").click(function () {
-        VideoComponent.render();
+        VideoModule.load();
     });
 });
