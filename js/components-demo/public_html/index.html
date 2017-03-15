@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +8,21 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <link rel="stylesheet" type="text/css" href="css/styles.css">
         <script src="js/main.js"></script>
-        <script src="js/component-1.js"></script>
-        <script src="js/component-2.js"></script>
+        <script src="js/text.js"></script>
+        <script src="js/image.js"></script>
+        <script src="js/video.js"></script>
     </head>
+    
     <body>
+        
         <h1>Main Component</h1>
-        <div id="main-container">
-            <button data-type="click">Click</button>
-            <p data-type="result"></p>
-        </div>
-        <div id="component-1-container"></div>
-        <div id="component-2-container"></div>
+        
+        <button id="text-button">Text</button>
+        <button id="image-button">Image</button>
+        <button id="video-button">Video</button>
+        
+        <div class="container" id="main-container"></div>
+        
     </body>
+    
 </html>
