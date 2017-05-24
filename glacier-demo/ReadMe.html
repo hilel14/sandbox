@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AWS Glacier Demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>
+            AWS Glacier Demo
+        </h1>
+        <h2>
+            Management console setup
+        </h2>
+        <ol>
+            <li>
+                Create vault
+            </li>
+            <li>
+                Create user and <strong>immediately</strong> download its credentials
+            </li>
+            <li>
+                IAM <strong>&rArr;</strong>
+                Users <strong>&rArr;</strong>
+                User <strong>&rArr;</strong>
+                Add permissions <strong>&rArr;</strong>
+                Attach existing policies directly <strong>&rArr;</strong>
+                AmazonGlacierFullAccess
+            </li>
+        </ol>
+        <h2>
+            CentOS work station setup
+        </h2>
+        <ol>
+            <li>
+                <code>
+                    yum install python2-pip
+                </code>
+            </li>
+            <li>
+                <code>
+                    pip install awscli
+                </code>
+            </li>
+            <li>
+                <code>
+                    aws configure
+                </code>
+            </li>
+        </ol>
+        <h2>
+            Examples
+        </h2>
+        <h3>
+            Upload file with Java SDK
+        </h3>
+        <p>
+            See GlacierClient.java
+            <br>
+            Result:
+            <br>
+            Archive ID: arch12345
+        </p>
+        <h3>
+            Initiate an archive retrieval job with AWS cli
+        </h3>
+        <p>
+            <code>
+                aws glacier initiate-job --account-id acc12345 --vault-name Vault-1 --job-parameters '{"Type": "archive-retrieval", "ArchiveId": "arc12345"}'
+            </code>
+        </p>
+        <p>
+            Result:
+        </p>
+        <pre>
+        {
+        "location": "...",
+        "jobId": "job12345"
+        }
+        </pre>
+        <h3>
+            Get job status
+        </h3>
+        <code>
+            aws glacier describe-job --account-id acc12345 --vault-name Vault-1 --job-id job12345
+        </code>
+        <h3>
+            Downloads job output
+        </h3>
+        <code>
+            aws glacier get-job-output --account-id acc12345 --vault-name Vault-1 --job-id job12345 out.jpg
+        </code>
+    </body>
+</html>
