@@ -1,8 +1,12 @@
 package org.hilel14.file.upload.demo;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -24,6 +28,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @Path("generic")
 public class GenericResource {
 
+    static final Logger LOGGER = Logger.getLogger(GenericResource.class.getName());
     @Context
     private UriInfo context;
 
@@ -61,10 +66,12 @@ public class GenericResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public void uploadFile(
             @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
-        String output = "/var/opt/data/" + fileDetail.getFileName();
+            @FormDataParam("file") FormDataContentDisposition fileDetail)
+            throws IOException {
+        File out = Paths.get(System.getProperty("java.io.tmpdir")).resolve(fileDetail.getFileName()).toFile();
         byte[] data = IOUtils.toByteArray(uploadedInputStream);
-        IOUtils.write(data, new FileOutputStream(output));
-        //return Response.status(200).entity(output).build();
+        IOUtils.write(data, new FileOutputStream(out));
+        LOGGER.log(Level.INFO, "File {0} uploaded successfully", out.getAbsolutePath());
+        //return Response.status(200).entity(out).build();
     }
 }
