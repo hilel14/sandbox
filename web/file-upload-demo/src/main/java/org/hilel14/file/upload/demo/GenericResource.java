@@ -3,7 +3,6 @@ package org.hilel14.file.upload.demo;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -13,7 +12,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -61,12 +59,12 @@ public class GenericResource {
     @POST
     @Path("upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFile(
+    public void uploadFile(
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         String output = "/var/opt/data/" + fileDetail.getFileName();
         byte[] data = IOUtils.toByteArray(uploadedInputStream);
         IOUtils.write(data, new FileOutputStream(output));
-        return Response.status(200).entity(output).build();
+        //return Response.status(200).entity(output).build();
     }
 }

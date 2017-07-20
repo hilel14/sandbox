@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.hilel14.file.upload.demo;
 
 import java.util.Set;
@@ -20,8 +15,9 @@ public class ApplicationConfig extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new java.util.HashSet<Class<?>>();
         addRestResourceClasses(resources);
-        // enable multipart uploads:
+        // enable multipart uploads -->
         resources.add(MultiPartFeature.class);
+        // <--
         return resources;
     }
 

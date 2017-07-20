@@ -30,6 +30,7 @@
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-multipart</artifactId>
             <version>2.25.1</version>
+            <!-- ApplicationConfig.getClasses() : resources.add(MultiPartFeature.class) -->
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
