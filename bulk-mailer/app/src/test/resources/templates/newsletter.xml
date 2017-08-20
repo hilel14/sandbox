@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-    <comment>newsletter template properties</comment>
-    <entry key="subject">Ganshaqed News</entry>
-    <entry key="sender.name">My batch mailer</entry>
-    <entry key="sender.address">user1@localhost.localdomain</entry>
-    <entry key="reply.to.address">user1@localhost.localdomain</entry>    
-</properties>

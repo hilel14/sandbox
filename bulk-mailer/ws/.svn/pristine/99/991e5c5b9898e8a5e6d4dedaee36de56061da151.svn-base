@@ -1,5 +1,0 @@
-newsletter.imap.url=imaps://mail1.ebill.co.il
-newsletter.imap.username=importer
-newsletter.imap.password=85135
-newsletter.imap.delete=false
-newsletter.imap.unseen=false

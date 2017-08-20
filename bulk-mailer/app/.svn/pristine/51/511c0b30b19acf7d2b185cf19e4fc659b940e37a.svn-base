@@ -1,8 +1,0 @@
-CREATE VIEW campaign_2016_06_08 AS
-SELECT user_part, domain_part, recipient_name, action_code, 
-	(SELECT COUNT(*) FROM activity WHERE activity_type = 'open' AND email.id = activity.email_id ) AS 'opened',
-	(SELECT COUNT(*) FROM activity WHERE activity_type = 'click' AND email.id = activity.email_id ) AS 'clicked',
-	(SELECT COUNT(*) FROM activity WHERE activity_type = 'unsubscribe' AND email.id = activity.email_id ) AS 'unsubscribe'
-FROM email, campaign
-WHERE email.campaign_id = campaign.id
-AND campaign.campaign_date = '2016-06-08';

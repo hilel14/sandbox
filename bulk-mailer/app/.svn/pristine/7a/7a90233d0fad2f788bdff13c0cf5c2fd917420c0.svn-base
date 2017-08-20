@@ -1,8 +1,0 @@
-SELECT DISTINCT(CONCAT(user_part, '@', domain_part)) AS email, activity_time
-FROM activity, email
-WHERE activity_type = 'unsubscribe'
-AND activity.email_id = email.id;
-
-/*
- grep -iv -f unsubscribed.csv all.csv > filtered.csv
-*/

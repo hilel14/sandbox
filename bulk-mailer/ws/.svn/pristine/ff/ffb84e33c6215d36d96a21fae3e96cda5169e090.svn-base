@@ -1,6 +1,0 @@
-newsletter.imap.uri=mail1.ebill.co.il?username=importer&password=85135&sslContextParameters=#sslContextParameters&delete=false&unseen=true
-#newsletter.imap.url=imaps://mail1.ebill.co.il
-#newsletter.imap.username=newsletter
-#newsletter.imap.password=85135
-#newsletter.imap.delete=false
-#newsletter.imap.unseen=false

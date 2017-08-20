@@ -1,3 +1,0 @@
-SELECT email.id ,unsubscribe.request_time, unsubscribe.email
-FROM email, unsubscribe
-WHERE unsubscribe.email = CONCAT(email.user_part , "@" , email.domain_part);

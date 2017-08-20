@@ -1,0 +1,10 @@
+git rebase -i HEAD~50 (n-1)
+: %s/pick/squash/g
+Rename first word of first line back to pick
+: wq
+Rename first message to the new squash message
+: wq
+
+git push origin +master 
+OR
+git push --force origin master

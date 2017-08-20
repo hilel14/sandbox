@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-    <comment>Alerts messages for to use as the subject of bounced mail</comment>
-    <entry key="customersMix">לא כל הנמענים שייכים לאותו לקוח</entry>
-    <entry key="nonCustomers">אסור לערבב לקוחות עם נמענים שאינם לקוחות</entry>
-    <entry key="attachmentMismatch">שם הקובץ המצורף לא מתאים ללקוח</entry>
-</properties>
