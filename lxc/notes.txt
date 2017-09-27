@@ -1,0 +1,12 @@
+Configure bridge
+
+yum install lxc lxc-templates lxc-extra
+lxc-create --name=bugzilla --template=centos -- --release 6
+
+Edig /var/lib/lxc/bugzilla/config (lxc.network.link, lxc.network.ipv4, lxc.network.ipv4.gateway)
+
+lxc-start -d -n bugzilla
+lxc-ls -f
+lxc-attach -n bugzilla
+
+Edit /etc/sysconfig/network-scripts/ifcfg-eth0 (IPADDR, PREFIX, GATEWAY)
