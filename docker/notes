@@ -1,0 +1,9 @@
+Useful commands:
+sudo docker build -t local/archie .
+sudo docker run -d -p 4000:80 local/archie
+sudo docker ps
+sudo docker exec -it $CONTAINER_ID /bin/bash
+
+Remove all stopped containers and images:
+sudo docker rm $(sudo docker ps --all --quiet)
+sudo docker rmi $(sudo docker images -aq)
