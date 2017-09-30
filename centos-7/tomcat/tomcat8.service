@@ -1,0 +1,16 @@
+# Systemd unit file for optional tomcat8
+
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=syslog.target network.target
+
+[Service]
+Type=forking
+EnvironmentFile=/opt/apache/tomcat/bin/setenv.sh
+ExecStart=/opt/apache/tomcat/bin/startup.sh
+SuccessExitStatus=143
+User=hilel14
+Group=hilel14
+
+[Install]
+WantedBy=multi-user.target
