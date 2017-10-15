@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>iBill Development Process</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            th, td
+            {
+                border: 1px solid black;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>
+            iBill Development Process Notes
+        </h1>
+        <ul>
+            <li>
+                Branching strategy and release management are based on
+                <a href="http://nvie.com/posts/a-successful-git-branching-model">this</a>
+                model.
+            </li>
+            <li>
+                Version numbering logic: major.minor.bug-fix
+            </li>
+            <li>
+                Bugzilla version field should match a specific git tag.
+            </li>
+            <li>
+                Jar file meta-inf should also match a specific git tag.
+            </li>
+        </ul>
+
+        <h2>
+            Version names logic
+        </h2>
+        version number = x.y.z where:
+        <ul>
+            <li>
+                X = major change
+            </li>
+            <li>
+                Y = normal change (new features and bug fixes)
+            </li>
+            <li>
+                Z = critical bug fix (hot fix)
+            </li>
+        </ul>
+
+        <h2>
+            Bugzilla Version and Target Milestone fields
+        </h2>
+
+        <ul>
+            <li>
+                Versions are snapshot of code that were tested, tagged and released to production.
+            </li>
+            <li>
+                The value of Bugzilla version field is the version number of the production release the bug was reported in.
+                Version 1.0.0, for example, contains
+                <a href="http://www.ebill.co.il/bugzilla/buglist.cgi?product=iBill&version=1.0.0">
+                    these
+                </a>
+                bugs.
+            </li>
+            <li>
+                Milestones are "targets" that you plan to get a bug fixed by. 
+                The value of Bugzilla milestone field can be something like: next-release, unknown, release-1.0.0.
+            </li>
+            <li>
+                Changing the milestone field of a bug, from unknown to next-release, means that we plan to close it until next release deadline.
+            </li>
+        </ul>
+
+        <h2>
+            Application META-INF
+        </h2>
+
+        <ul>
+            <li>
+                The value of the <strong>version</strong> entry in META-INF/about.properties should show the correct release version the Jar file is part of.
+            </li>
+            <li>
+                It should be changed from "unspecified" to the specific version number right after release-x.y.z branch is created.
+            </li>
+        </ul>
+
+        <h2>
+            Release 1.0.0 example
+        </h2>
+
+        <ol>
+            <li>
+                Decide which bugs will be fixed by the release-1.0.0 deadline and change the value of their milestone field to milestone-1.0.0.
+            </li>
+            <li>
+                Resolve and close all the bugs of milestone-1.0.0.
+            <li>
+                Create <strong>release-1.0.0</strong> branch, based on develop
+            </li>
+            <li>
+                In the newly created release-1.0.0 branch, set the value of META-INF/about.properties version entry to 1.0.0
+            </li>
+            <li>
+                Push release-1.0.0 branch to origin
+            </li>
+            <li>
+                Build, test and fix critical bugs
+            </li>
+            <li>
+                Merge release-1.0.0 with master, and tag it.
+            </li>
+            <li>
+                Merge release-1.0.0 with develop
+            </li>
+            <li>
+                In the develop branch, set the value of META-INF/about.properties version entry to "unspecified".
+                Or resolve the merge conflict by accepting the develop branch value.
+                Both methods should have the same effect.
+            </li>
+        </ol>
+    </body>
+</html>

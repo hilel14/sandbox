@@ -1,0 +1,32 @@
+Git command-line tool
+
+1.  Commit all changes to develop
+2.  git checkout master
+3.  git checkout develop -- pom.xml
+4.  git add pom.xml
+5.  git commit -m "Change version to X.Y.Z-SNAPSHOT"
+6.  git merge develop
+7.  Edit pom.xml: change version from X.Y.Z-SNAPSHOT to X.Y.Z-RELEASE
+8.  git add pom.xml
+9.  git commit -m "Change version to X.Y.Z-RELEASE"
+10. git push
+11. git checkout develop
+12. Edit pom.xml: change version from X.Y.Z-SNAPSHOT to X.Y+1.Z-SNAPSHOT
+13. git add pom.xml
+14. git commit
+
+Github web interface - https://github.com
+
+1. releases
+2. Draft a new release
+3. Type vX.Y.Z as new tag name. Make sure Target branch is master. 
+   Optionaly, fill Release title and Description fields
+4. Publish release
+
+Creating distribution
+
+1. Download release soruce code from Github
+2. Extract
+3. cd to project root directory (the one with pom.xml)
+4. mvn clean install dependency:copy-dependencies assembly:single
+5. Deploy target/cellcom-statement-creator-X.Y.Z-RELEASE-distribution.tar
