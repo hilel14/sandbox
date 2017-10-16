@@ -4,6 +4,7 @@ ADD . /root
 
 RUN /root/jenkins/jenkins.setup.sh
 RUN /root/archiva/archiva.setup.sh
+RUN /root/git/git.setup.sh
 
 EXPOSE 80
 EXPOSE 443

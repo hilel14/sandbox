@@ -7,6 +7,7 @@ sudo docker exec -it $CONTAINER_ID /bin/bash
 Remove all stopped containers and images:
 sudo docker rm $(sudo docker ps --all --quiet)
 sudo docker rmi $(sudo docker images -aq)
+sudo docker volume rm $(sudo docker volume ls | cut -c 21-100 | tail -n +2)
 
 # set correct timezone?
 RUN echo "Asia/Jerusalem" > /etc/timezone
