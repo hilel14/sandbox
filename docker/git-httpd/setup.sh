@@ -1,12 +1,13 @@
 #!/bin/sh
 
 # install packages
-yum -y install httpd git
+yum -y install httpd git gitweb
 yum clean all
 
 # enable services
 systemctl enable httpd.service
 
 # Configure git over http
-mkdir /var/www/git
-mv /root/git-http-backend.conf /etc/httpd/conf.d/
+cd /root
+mkdir /var/lib/git
+mv git-http-backend.conf /etc/httpd/conf.d/

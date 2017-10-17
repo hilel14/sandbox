@@ -1,6 +1,6 @@
 Build and run:
 docker build --rm -t local/git-httpd .
-docker run -tid -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v git-vol-1:/var/www/git -p 80:80 -p 443:443 local/git-httpd
+docker run -tid -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v git:/var/lib/git -p 80:80 -p 443:443 local/git-httpd
 
 More information:
 https://git-scm.com/book/en/v2/Git-on-the-Server-Smart-HTTP
