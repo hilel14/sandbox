@@ -1,0 +1,15 @@
+# /etc/systemd/system/archiva.service
+
+[Unit]
+Description=Apache Archiva – The Build Artifact Repository Manager
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/opt/archiva/logs/archiva.pid 
+ExecStart=/opt/archiva/bin/archiva start
+SuccessExitStatus=143
+User=archiva
+
+[Install]
+WantedBy=multi-user.target

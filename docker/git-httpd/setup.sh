@@ -11,3 +11,6 @@ systemctl enable httpd.service
 cd /root
 mkdir /var/lib/git
 mv git-http-backend.conf /etc/httpd/conf.d/
+
+# more information
+# https://git-scm.com/book/en/v2/Git-on-the-Server-Smart-HTTP

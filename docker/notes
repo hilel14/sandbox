@@ -11,3 +11,7 @@ sudo docker volume rm $(sudo docker volume ls | cut -c 21-100 | tail -n +2)
 
 # set correct timezone?
 RUN echo "Asia/Jerusalem" > /etc/timezone
+
+# network
+docker network create my-network
+docker network inspect my-network
