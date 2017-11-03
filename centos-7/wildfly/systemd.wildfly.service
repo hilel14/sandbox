@@ -1,0 +1,17 @@
+[Unit]
+Description=The WildFly Application Server
+After=syslog.target network.target
+Before=httpd.service
+
+[Service]
+Environment=LAUNCH_JBOSS_IN_BACKGROUND=1
+Environment=JBOSS_PIDFILE=/opt/jboss/wildfly/11/wildfly.pid
+#EnvironmentFile=-/etc/wildfly/wildfly.conf
+User=hilel14
+LimitNOFILE=102642
+PIDFile=/opt/jboss/wildfly/11/wildfly.pid
+ExecStart=/opt/jboss/wildfly/11/bin/standalone.sh
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target
