@@ -1,0 +1,14 @@
+dn: dc=negev,dc=north
+dc: negev
+objectClass: top
+objectClass: domain
+
+dn: ou=People,dc=negev,dc=north
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Group,dc=negev,dc=north
+ou: Group
+objectClass: top
+objectClass: organizationalUnit

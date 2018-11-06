@@ -1,0 +1,7 @@
+server localhost
+zone negev.north
+update add dns.negev.north 86400 A 192.168.2.21
+update add ca.negev.north 86400 A 192.168.2.21
+update add ldap.negev.north 86400 A 192.168.2.21
+send
+quit

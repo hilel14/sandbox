@@ -1,0 +1,2 @@
+## Allows people in group $domainAdmins to run all commands
+%$domainAdmins  ALL=(ALL)       ALL

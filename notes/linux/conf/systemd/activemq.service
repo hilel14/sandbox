@@ -1,0 +1,13 @@
+[Unit]
+Description=Popular and powerful open source messaging and Integration Patterns provider
+
+[Service]
+Type=forking
+ExecStart=/opt/apache/activemq/5.10.0/bin/activemq start
+ExecStop=/opt/apache/activemq/5.10.0/bin/activemq stop
+ExecReload=/opt/apache/activemq/5.10.0/bin/activemq restart
+User=c7
+Group=c7
+
+[Install]
+WantedBy=multi-user.target

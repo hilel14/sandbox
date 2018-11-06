@@ -1,0 +1,15 @@
+CA Sertificate Fileds:
+
+Country Name (2 letter code) [XX]:IL
+State or Province Name (full name) []:Negev
+Locality Name (eg, city) [Default City]:GvarAm
+Organization Name (eg, company) [Default Company Ltd]:Negev Ltd
+Organizational Unit Name (eg, section) []:Certification
+Common Name (eg, your name or your server's hostname) []:ca.negev.north
+Email Address []:admin@negev.north
+
+Please enter the following 'extra' attributes to be sent with your certificate request
+
+A challenge password []:The street
+An optional company name []:Negev North Ltd
+

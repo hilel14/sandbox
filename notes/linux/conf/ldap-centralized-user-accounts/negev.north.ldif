@@ -1,0 +1,71 @@
+# extended LDIF
+#
+# LDAPv3
+# base <dc=negev,dc=north> with scope subtree
+# filter: (objectclass=*)
+# requesting: ALL
+#
+
+# negev.north
+dn: dc=negev,dc=north
+dc: negev
+objectClass: top
+objectClass: domain
+
+# People, negev.north
+dn: ou=People,dc=negev,dc=north
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+# Group, negev.north
+dn: ou=Group,dc=negev,dc=north
+ou: Group
+objectClass: top
+objectClass: organizationalUnit
+
+# NegevUsers, Group, negev.north
+dn: cn=NegevUsers,ou=Group,dc=negev,dc=north
+objectClass: posixGroup
+objectClass: top
+cn: NegevUsers
+userPassword:: e2NyeXB0fXg=
+gidNumber: 1000
+memberUid: user1
+memberUid: user2
+
+# NegevAdmins, Group, negev.north
+dn: cn=NegevAdmins,ou=Group,dc=negev,dc=north
+objectClass: posixGroup
+objectClass: top
+cn: NegevAdmins
+userPassword:: e2NyeXB0fXg=
+gidNumber: 1100
+memberUid: user1
+
+# user1, People, negev.north
+dn: uid=user1,ou=People,dc=negev,dc=north
+uid: user1
+cn: user1
+objectClass: account
+objectClass: posixAccount
+objectClass: top
+loginShell: /bin/bash
+uidNumber: 1000
+gidNumber: 1000
+homeDirectory: /home/user1
+userPassword:: e2NyeXB0fSQxJHM1L2drMDVqJC90NWRmc1ZVYWtObHhQTlJyQkJtdC8=
+
+# user2, People, negev.north
+dn: uid=user2,ou=People,dc=negev,dc=north
+uid: user2
+cn: user2
+objectClass: account
+objectClass: posixAccount
+objectClass: top
+loginShell: /bin/bash
+uidNumber: 1001
+gidNumber: 1000
+homeDirectory: /home/user2
+userPassword:: e2NyeXB0fSQxJHM1L2drMDVqJC90NWRmc1ZVYWtObHhQTlJyQkJtdC8=
+

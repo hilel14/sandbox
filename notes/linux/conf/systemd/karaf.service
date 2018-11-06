@@ -1,0 +1,13 @@
+[Unit]
+Description=Popular OSGI Container
+
+[Service]
+Type=forking
+ExecStart=/opt/apache/karaf/3.0.1/bin/start
+ExecStop=/opt/apache/karaf/3.0.1/bin/stop
+
+User=c7
+Group=c7
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>Named Dynamic Configuration</title>
+
+  
+</head><body>
+<h1>Install packages:</h1>
+
+<pre>yum install bind bind-utils</pre>
+
+<h1>Generate keys:</h1>
+
+<pre>dnssec-keygen -a hmac-md5 -b 128 -n USER mykey</pre>
+
+<p>This will create 2 files: Kmykey.+157+10480.key and
+Kmykey.+157+10480.private</p>
+
+<h1>Make changes to /etc/named.conf :</h1>
+
+<h2>Global changes</h2>
+
+<table border="1" cellpadding="2" cellspacing="0">
+
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Replace</td>
+      <td style="vertical-align: top;">With</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>listen-on port 53&nbsp;&nbsp;&nbsp; { 127.0.0.1; };</pre>
+      </td>
+      <td style="vertical-align: top;">
+      <pre>listen-on port 53&nbsp;&nbsp;&nbsp; { any; };</pre>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>allow-query&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; { localhost; };</pre>
+      </td>
+      <td style="vertical-align: top;">
+      <pre>allow-query { localhost; 192.168.0.0/16; };</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h2>New zone related changes:</h2>
+
+Add after the global section:
+<pre>zone "negev.north" in {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type master;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file "dynamic/negev.north.zone";<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; allow-update{ key mykey; };<br>};<br></pre>
+
+<pre>key mykey {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; algorithm hmac-md5;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; secret "2Mjiox9gVoTz8Pz7fYqFig==";<br>};<br></pre>
+
+Make sure the value of the <span style="font-weight: bold;">secret</span>
+entry is the same as the last token in the key file
+(Kmykey.+157+10480.key)<br>
+
+<h1>Create new emtpy zone file:</h1>
+
+<pre>cp /usr/share/doc/bind-9.7.3/sample/var/named/my.internal.zone.db /var/named/dynamic/negev.north.zone<br>chown named:named /var/named/dynamic/negev.north.zone<br>restorecon /var/named/dynamic/negev.north.zone<br></pre>
+
+<h1>Restart the DNS service:</h1>
+
+<pre>service named restart</pre>
+
+<h1>Add some records:</h1>
+
+<pre>nsupdate -k Kmykey.+157+10480.key update-data.txt</pre>
+
+</body></html>

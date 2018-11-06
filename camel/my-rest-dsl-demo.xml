@@ -1,0 +1,30 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+             http://www.osgi.org/xmlns/blueprint/v1.0.0
+                https://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+             http://camel.apache.org/schema/blueprint
+                http://camel.apache.org/schema/blueprint/camel-blueprint-2.17.1.xsd
+             ">
+
+    <!--
+    feature:install camel-jetty9
+    -->
+
+    <camelContext xmlns="http://camel.apache.org/schema/blueprint">
+
+        <restConfiguration component="jetty" host="0.0.0.0" port="9001" bindingMode="auto" />
+
+        <rest path="/api">
+            <get uri="/get">
+                <to uri="log:my-demo?level=INFO&amp;showAll=true&amp;multiline=true"/>
+            </get>
+            <post uri="/post">
+                <to uri="log:my-demo?level=INFO"/>
+            </post>
+        </rest>
+
+    </camelContext>
+
+</blueprint>

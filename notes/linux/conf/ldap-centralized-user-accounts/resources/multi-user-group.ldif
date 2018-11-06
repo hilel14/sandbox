@@ -1,0 +1,9 @@
+dn: cn=bin,ou=Group,dc=negev,dc=north
+objectClass: posixGroup
+objectClass: top
+cn: bin
+userPassword: {crypt}x
+gidNumber: 1
+memberUid: daemon
+memberUid: root
+

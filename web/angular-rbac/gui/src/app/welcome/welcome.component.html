@@ -1,0 +1,15 @@
+<div>
+  Current state: {{ auth.getCurrentState() }}
+</div>
+
+<hr>
+
+<div>
+  Public stuff
+</div>
+
+<div *ngIf="auth.hasPermission('manager')">
+  Private stuff
+</div>
+
+<button [disabled]="!auth.hasPermission('manager')">Run</button>
