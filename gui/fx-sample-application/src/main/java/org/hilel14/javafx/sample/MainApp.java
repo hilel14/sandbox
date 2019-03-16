@@ -1,4 +1,4 @@
-package my.fx.demo;
+package org.hilel14.javafx.sample;
 
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -31,6 +31,7 @@ public class MainApp extends Application {
 
     @Override
     public void stop() {
+        LOGGER.info("stop() callback...");
         preferences.putDouble("Scene.width", scene.getWidth());
         preferences.putDouble("Scene.height", scene.getHeight());
     }

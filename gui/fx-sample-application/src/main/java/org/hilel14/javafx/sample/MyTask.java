@@ -1,4 +1,4 @@
-package my.fx.demo;
+package org.hilel14.javafx.sample;
 
 import java.nio.charset.Charset;
 import java.nio.file.Files;

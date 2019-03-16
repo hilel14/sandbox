@@ -1,4 +1,4 @@
-package my.fx.demo;
+package org.hilel14.javafx.sample;
 
 import java.io.File;
 import java.net.URL;
