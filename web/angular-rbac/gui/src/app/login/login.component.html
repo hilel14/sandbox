@@ -1,0 +1,18 @@
+<div>
+  Current state: {{ auth.getCurrentState() }}
+</div>
+<hr>
+<form name="form">
+  <div>
+    <label for="username">Username</label>
+    <input type="text" name="username" [(ngModel)]="username" />
+  </div>
+  <div>
+    <label for="password">Password</label>
+    <input type="password" name="password" [(ngModel)]="password" />
+  </div>
+  <div>
+    <button (click)="login()">Login</button>
+    <button (click)="logout()">Logout</button>
+  </div>
+</form>

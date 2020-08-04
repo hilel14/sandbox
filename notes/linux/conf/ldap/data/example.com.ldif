@@ -1,0 +1,56 @@
+dn: dc=example,dc=com
+objectClass: domain
+objectClass: top
+description: Fiction domain
+dc: example
+
+dn: ou=superheros, dc=example,dc=com
+ou: superheros
+description: All super heros in this domain
+objectclass: organizationalunit
+
+dn: ou=supervillains, dc=example,dc=com
+ou: supervillains
+description: All super villains in this domain
+objectclass: organizationalunit
+
+dn: cn=Clark Kent,ou=superheros,dc=example,dc=com
+objectclass: inetOrgPerson
+cn: Clark Joseph Kent
+cn: Clark Jerome Kent
+sn: Kent
+uid: superman
+userpassword: 12345
+mail: superman@example.com
+mail: sumperman@krypton.universe
+mail: superman@metropolis.org
+description: The civilian and secret identity of Superman. Can fly.
+
+dn: cn=Peter Parker,ou=superheros,dc=example,dc=com
+objectclass: inetOrgPerson
+cn: Peter Parker
+sn: Parker
+uid: spiderman
+userpassword: 12345
+mail: spiderman@example.com
+description: The civilian and secret identity of Batman. Can shoot spider-webs and react to danger quickly.
+
+dn: cn=Lex Luthor,ou=supervillains,dc=example,dc=com
+objectclass: inetOrgPerson
+cn: Lex Luthor
+sn: Luthor
+uid: lexluthor
+userpassword: 12345
+mail: lexluthor@example.com
+mail: lexluthor@metropolis.net
+description: The archenemy of Superman
+
+dn: cn=The Joker,ou=supervillains,dc=example,dc=com
+objectclass: inetOrgPerson
+cn: The Joker
+sn: Joker
+uid: joker
+userpassword: 12345
+mail: joker@example.com
+mail: joker@gotham.city
+description: The archenemy of Batman

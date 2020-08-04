@@ -28,3 +28,5 @@ mvn dependency:copy-dependencies -Dclassifier=sources
 mvn dependency:copy-dependencies -Dclassifier=javadoc
 Common errors work-arounds:
    mvn dependency:copy-dependencies -Dclassifier=javadoc -DexcludeArtifactIds=hamcrest-core
+
+mvn archetype:generate -DgroupId=org.codehaus.mojo.archetypes -DartifactId=osgi-archetype -DarchetypeArtifactId=1.4

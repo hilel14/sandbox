@@ -1,0 +1,51 @@
+yum install openldap-servers openldap-clients
+
+-----------------------------------------------------------------------------------------------
+
+Import data into the default db
+
+1. service ldap stop
+2. uncomment "rootpw secret" in /etc/openldap/slapd.conf (or use slappasswd to generate new password)
+   also delete /etc/openldap/slapd.d/ ?
+   also delete content of /var/lib/ldap ?
+3. service ldap start
+4. ldapadd -D "cn=Manager,dc=my-domain,dc=com" -w secret -f my-domain.ldif
+5. search examples:
+   ldapsearch -D "cn=Manager,dc=my-domain,dc=com" -W -h 192.168.2.21 -b "dc=my-domain,dc=com"
+   ldapsearch -D "cn=Manager,dc=my-domain,dc=com" -w secret -b "dc=my-domain,dc=com"
+   ldapsearch -D "cn=Manager,dc=my-domain,dc=com" -w secret -b "dc=my-domain,dc=com" "sn=smith"
+   ldapsearch -D "cn=Manager,dc=my-domain,dc=com" -w secret -b "dc=my-domain,dc=com" -LLL "sn=smith" homephone
+   ldapwhoami -D "cn=Manager,dc=my-domain,dc=com"   
+
+-----------------------------------------------------------------------------------------------
+
+Add new db and import data into it
+
+/etc/init.d/ldap stop
+
+cd /var/lib/ldap
+mkdir doghouse
+chown ldap:ldap doghouse
+chmod 700 doghouse
+restorecon -r doghouse
+
+Paste at the end of /etc/openldap/slapd.conf:
+
+database	bdb
+suffix		"o=doghouse"
+rootdn		"uid=admin,o=doghouse"
+rootpw		123456
+directory	/var/lib/ldap/doghouse
+
+/etc/init.d/ldap start
+
+Import doghouse.ldif into the directory:
+ldapadd -D "uid=admin,o=doghouse" -w 123456 -f doghouse.ldif
+
+Search example:
+ldapsearch -D "uid=admin,o=doghouse" -w 123456 -b "o=doghouse" "uid=dog3"
+
+-----------------------------------------------------------------------------------------------
+Browse:
+
+ldap://localhost/ou=people,dc=my-domain,dc=com??one?(objectclass=*)

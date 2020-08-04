@@ -1,0 +1,61 @@
+dn: o=doghouse
+objectClass: top
+objectClass: organization
+o: doghouse
+
+dn: ou=dogs,o=doghouse
+objectClass: organizationalUnit
+objectClass: top
+ou: dogs
+
+dn: uid=manager,o=doghouse
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Dog Manager
+sn: Manager
+uid: manager
+userPassword:: MTIzNDU2
+
+dn: ou=groups,o=doghouse
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+
+dn: cn=bulldogs,ou=groups,o=doghouse
+objectClass: groupOfUniqueNames
+objectClass: top
+cn: bulldogs
+uniqueMember: uid=dog1,ou=dogs,o=doghouse
+
+dn: uid=dog1,ou=dogs,o=doghouse
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Dog One
+sn: One
+uid: dog1
+userPassword:: MTIzNDU2
+
+dn: uid=dog3,ou=dogs,o=doghouse
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Dog Three
+sn: Three
+uid: dog3
+userPassword:: MTIzNDU2
+
+dn: uid=dog2,ou=dogs,o=doghouse
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Dog Two
+sn: Two
+uid: dog2
+userPassword:: MTIzNDU2
+

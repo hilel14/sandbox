@@ -1,0 +1,7 @@
+#  ldapmodify -f <this-file>
+# slappasswd (123456) -> {SSHA}0wYU9gIlLavEyK4L8pxUiC9wRp2oPSCf
+
+dn: cn=Moe Howard,ou=MemberGroupA,o=stooges
+changetype: modify
+replace: userPassword
+userPassword: {SSHA}0wYU9gIlLavEyK4L8pxUiC9wRp2oPSCf

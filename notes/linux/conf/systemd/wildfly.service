@@ -1,0 +1,12 @@
+[Unit]
+Description=Wildfly application server
+After=network.target
+
+[Service]
+Type=simple
+User=c7
+Group=c7
+ExecStart=/opt/jboss/wildfly/9.0.1/bin/standalone.sh
+
+[Install]
+WantedBy=multi-user.target

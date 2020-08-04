@@ -1,0 +1,84 @@
+http://www.ibm.com/developerworks/linux/library/l-openldap
+
+Server size:
+
+install openldap-servers
+edit slapd.conf
+import negev.north.ldif
+
+Usefull commands:
+
+grep scientific /etc/passwd > passwd.in
+/usr/share/migrationtools/migrate_passwd.pl passwd.in > passwd.ldif
+ldapadd -x -D "cn=Manager,dc=negev,dc=north" -w secret -f passwd.ldif
+ldapsearch -x -b 'dc=negev,dc=north' '(objectclass=*)'
+ldapsearch -D "cn=Manager,dc=negev,dc=north" -w secret -b "dc=negev,dc=north" > negev.north.ldif
+ldapsearch -ZZ -D "cn=Manager,dc=negev,dc=north" -w secret -b "dc=negev,dc=north"
+
+Client side:
+
+install openldap-clients
+remove sssd
+configure client to use LDAP authentication (3 options):
+1. authconfig-tui
+2. authconfig --enableldap --update
+3. edit config files manually
+
+configure sudoers:
+
+Create /etc/sudoers.d/negev-admins with this content:
+## Allows people in group NegevAdmins to run all commands
+%NegevAdmins  ALL=(ALL)       ALL
+
+Disalble root login
+Edit /etc/ssh/sshd_config : uncomment PermitRootLogin and change value to no
+
+home directories (3 options):
+
+1. add to /etc/pam.d/login and /etc/pam.d/sshd
+   session    required    pam_mkhomedir.so skel=/etc/skel/ umask=0077
+2. mount home direcory remotely (nfs? ssh?)
+3. manually
+   mkdir /home/$user
+   cp /etc/skel /home/$user
+   chown -R $user:NegevUsers /home/$user
+   chmod 700 /home/$user
+
+
+TLS security - Server side
+
+yum install openssl
+
+/etc/pki/tls/misc/CA -newca
+openssl req -new -nodes -subj '/CN=ca.negev.north/O=Negev Ltd/C=IL/ST=Negev/L=GvarAm' -keyout slapd-key.pem -out slapd-req.pem -days 3650
+openssl ca -out slapd-cert.pem -infiles slapd-req.pem
+
+mv slapd-cert.pem /etc/openldap/slapdcert.pem
+chown ldap:ldap /etc/openldap/slapdcert.pem
+chmod 644 /etc/openldap/slapdcert.pem
+
+mv slapd-key.pem /etc/openldap/slapdkey.pem
+chown ldap:ldap /etc/openldap/slapdkey.pem
+chmod 400 /etc/openldap/slapdkey.pem
+
+cp /etc/pki/CA/cacert.pem /etc/openldap/cacerts/cacert.pem
+chown ldap:ldap /etc/openldap/cacerts/cacert.pem
+chmod 644 /etc/openldap/cacerts/cacert.pem
+
+Add to (or uncomment in) /etc/openldap/slapd.conf :
+   TLSCACertificateFile /etc/openldap/cacerts/cacert.pem
+   TLSCertificateFile /etc/openldap/slapdcert.pem
+   TLSCertificateKeyFile /etc/openldap/slapdkey.pem 
+
+TLS security - client side:
+
+copy /etc/openldap/cacerts/cacert.pem to client
+
+add/update /etc/openldap/ldap.conf :
+   URI          ldap://ca.negev.north
+   BASE         dc=negev,dc=north
+   TLS_CACERT   /etc/openldap/cacerts/cacert.pem
+   ssl          start_tls
+
+Test TLS connection:
+   ldapsearch -ZZ -x -b 'dc=negev,dc=north' '(objectclass=*)'

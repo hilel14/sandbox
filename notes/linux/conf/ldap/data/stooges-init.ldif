@@ -1,0 +1,155 @@
+dn: o=stooges
+objectClass: top
+objectClass: organization
+o: stooges
+description: The Three Stooges
+
+dn: cn=StoogeAdmin,o=stooges
+objectClass: organizationalRole
+cn: StoogeAdmin
+description: LDAP Directory Administrator
+
+dn: ou=MemberGroupA,o=stooges
+ou: MemberGroupA
+objectClass: top
+objectClass: organizationalUnit
+description: Members of MemberGroupA
+
+dn: ou=MemberGroupB,o=stooges
+ou: MemberGroupB
+objectClass: top
+objectClass: organizationalUnit
+description: Members of MemberGroupB
+
+dn: ou=group,o=stooges
+ou: group
+objectclass: organizationalUnit
+objectclass: domainRelatedObject
+associatedDomain: stooges
+
+dn: cn=users,ou=group,o=stooges
+cn: users
+objectClass: top
+objectClass: posixGroup
+gidNumber: 100
+memberUid: larry
+memberUid: moe
+
+dn: cn=groupb,ou=group,o=stooges
+cn: groupb
+objectClass: top
+objectClass: posixGroup
+gidNumber: 1003
+memberUid: curley
+
+dn: cn=Larry Fine,ou=MemberGroupA,o=stooges
+ou: MemberGroupA
+o: stooges
+cn: Larry Fine
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: top
+mail: LFine@isp.com
+givenname: Larry
+sn: Fine
+uid: larry
+uidNumber: 1001
+gidNumber: 100
+gecos: Larry Fine
+loginShell: /bin/bash
+homeDirectory: /home/larry
+shadowLastChange: 14368
+shadowMin: 0
+shadowMax: 999999
+shadowWarning: 7
+userPassword: lassrysecret
+homePostalAddress: 15 Cherry Ln.$Plano TX 78888
+postalAddress: 215 Fitzhugh Ave.
+l: Dallas
+st: TX
+postalcode: 75226
+telephoneNumber: (800)555-1212
+homePhone: 800-555-1313
+facsimileTelephoneNumber: 800-555-1414
+title: Account Executive
+destinationindicator: /bios/images/lfine.jpg
+
+dn: cn=Moe Howard,ou=MemberGroupA,o=stooges
+ou: MemberGroupA
+o: stooges
+cn: Moe Howard
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: top
+mail: MHoward@isp.com
+givenname: Moe
+sn: Howard
+uid: moe
+uidNumber: 1002
+gidNumber: 100
+gecos: Moe Howard
+loginShell: /bin/bash
+homeDirectory: /home/moe
+shadowLastChange: 14365
+shadowMin: 0
+shadowMax: 999999
+shadowWarning: 7
+userPassword: moesecret
+initials: B
+homePostalAddress: 16 Cherry Ln.$Plano TX 78888
+postalAddress: 216 South Fitzhugh Ave.
+l: Dallas
+st: TX
+postalcode: 75226
+pager: 800-555-1319
+homePhone: 800-555-1313
+telephoneNumber: (800)555-1213
+mobile: 800-555-1318
+title: Manager of Product Development
+facsimileTelephoneNumber: 800-555-3318
+manager: cn=Larry Howard,ou=MemberGroupA,o=stooges
+destinationindicator: /bios/images/mhoward.jpg
+
+dn: cn=Curley Howard,ou=MemberGroupB,o=stooges
+ou: MemberGroupB
+o: stooges
+cn: Curley Howard
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: top
+mail: CHoward@isp.com
+givenname: Curley
+sn: Howard
+uid: curley
+uidNumber: 1003
+gidNumber: 1003
+gecos: Curley Howard
+loginShell: /bin/bash
+homeDirectory: /home/curley
+shadowLastChange: 14362
+shadowMin: 0
+shadowMax: 999999
+shadowWarning: 7
+userPassword: curleysecret
+initials: J
+homePostalAddress: 14 Cherry Ln.$Plano TX 78888
+postalAddress: 2908 Greenville Ave.
+l: Dallas
+st: TX
+postalcode: 75206
+pager: 800-555-1319
+homePhone: 800-555-1313
+telephoneNumber: (800)555-1214
+mobile: 800-555-1318
+title: Developemnt Engineer
+facsimileTelephoneNumber: 800-555-3318
+destinationindicator: /bios/images/choward.jpg

@@ -1,0 +1,12 @@
+[Unit]
+Description=H2 Database Engine
+
+
+[Service]
+Type=simple
+User=c7
+Group=c7
+ExecStart=/opt/h2/bin/start.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,16 @@
+Apache Directory Server configuration:
+
+Server setup:
+
+1. Create new server
+2. Create new connection and connect:
+   Bind DN or user: uid=admin,ou=system
+   Bind password: secret
+
+New partition example:
+
+1. Create new partition:
+   ID: sevenSeas, Cache Size: 100, Suffix: o=sevenSeas, Enable optimizer, Synchronization on write
+2. Create new context entry:
+   Root DSE > New Context Entry > Create entry from scratch > organization, extensibleObject > o=sevenSeas
+3. Import sevenSeas.ldif

@@ -1,0 +1,7 @@
+server localhost
+zone negev.north
+update add optiplex.negev.north 86400 A 192.168.2.21
+update add www.negev.north 86400 A 192.168.2.22
+update add win7.negev.north 86400 A 192.168.2.23
+send
+quit

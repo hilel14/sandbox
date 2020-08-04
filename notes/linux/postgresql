@@ -1,0 +1,18 @@
+basic configuration after installation:
+
+sudo postgresql-setup initdb
+sudo vim /var/lib/pgsql/data/pg_hba.conf (change method from ident to md5 for IPv4 local connections)
+sudo systemctl start postgresql.service
+
+Change to the db user: su - postgres
+createdb <dbname>
+createuser <username>
+psql > alter user <username> with encrypted password '<password>';
+psql > grant all privileges on database <dbname> to <username> ;
+   
+Other psql usefull commands:
+list all databases    \l
+list users            SELECT usename FROM pg_user;
+
+IPv4 connection:
+psql --host=127.0.0.1 --username=user1 --dbname=db1
