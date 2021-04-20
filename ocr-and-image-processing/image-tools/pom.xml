@@ -26,5 +26,10 @@
             <artifactId>ij</artifactId>
             <version>1.53c</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-imaging</artifactId>
+            <version>1.0-alpha2</version>
+        </dependency>
     </dependencies>
 </project>
